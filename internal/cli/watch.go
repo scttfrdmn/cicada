@@ -98,8 +98,8 @@ func NewWatchAddCmd() *cobra.Command {
 			// Generate watch ID (simple for now)
 			watchID := fmt.Sprintf("%s-%d", source, time.Now().Unix())
 
-			// Add watch
-			if err := watchManager.Add(watchID, config, srcBackend, dstBackend); err != nil {
+			// Add watch (with persistence)
+			if err := watchManager.AddWatch(watchID, config, srcBackend, dstBackend); err != nil {
 				return fmt.Errorf("add watch: %w", err)
 			}
 
@@ -175,7 +175,7 @@ func NewWatchRemoveCmd() *cobra.Command {
 				fmt.Printf("Removing watch: %s\n", id)
 			}
 
-			if err := watchManager.Remove(id); err != nil {
+			if err := watchManager.RemoveWatch(id); err != nil {
 				return fmt.Errorf("remove watch: %w", err)
 			}
 

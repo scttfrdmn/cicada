@@ -18,7 +18,9 @@ import (
 	"context"
 	"fmt"
 	"sync"
+	"time"
 
+	"github.com/scttfrdmn/cicada/internal/config"
 	cicadasync "github.com/scttfrdmn/cicada/internal/sync"
 )
 
@@ -120,4 +122,121 @@ func (m *Manager) StopAll(ctx context.Context) error {
 
 	m.watchers = make(map[string]*Watcher)
 	return firstErr
+}
+
+// SaveConfig persists all watches to the configuration file.
+func (m *Manager) SaveConfig() error {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+
+	// Load current config
+	cfg, err := config.LoadOrDefault()
+	if err != nil {
+		return fmt.Errorf("load config: %w", err)
+	}
+
+	// Convert watches to config format
+	cfg.Watches = make([]config.WatchConfig, 0, len(m.watchers))
+	for id, watcher := range m.watchers {
+		status := watcher.Status()
+		watchConfig := config.WatchConfig{
+			ID:              id,
+			Source:          status.Source,
+			Destination:     status.Destination,
+			DebounceSeconds: int(watcher.config.DebounceDelay.Seconds()),
+			MinAgeSeconds:   int(watcher.config.MinAge.Seconds()),
+			DeleteSource:    watcher.config.DeleteSource,
+			SyncOnStart:     watcher.config.SyncOnStart,
+			Exclude:         watcher.config.ExcludePatterns,
+			Enabled:         status.Active,
+		}
+		cfg.Watches = append(cfg.Watches, watchConfig)
+	}
+
+	// Save config
+	path, err := config.ConfigPath()
+	if err != nil {
+		return fmt.Errorf("get config path: %w", err)
+	}
+
+	if err := config.Save(cfg, path); err != nil {
+		return fmt.Errorf("save config: %w", err)
+	}
+
+	return nil
+}
+
+// AddWatch creates, starts, and persists a new watcher.
+func (m *Manager) AddWatch(id string, cfg Config, srcBackend, dstBackend cicadasync.Backend) error {
+	if err := m.Add(id, cfg, srcBackend, dstBackend); err != nil {
+		return err
+	}
+
+	if err := m.SaveConfig(); err != nil {
+		// Rollback the add operation
+		_ = m.Remove(id)
+		return fmt.Errorf("save config: %w", err)
+	}
+
+	return nil
+}
+
+// RemoveWatch stops, removes, and unpersists a watcher.
+func (m *Manager) RemoveWatch(id string) error {
+	if err := m.Remove(id); err != nil {
+		return err
+	}
+
+	if err := m.SaveConfig(); err != nil {
+		return fmt.Errorf("save config: %w", err)
+	}
+
+	return nil
+}
+
+// LoadFromConfig loads and starts all enabled watches from the configuration file.
+func (m *Manager) LoadFromConfig(createBackend func(context.Context, string) (cicadasync.Backend, string, error)) error {
+	// Load config
+	cfg, err := config.LoadOrDefault()
+	if err != nil {
+		return fmt.Errorf("load config: %w", err)
+	}
+
+	ctx := context.Background()
+
+	// Start each enabled watch
+	for _, watchConfig := range cfg.Watches {
+		if !watchConfig.Enabled {
+			continue
+		}
+
+		// Create backends
+		srcBackend, srcPath, err := createBackend(ctx, watchConfig.Source)
+		if err != nil {
+			return fmt.Errorf("create source backend for %s: %w", watchConfig.ID, err)
+		}
+
+		dstBackend, dstPath, err := createBackend(ctx, watchConfig.Destination)
+		if err != nil {
+			return fmt.Errorf("create destination backend for %s: %w", watchConfig.ID, err)
+		}
+
+		// Convert config
+		config := Config{
+			Source:          srcPath,
+			Destination:     dstPath,
+			DebounceDelay:   time.Duration(watchConfig.DebounceSeconds) * time.Second,
+			MinAge:          time.Duration(watchConfig.MinAgeSeconds) * time.Second,
+			DeleteSource:    watchConfig.DeleteSource,
+			SyncOnStart:     watchConfig.SyncOnStart,
+			ExcludePatterns: watchConfig.Exclude,
+		}
+
+		// Add watch (without persisting again)
+		if err := m.Add(watchConfig.ID, config, srcBackend, dstBackend); err != nil {
+			return fmt.Errorf("add watch %s: %w", watchConfig.ID, err)
+		}
+	}
+
+	return nil
 }

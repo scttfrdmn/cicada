@@ -4,6 +4,7 @@ package metadata
 import (
 	"fmt"
 	"io"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -570,8 +571,8 @@ func (e *GenericExtractor) Extract(filepath string) (map[string]interface{}, err
 
 	metadata := map[string]interface{}{
 		"format":   detectFormat(filepath),
-		"filesize": info.Size,
-		"modified": info.ModTime,
+		"filesize": info.Size(),
+		"modified": info.ModTime(),
 	}
 
 	return metadata, nil
@@ -585,9 +586,8 @@ func (e *GenericExtractor) ExtractFromReader(r io.Reader, filename string) (map[
 
 // Helper functions
 
-func getFileInfo(filepath string) (FileInfo, error) {
-	// TODO: Implement os.Stat wrapper
-	return FileInfo{}, nil
+func getFileInfo(filepath string) (os.FileInfo, error) {
+	return os.Stat(filepath)
 }
 
 func detectFormat(filename string) string {
@@ -606,7 +606,18 @@ func AutoExtractMetadata(registry *ExtractorRegistry, filepath, schemaName strin
 		return nil, err
 	}
 
-	fileInfo, _ := getFileInfo(filepath)
+	osFileInfo, err := getFileInfo(filepath)
+	if err != nil {
+		return nil, fmt.Errorf("get file info: %w", err)
+	}
+
+	// Convert os.FileInfo to metadata.FileInfo
+	fileInfo := FileInfo{
+		Filename:  osFileInfo.Name(),
+		Path:      filepath,
+		Size:      osFileInfo.Size(),
+		CreatedAt: osFileInfo.ModTime(),
+	}
 
 	metadata := &Metadata{
 		SchemaName:    schemaName,

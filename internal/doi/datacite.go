@@ -247,7 +247,7 @@ func (m *DOIManager) MintDOI(dataset *Dataset) (*DOI, error) {
 		},
 	}
 
-	resp, err := m.client.CreateDOI(payload)
+	_, err = m.client.CreateDOI(payload)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create DOI: %w", err)
 	}
@@ -280,9 +280,11 @@ func (m *DOIManager) UpdateDOI(doiString string, updates map[string]interface{})
 
 	// Apply updates
 	// TODO: Merge updates into current metadata
+	_ = current // Silence unused variable warning
 
 	// Submit update
-	return m.client.UpdateDOI(doiString, current)
+	// TODO: Convert DOI struct to payload format
+	return fmt.Errorf("UpdateDOI not yet implemented")
 }
 
 // GetDOI retrieves DOI information
@@ -314,7 +316,7 @@ func (c *DataCiteClient) CreateDOI(payload map[string]interface{}) (map[string]i
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusCreated {
 		return nil, fmt.Errorf("API request failed with status %d", resp.StatusCode)
@@ -342,7 +344,7 @@ func (c *DataCiteClient) GetDOI(doi string) (*DOI, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("API request failed with status %d", resp.StatusCode)
@@ -371,7 +373,7 @@ func (c *DataCiteClient) UpdateDOI(doi string, updates map[string]interface{}) e
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("API request failed with status %d", resp.StatusCode)
@@ -395,7 +397,7 @@ func (c *DataCiteClient) ListDOIs(repositoryID string) ([]*DOI, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("API request failed with status %d", resp.StatusCode)

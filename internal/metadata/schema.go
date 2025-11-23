@@ -320,7 +320,7 @@ func (sm *SchemaManager) ValidateMetadata(metadata *Metadata) ValidationResult {
 	}
 
 	// Custom validation rules
-	for _, rule := range schema.ValidationRules {
+	for range schema.ValidationRules {
 		// TODO: Implement rule evaluation
 		// This would involve parsing and evaluating the rule expression
 	}
