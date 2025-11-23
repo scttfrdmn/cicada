@@ -5,16 +5,25 @@ help: ## Show this help message
 	@echo 'Available targets:'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
+# Version info
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
+COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "none")
+DATE ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+LDFLAGS = -ldflags "-s -w -X main.version=$(VERSION) -X main.commit=$(COMMIT) -X main.date=$(DATE) -X main.builtBy=make"
+
 # Build targets
 .PHONY: build
 build: ## Build the cicada binary
-	@echo "Building cicada..."
-	@go build -o bin/cicada ./cmd/cicada
+	@echo "Building cicada $(VERSION)..."
+	@mkdir -p bin
+	@go build $(LDFLAGS) -o bin/cicada ./cmd/cicada
+	@echo "✓ Built: bin/cicada"
 
 .PHONY: install
 install: ## Install cicada to $GOPATH/bin
-	@echo "Installing cicada..."
-	@go install ./cmd/cicada
+	@echo "Installing cicada $(VERSION)..."
+	@go install $(LDFLAGS) ./cmd/cicada
+	@echo "✓ Installed to $(shell go env GOPATH)/bin/cicada"
 
 .PHONY: clean
 clean: ## Clean build artifacts

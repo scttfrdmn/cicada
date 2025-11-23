@@ -1,0 +1,186 @@
+# GoReleaser configuration for Cicada
+# https://goreleaser.com
+
+version: 2
+
+before:
+  hooks:
+    # Ensure dependencies are up to date
+    - go mod tidy
+    # Run tests before building
+    - go test -short ./...
+
+builds:
+  - id: cicada
+    main: ./cmd/cicada
+    binary: cicada
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    goarm:
+      - "7"
+    # Ignore certain combinations
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -X main.builtBy=goreleaser
+
+archives:
+  - id: targz
+    formats:
+      - tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    files:
+      - LICENSE
+      - README.md
+      - CHANGELOG.md
+  - id: zip
+    formats:
+      - zip
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    files:
+      - LICENSE
+      - README.md
+      - CHANGELOG.md
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - '^ci:'
+  groups:
+    - title: Features
+      regexp: '^feat:'
+      order: 0
+    - title: Bug Fixes
+      regexp: '^fix:'
+      order: 1
+    - title: Performance
+      regexp: '^perf:'
+      order: 2
+    - title: Others
+      order: 999
+
+release:
+  github:
+    owner: scttfrdmn
+    name: cicada
+  draft: false
+  prerelease: auto
+  mode: replace
+  header: |
+    ## Cicada {{ .Tag }}
+
+    **Fast, reliable file sync for S3**
+
+    ### Installation
+
+    #### Homebrew (macOS/Linux)
+    ```bash
+    brew install scttfrdmn/tap/cicada
+    ```
+
+    #### Scoop (Windows)
+    ```powershell
+    scoop bucket add scttfrdmn https://github.com/scttfrdmn/scoop-bucket
+    scoop install cicada
+    ```
+
+    #### Manual Installation
+    Download the appropriate archive for your platform below, extract it, and move the `cicada` binary to your PATH.
+
+  footer: |
+    ### Verifying Downloads
+
+    All archives are checksummed. Verify with:
+    ```bash
+    sha256sum -c checksums.txt
+    ```
+
+    ### Upgrading
+
+    #### Homebrew
+    ```bash
+    brew upgrade cicada
+    ```
+
+    #### Scoop
+    ```powershell
+    scoop update cicada
+    ```
+
+    **Full Changelog**: https://github.com/scttfrdmn/cicada/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+# Homebrew formula
+brews:
+  - name: cicada
+    ids:
+      - targz
+    repository:
+      owner: scttfrdmn
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: Formula
+    homepage: https://github.com/scttfrdmn/cicada
+    description: "Fast, reliable file sync for S3"
+    license: "Apache-2.0"
+    test: |
+      system "#{bin}/cicada version"
+    install: |
+      bin.install "cicada"
+
+# Scoop manifest
+scoops:
+  - name: cicada
+    ids:
+      - zip
+    repository:
+      owner: scttfrdmn
+      name: scoop-bucket
+      token: "{{ .Env.SCOOP_BUCKET_GITHUB_TOKEN }}"
+    homepage: https://github.com/scttfrdmn/cicada
+    description: "Fast, reliable file sync for S3"
+    license: "Apache-2.0"
+
+# Announcement
+announce:
+  skip: true  # Enable when ready for announcements
+
+# Metadata
+metadata:
+  mod_timestamp: '{{ .CommitTimestamp }}'

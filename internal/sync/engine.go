@@ -51,6 +51,13 @@ type Engine struct {
 	options     SyncOptions
 }
 
+// syncPair represents a file to sync with source and destination paths.
+type syncPair struct {
+	srcPath  string
+	dstPath  string
+	fileInfo FileInfo
+}
+
 // NewEngine creates a new sync engine.
 func NewEngine(source, destination Backend, options SyncOptions) *Engine {
 	if options.Concurrency <= 0 {
@@ -78,35 +85,46 @@ func (e *Engine) Sync(ctx context.Context, sourcePath, destPath string) error {
 		return fmt.Errorf("list destination: %w", err)
 	}
 
-	// Build destination file map for quick lookup
+	// Build destination file map for quick lookup with relative paths
 	dstMap := make(map[string]*FileInfo)
 	for i := range dstFiles {
-		dstMap[dstFiles[i].Path] = &dstFiles[i]
+		// Strip destination prefix to get relative path
+		relPath := stripPrefix(dstFiles[i].Path, destPath)
+		dstMap[relPath] = &dstFiles[i]
 	}
 
 	// Determine what needs to be synced
-	var toSync []FileInfo
+	var toSync []syncPair
 	for _, srcFile := range srcFiles {
 		if srcFile.IsDir {
 			continue // Skip directories
 		}
 
-		dstFile, exists := dstMap[srcFile.Path]
+		// Strip source prefix to get relative path
+		relPath := stripPrefix(srcFile.Path, sourcePath)
+
+		dstFile, exists := dstMap[relPath]
 		if !exists || needsSync(srcFile, *dstFile) {
-			toSync = append(toSync, srcFile)
+			// Map source path to destination path
+			dstFullPath := joinPath(destPath, relPath)
+			toSync = append(toSync, syncPair{
+				srcPath:  srcFile.Path,
+				dstPath:  dstFullPath,
+				fileInfo: srcFile,
+			})
 		}
 
 		// Remove from map to track what's left (for deletion)
 		if exists {
-			delete(dstMap, srcFile.Path)
+			delete(dstMap, relPath)
 		}
 	}
 
 	// Files remaining in dstMap are not in source
 	var toDelete []string
 	if e.options.Delete {
-		for path := range dstMap {
-			toDelete = append(toDelete, path)
+		for _, dstFile := range dstMap {
+			toDelete = append(toDelete, dstFile.Path)
 		}
 	}
 
@@ -136,7 +154,7 @@ func (e *Engine) Sync(ctx context.Context, sourcePath, destPath string) error {
 	return nil
 }
 
-func (e *Engine) syncFiles(ctx context.Context, files []FileInfo) error {
+func (e *Engine) syncFiles(ctx context.Context, files []syncPair) error {
 	sem := make(chan struct{}, e.options.Concurrency)
 	var wg sync.WaitGroup
 	errCh := make(chan error, len(files))
@@ -145,12 +163,12 @@ func (e *Engine) syncFiles(ctx context.Context, files []FileInfo) error {
 		wg.Add(1)
 		sem <- struct{}{} // Acquire semaphore
 
-		go func(f FileInfo) {
+		go func(f syncPair) {
 			defer wg.Done()
 			defer func() { <-sem }() // Release semaphore
 
 			if err := e.syncFile(ctx, f); err != nil {
-				errCh <- fmt.Errorf("sync %s: %w", f.Path, err)
+				errCh <- fmt.Errorf("sync %s: %w", f.dstPath, err)
 			}
 		}(file)
 	}
@@ -169,25 +187,25 @@ func (e *Engine) syncFiles(ctx context.Context, files []FileInfo) error {
 	return firstErr
 }
 
-func (e *Engine) syncFile(ctx context.Context, file FileInfo) error {
+func (e *Engine) syncFile(ctx context.Context, pair syncPair) error {
 	// Report progress
 	if e.options.ProgressFunc != nil {
 		e.options.ProgressFunc(ProgressUpdate{
 			Operation:  "upload",
-			Path:       file.Path,
-			BytesTotal: file.Size,
+			Path:       pair.dstPath,
+			BytesTotal: pair.fileInfo.Size,
 		})
 	}
 
 	// Read from source
-	reader, err := e.source.Read(ctx, file.Path)
+	reader, err := e.source.Read(ctx, pair.srcPath)
 	if err != nil {
 		return fmt.Errorf("read: %w", err)
 	}
 	defer func() { _ = reader.Close() }()
 
 	// Write to destination
-	if err := e.destination.Write(ctx, file.Path, reader, file.Size); err != nil {
+	if err := e.destination.Write(ctx, pair.dstPath, reader, pair.fileInfo.Size); err != nil {
 		return fmt.Errorf("write: %w", err)
 	}
 
@@ -195,9 +213,9 @@ func (e *Engine) syncFile(ctx context.Context, file FileInfo) error {
 	if e.options.ProgressFunc != nil {
 		e.options.ProgressFunc(ProgressUpdate{
 			Operation:  "upload",
-			Path:       file.Path,
-			BytesDone:  file.Size,
-			BytesTotal: file.Size,
+			Path:       pair.dstPath,
+			BytesDone:  pair.fileInfo.Size,
+			BytesTotal: pair.fileInfo.Size,
 		})
 	}
 
@@ -235,4 +253,38 @@ func needsSync(src, dst FileInfo) bool {
 
 	// If source is newer, sync
 	return src.ModTime.After(dst.ModTime)
+}
+
+// stripPrefix removes the prefix from a path.
+// For example: stripPrefix("prefix/file.txt", "prefix/") returns "file.txt"
+func stripPrefix(path, prefix string) string {
+	if prefix == "" {
+		return path
+	}
+
+	// Ensure prefix ends with / for proper stripping
+	if prefix[len(prefix)-1] != '/' {
+		prefix += "/"
+	}
+
+	if len(path) >= len(prefix) && path[:len(prefix)] == prefix {
+		return path[len(prefix):]
+	}
+
+	return path
+}
+
+// joinPath joins a prefix and path with proper separator handling.
+// For example: joinPath("prefix/", "file.txt") returns "prefix/file.txt"
+func joinPath(prefix, path string) string {
+	if prefix == "" {
+		return path
+	}
+
+	// Ensure prefix ends with / for proper joining
+	if prefix[len(prefix)-1] != '/' {
+		prefix += "/"
+	}
+
+	return prefix + path
 }

@@ -21,10 +21,19 @@ import (
 	"github.com/scttfrdmn/cicada/internal/cli"
 )
 
-const version = "0.1.0"
+// Version information - set via ldflags during build
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+	builtBy = "source"
+)
 
 func main() {
-	if err := cli.Execute(version); err != nil {
+	// Pass version info to CLI
+	versionInfo := fmt.Sprintf("%s (commit: %s, built: %s, by: %s)", version, commit, date, builtBy)
+
+	if err := cli.Execute(versionInfo); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
