@@ -15,9 +15,12 @@
 package cli
 
 import (
+	"context"
 	"fmt"
+	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/scttfrdmn/cicada/internal/sync"
 )
 
 // NewSyncCmd creates the sync command.
@@ -51,6 +54,8 @@ Examples:
 			source = args[0]
 			destination = args[1]
 
+			ctx := context.Background()
+
 			if verbose {
 				fmt.Printf("Syncing from %s to %s\n", source, destination)
 				if dryRun {
@@ -58,8 +63,47 @@ Examples:
 				}
 			}
 
-			// TODO: Implement sync logic
-			return fmt.Errorf("sync not yet implemented")
+			// Create backends
+			srcBackend, srcPath, err := createBackend(ctx, source)
+			if err != nil {
+				return fmt.Errorf("create source backend: %w", err)
+			}
+			defer func() { _ = srcBackend.Close() }()
+
+			dstBackend, dstPath, err := createBackend(ctx, destination)
+			if err != nil {
+				return fmt.Errorf("create destination backend: %w", err)
+			}
+			defer func() { _ = dstBackend.Close() }()
+
+			// Create sync engine
+			engine := sync.NewEngine(srcBackend, dstBackend, sync.SyncOptions{
+				DryRun:      dryRun,
+				Delete:      delete,
+				Concurrency: 4,
+				ProgressFunc: func(update sync.ProgressUpdate) {
+					if verbose {
+						if update.Error != nil {
+							fmt.Printf("❌ %s %s: %v\n", update.Operation, update.Path, update.Error)
+						} else if update.BytesTotal > 0 {
+							fmt.Printf("✓ %s %s (%d bytes)\n", update.Operation, update.Path, update.BytesTotal)
+						} else {
+							fmt.Printf("✓ %s %s\n", update.Operation, update.Path)
+						}
+					}
+				},
+			})
+
+			// Perform sync
+			if err := engine.Sync(ctx, srcPath, dstPath); err != nil {
+				return fmt.Errorf("sync failed: %w", err)
+			}
+
+			if verbose {
+				fmt.Println("✓ Sync complete")
+			}
+
+			return nil
 		},
 	}
 
@@ -67,4 +111,29 @@ Examples:
 	cmd.Flags().BoolVar(&delete, "delete", false, "delete files in destination not present in source")
 
 	return cmd
+}
+
+// createBackend creates the appropriate backend based on the path.
+func createBackend(ctx context.Context, path string) (sync.Backend, string, error) {
+	if strings.HasPrefix(path, "s3://") {
+		bucket, key, err := sync.ParseS3URI(path)
+		if err != nil {
+			return nil, "", err
+		}
+
+		backend, err := sync.NewS3Backend(ctx, bucket)
+		if err != nil {
+			return nil, "", fmt.Errorf("create S3 backend: %w", err)
+		}
+
+		return backend, key, nil
+	}
+
+	// Local filesystem
+	backend, err := sync.NewLocalBackend(path)
+	if err != nil {
+		return nil, "", fmt.Errorf("create local backend: %w", err)
+	}
+
+	return backend, "", nil
 }

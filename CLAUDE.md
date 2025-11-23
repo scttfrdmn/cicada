@@ -157,6 +157,93 @@ gh label create "quality: performance" --description "Performance optimization n
 - Use prefixes for categories: `area:`, `priority:`, `type:`, `quality:`
 - Be descriptive but concise
 
+## Go Coding Standards
+
+**Write idiomatic Go code that passes all linters.** Cicada maintains a Go Report Card grade of A+.
+
+### Key Idioms to Follow
+
+1. **Always handle errors explicitly**
+   ```go
+   // ❌ BAD: Silently ignoring errors
+   defer file.Close()
+
+   // ✅ GOOD: Explicitly ignoring errors
+   defer func() { _ = file.Close() }()
+   ```
+
+2. **Use short variable names in limited scopes**
+   ```go
+   // ✅ GOOD: Short names in small scopes
+   for i, f := range files {
+       if err := processFile(f); err != nil {
+           return fmt.Errorf("file %d: %w", i, err)
+       }
+   }
+   ```
+
+3. **Return early, avoid else**
+   ```go
+   // ❌ BAD: Unnecessary else
+   if err != nil {
+       return err
+   } else {
+       doWork()
+   }
+
+   // ✅ GOOD: Early return
+   if err != nil {
+       return err
+   }
+   doWork()
+   ```
+
+4. **Wrap errors with context**
+   ```go
+   // ❌ BAD: Losing error context
+   return err
+
+   // ✅ GOOD: Adding context
+   return fmt.Errorf("sync file %s: %w", path, err)
+   ```
+
+5. **Use defer for cleanup**
+   ```go
+   f, err := os.Open(path)
+   if err != nil {
+       return err
+   }
+   defer func() { _ = f.Close() }()
+
+   // Work with file...
+   ```
+
+### Linting Requirements
+
+Before committing, ensure code passes all linters:
+
+```bash
+make lint    # Must show "0 issues"
+```
+
+Common linter errors to avoid:
+- **errcheck**: All errors must be checked or explicitly ignored
+- **gocyclo**: Keep cyclomatic complexity < 15
+- **gosec**: No security vulnerabilities
+- **govet**: No suspicious constructs
+- **misspell**: Check spelling in comments
+
+### Test Coverage
+
+- Target 80%+ overall coverage
+- Be reasonable: don't test getters, generated code, or pure I/O
+- Write table-driven tests for complex logic
+- Use testify/assert for clearer test assertions
+
+```bash
+make test-cover    # Generate coverage report
+```
+
 ## Creating New Issues
 
 When you identify new work, create an issue instead of editing markdown:
