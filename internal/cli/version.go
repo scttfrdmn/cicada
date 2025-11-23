@@ -12,20 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package cli
 
 import (
 	"fmt"
-	"os"
+	"runtime"
 
-	"github.com/scttfrdmn/cicada/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-const version = "0.1.0"
-
-func main() {
-	if err := cli.Execute(version); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+// NewVersionCmd creates the version command.
+func NewVersionCmd(version string) *cobra.Command {
+	return &cobra.Command{
+		Use:   "version",
+		Short: "Print version information",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("cicada version %s\n", version)
+			fmt.Printf("  Go version: %s\n", runtime.Version())
+			fmt.Printf("  OS/Arch: %s/%s\n", runtime.GOOS, runtime.GOARCH)
+		},
 	}
 }
