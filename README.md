@@ -6,7 +6,17 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/scttfrdmn/cicada)](go.mod)
 
-> **Note**: Cicada is in early development (v0.1.0-alpha). The current release focuses on core sync functionality. See [VISION.md](VISION.md) for the full roadmap.
+> **Note**: Cicada is in early development (v0.1.0). The current release focuses on core sync functionality. See [VISION.md](VISION.md) for the full roadmap.
+
+## Documentation
+
+- 📖 **[User Scenarios](docs/USER_SCENARIOS.md)** - Detailed persona-based walkthroughs showing real-world usage:
+  - Lab researcher automating instrument data uploads
+  - PhD student backing up research data
+  - Bioinformatician integrating with analysis pipelines
+  - Lab manager ensuring data governance compliance
+- 🚀 **Quick Start** (below) - Get started in 5 minutes
+- 📋 **[Full Documentation](#usage)** - Complete command reference
 
 ## Features
 
