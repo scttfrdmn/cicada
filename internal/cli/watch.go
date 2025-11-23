@@ -15,9 +15,16 @@
 package cli
 
 import (
+	"context"
 	"fmt"
+	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/scttfrdmn/cicada/internal/watch"
+)
+
+var (
+	watchManager = watch.NewManager()
 )
 
 // NewWatchCmd creates the watch command.
@@ -47,7 +54,14 @@ Examples:
 
 // NewWatchAddCmd creates the watch add subcommand.
 func NewWatchAddCmd() *cobra.Command {
-	return &cobra.Command{
+	var (
+		debounce     int
+		minAge       int
+		deleteSource bool
+		syncOnStart  bool
+	)
+
+	cmd := &cobra.Command{
 		Use:   "add <source> <destination>",
 		Short: "Add a directory to watch",
 		Args:  cobra.ExactArgs(2),
@@ -59,10 +73,50 @@ func NewWatchAddCmd() *cobra.Command {
 				fmt.Printf("Adding watch: %s -> %s\n", source, destination)
 			}
 
-			// TODO: Implement watch add logic
-			return fmt.Errorf("watch add not yet implemented")
+			ctx := context.Background()
+
+			// Create backends
+			srcBackend, srcPath, err := createBackend(ctx, source)
+			if err != nil {
+				return fmt.Errorf("create source backend: %w", err)
+			}
+
+			dstBackend, dstPath, err := createBackend(ctx, destination)
+			if err != nil {
+				return fmt.Errorf("create destination backend: %w", err)
+			}
+
+			// Create watch config
+			config := watch.DefaultConfig()
+			config.Source = srcPath
+			config.Destination = dstPath
+			config.DebounceDelay = time.Duration(debounce) * time.Second
+			config.MinAge = time.Duration(minAge) * time.Second
+			config.DeleteSource = deleteSource
+			config.SyncOnStart = syncOnStart
+
+			// Generate watch ID (simple for now)
+			watchID := fmt.Sprintf("%s-%d", source, time.Now().Unix())
+
+			// Add watch
+			if err := watchManager.Add(watchID, config, srcBackend, dstBackend); err != nil {
+				return fmt.Errorf("add watch: %w", err)
+			}
+
+			fmt.Printf("✓ Watch started: %s\n", watchID)
+			fmt.Printf("  Source: %s\n", source)
+			fmt.Printf("  Destination: %s\n", destination)
+
+			return nil
 		},
 	}
+
+	cmd.Flags().IntVar(&debounce, "debounce", 5, "debounce delay in seconds")
+	cmd.Flags().IntVar(&minAge, "min-age", 10, "minimum file age before sync in seconds")
+	cmd.Flags().BoolVar(&deleteSource, "delete-source", false, "delete source files after sync")
+	cmd.Flags().BoolVar(&syncOnStart, "sync-on-start", true, "perform initial sync when starting")
+
+	return cmd
 }
 
 // NewWatchListCmd creates the watch list subcommand.
@@ -71,8 +125,39 @@ func NewWatchListCmd() *cobra.Command {
 		Use:   "list",
 		Short: "List active watches",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// TODO: Implement watch list logic
-			return fmt.Errorf("watch list not yet implemented")
+			statuses := watchManager.List()
+
+			if len(statuses) == 0 {
+				fmt.Println("No active watches")
+				return nil
+			}
+
+			fmt.Printf("Active watches: %d\n\n", len(statuses))
+
+			for id, status := range statuses {
+				fmt.Printf("Watch: %s\n", id)
+				fmt.Printf("  Source: %s\n", status.Source)
+				fmt.Printf("  Destination: %s\n", status.Destination)
+				fmt.Printf("  Active: %v\n", status.Active)
+				fmt.Printf("  Started: %s\n", status.StartedAt.Format(time.RFC3339))
+
+				if !status.LastSync.IsZero() {
+					fmt.Printf("  Last sync: %s\n", status.LastSync.Format(time.RFC3339))
+					fmt.Printf("  Files synced: %d\n", status.FilesSynced)
+					fmt.Printf("  Bytes synced: %d\n", status.BytesSynced)
+				}
+
+				if status.ErrorCount > 0 {
+					fmt.Printf("  Errors: %d\n", status.ErrorCount)
+					if status.LastError != "" {
+						fmt.Printf("  Last error: %s\n", status.LastError)
+					}
+				}
+
+				fmt.Println()
+			}
+
+			return nil
 		},
 	}
 }
@@ -90,8 +175,12 @@ func NewWatchRemoveCmd() *cobra.Command {
 				fmt.Printf("Removing watch: %s\n", id)
 			}
 
-			// TODO: Implement watch remove logic
-			return fmt.Errorf("watch remove not yet implemented")
+			if err := watchManager.Remove(id); err != nil {
+				return fmt.Errorf("remove watch: %w", err)
+			}
+
+			fmt.Printf("✓ Watch removed: %s\n", id)
+			return nil
 		},
 	}
 }
