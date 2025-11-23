@@ -1,12 +1,12 @@
 # Cicada
 
-**Fast, reliable file sync for S3** - An rsync-like CLI tool for syncing files between local filesystems and AWS S3, with automatic file watching.
+**Dormant data commons for academic research** - Lightweight, cost-effective platform providing federated storage, access control, and compute-to-data capabilities. Like a cicada, it lies dormant (consuming minimal resources) until needed, then emerges powerfully for data-intensive work.
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/scttfrdmn/cicada)](https://goreportcard.com/report/github.com/scttfrdmn/cicada)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/scttfrdmn/cicada)](go.mod)
 
-> **Note**: Cicada is in early development (v0.1.0). The current release focuses on core sync functionality. See **[v0.2.0 Roadmap](docs/ROADMAP_v0.2.0.md)** for upcoming metadata extraction and instrument-aware features.
+> **Note**: Cicada is in early development (v0.1.0). The current release implements the foundational storage and sync layer. See **[v0.2.0 Roadmap](docs/ROADMAP_v0.2.0.md)** for upcoming metadata extraction and instrument-aware features, and **[planning/PROJECT-SUMMARY.md](planning/PROJECT-SUMMARY.md)** for the complete data commons vision.
 
 ## Documentation
 
@@ -440,7 +440,7 @@ If you use Cicada in your research, please cite:
 
 ```bibtex
 @software{cicada2025,
-  title = {Cicada: Fast File Sync for S3},
+  title = {Cicada: Dormant Data Commons for Academic Research},
   author = {Scott Friedman},
   year = {2025},
   url = {https://github.com/scttfrdmn/cicada},

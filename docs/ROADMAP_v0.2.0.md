@@ -8,7 +8,16 @@
 
 ## Vision
 
-Transform Cicada from a **file sync tool** into an **intelligent research data pipeline** that understands scientific instruments and preserves critical metadata.
+Cicada is a **dormant data commons platform for academic research labs**. Version 0.1.0 established the foundational storage and sync layer. Version 0.2.0 builds on that foundation by adding **instrument awareness and metadata intelligence** - critical capabilities for a true data commons.
+
+This release transforms Cicada into an intelligent research data pipeline that:
+- Automatically extracts and preserves instrument metadata during data ingestion
+- Understands diverse scientific instruments through pluggable extractors
+- Validates file integrity and metadata completeness
+- Enables FAIR-compliant data management with rich, searchable metadata
+- Supports DOI minting for data publication (DataCite/Zenodo)
+
+These capabilities move Cicada closer to the full data commons vision: federated storage with metadata, access control, compute-to-data, collaboration primitives, and data publication.
 
 ---
 

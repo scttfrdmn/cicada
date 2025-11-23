@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0] - 2025-11-23
 
-Initial release of Cicada - Fast, reliable file sync for S3.
+Initial release of Cicada - Foundational storage and sync layer for the dormant data commons platform.
 
 ### Added
 

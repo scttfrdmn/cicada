@@ -1,6 +1,8 @@
 # Cicada User Scenarios
 
-This document provides persona-based walkthroughs showing how different users can leverage Cicada for their S3 file sync needs.
+Cicada is a **dormant data commons platform for academic research labs**, providing federated storage, access control, compute-to-data capabilities, and collaboration primitives. Like a cicada, it lies dormant (consuming minimal resources) until needed, then emerges powerfully for data-intensive work.
+
+This document provides persona-based walkthroughs for **v0.1.0**, which implements the foundational storage and sync layer. These scenarios demonstrate how researchers can leverage Cicada's core capabilities to automate instrument data uploads, backup research data, integrate with analysis pipelines, and ensure data governance compliance.
 
 ## Table of Contents
 
