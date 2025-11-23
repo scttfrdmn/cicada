@@ -14,7 +14,12 @@
 
 package sync
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+)
 
 func TestParseS3URI(t *testing.T) {
 	tests := []struct {
@@ -90,6 +95,69 @@ func TestParseS3URI(t *testing.T) {
 
 			if key != tt.wantKey {
 				t.Errorf("ParseS3URI() key = %v, want %v", key, tt.wantKey)
+			}
+		})
+	}
+}
+
+func TestTagsToString(t *testing.T) {
+	tests := []struct {
+		name string
+		tags []types.Tag
+		want string
+	}{
+		{
+			name: "empty tags",
+			tags: []types.Tag{},
+			want: "",
+		},
+		{
+			name: "single tag",
+			tags: []types.Tag{
+				{Key: aws.String("format"), Value: aws.String("CZI")},
+			},
+			want: "format=CZI",
+		},
+		{
+			name: "multiple tags",
+			tags: []types.Tag{
+				{Key: aws.String("format"), Value: aws.String("CZI")},
+				{Key: aws.String("manufacturer"), Value: aws.String("Zeiss")},
+				{Key: aws.String("instrument-type"), Value: aws.String("microscopy")},
+			},
+			want: "format=CZI&manufacturer=Zeiss&instrument-type=microscopy",
+		},
+		{
+			name: "tags with special characters",
+			tags: []types.Tag{
+				{Key: aws.String("operator"), Value: aws.String("John Doe")},
+				{Key: aws.String("acquisition-date"), Value: aws.String("2025-11-23")},
+			},
+			want: "operator=John Doe&acquisition-date=2025-11-23",
+		},
+		{
+			name: "tag with nil key",
+			tags: []types.Tag{
+				{Key: aws.String("format"), Value: aws.String("CZI")},
+				{Key: nil, Value: aws.String("value")},
+			},
+			want: "format=CZI",
+		},
+		{
+			name: "tag with nil value",
+			tags: []types.Tag{
+				{Key: aws.String("format"), Value: aws.String("CZI")},
+				{Key: aws.String("empty"), Value: nil},
+			},
+			want: "format=CZI",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tagsToString(tt.tags)
+			if got != tt.want {
+				t.Errorf("tagsToString() = %v, want %v", got, tt.want)
 			}
 		})
 	}

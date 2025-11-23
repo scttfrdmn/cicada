@@ -23,6 +23,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+
+	"github.com/scttfrdmn/cicada/internal/metadata"
 )
 
 // S3Backend implements Backend for AWS S3.
@@ -109,6 +112,73 @@ func (b *S3Backend) Write(ctx context.Context, path string, r io.Reader, size in
 	return nil
 }
 
+// WriteWithMetadata writes a file with metadata tags.
+// The metadata is converted to S3 object tags (max 10 tags, prioritized).
+func (b *S3Backend) WriteWithMetadata(ctx context.Context, path string, r io.Reader, size int64, md *metadata.Metadata) error {
+	input := &s3.PutObjectInput{
+		Bucket: aws.String(b.bucket),
+		Key:    aws.String(path),
+		Body:   r,
+	}
+
+	// Convert metadata to S3 tags if metadata is provided
+	if md != nil {
+		tags := metadata.MetadataToS3Tags(md)
+		if len(tags) > 0 {
+			// Convert to tagging string format
+			input.Tagging = aws.String(tagsToString(tags))
+		}
+	}
+
+	_, err := b.client.PutObject(ctx, input)
+	if err != nil {
+		return fmt.Errorf("put object with metadata: %w", err)
+	}
+
+	return nil
+}
+
+// PutObjectTagging adds or updates tags on an existing S3 object.
+// The metadata is converted to S3 object tags (max 10 tags, prioritized).
+func (b *S3Backend) PutObjectTagging(ctx context.Context, path string, md *metadata.Metadata) error {
+	if md == nil {
+		return fmt.Errorf("metadata cannot be nil")
+	}
+
+	tags := metadata.MetadataToS3Tags(md)
+	if len(tags) == 0 {
+		// No tags to apply
+		return nil
+	}
+
+	_, err := b.client.PutObjectTagging(ctx, &s3.PutObjectTaggingInput{
+		Bucket: aws.String(b.bucket),
+		Key:    aws.String(path),
+		Tagging: &types.Tagging{
+			TagSet: tags,
+		},
+	})
+	if err != nil {
+		return fmt.Errorf("put object tagging: %w", err)
+	}
+
+	return nil
+}
+
+// GetObjectTagging retrieves tags from an S3 object and converts them to metadata fields.
+// Returns a map of field names to values extracted from the tags.
+func (b *S3Backend) GetObjectTagging(ctx context.Context, path string) (map[string]interface{}, error) {
+	output, err := b.client.GetObjectTagging(ctx, &s3.GetObjectTaggingInput{
+		Bucket: aws.String(b.bucket),
+		Key:    aws.String(path),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("get object tagging: %w", err)
+	}
+
+	return metadata.S3TagsToMetadata(output.TagSet), nil
+}
+
 // Delete deletes a file.
 func (b *S3Backend) Delete(ctx context.Context, path string) error {
 	_, err := b.client.DeleteObject(ctx, &s3.DeleteObjectInput{
@@ -164,4 +234,16 @@ func ParseS3URI(uri string) (bucket, key string, err error) {
 	}
 
 	return bucket, key, nil
+}
+
+// tagsToString converts S3 tags to URL-encoded string format for PutObject.
+// Format: "key1=value1&key2=value2"
+func tagsToString(tags []types.Tag) string {
+	var parts []string
+	for _, tag := range tags {
+		if tag.Key != nil && tag.Value != nil {
+			parts = append(parts, fmt.Sprintf("%s=%s", *tag.Key, *tag.Value))
+		}
+	}
+	return strings.Join(parts, "&")
 }
