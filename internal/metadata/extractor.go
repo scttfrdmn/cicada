@@ -13,16 +13,16 @@ import (
 type Extractor interface {
 	// CanHandle returns true if this extractor can handle the given file
 	CanHandle(filename string) bool
-	
+
 	// Extract extracts metadata from a file
 	Extract(filepath string) (map[string]interface{}, error)
-	
+
 	// ExtractFromReader extracts metadata from a reader
 	ExtractFromReader(r io.Reader, filename string) (map[string]interface{}, error)
-	
+
 	// Name returns the extractor name
 	Name() string
-	
+
 	// SupportedFormats returns list of supported file extensions
 	SupportedFormats() []string
 }
@@ -49,24 +49,24 @@ func (r *ExtractorRegistry) RegisterDefaults() {
 	// Image formats
 	r.Register(&TIFFExtractor{})
 	r.Register(&OMETIFFExtractor{})
-	r.Register(&ZeissExtractor{})    // .czi
-	r.Register(&NikonExtractor{})    // .nd2
-	r.Register(&LeicaExtractor{})    // .lif
-	
+	r.Register(&ZeissExtractor{}) // .czi
+	r.Register(&NikonExtractor{}) // .nd2
+	r.Register(&LeicaExtractor{}) // .lif
+
 	// Sequencing formats
 	r.Register(&FASTQExtractor{})
 	r.Register(&BAMExtractor{})
-	
+
 	// Mass spec formats
 	r.Register(&MzMLExtractor{})
 	r.Register(&MGFExtractor{})
-	
+
 	// Other formats
 	r.Register(&HDF5Extractor{})
 	r.Register(&ZarrExtractor{})
 	r.Register(&DICOMExtractor{})
-	r.Register(&FCSExtractor{})      // Flow cytometry
-	
+	r.Register(&FCSExtractor{}) // Flow cytometry
+
 	// Generic fallback
 	r.Register(&GenericExtractor{})
 }
@@ -88,7 +88,7 @@ func (r *ExtractorRegistry) Extract(filepath string) (map[string]interface{}, er
 	if extractor == nil {
 		return nil, fmt.Errorf("no extractor found for file: %s", filename)
 	}
-	
+
 	return extractor.Extract(filepath)
 }
 
@@ -140,12 +140,12 @@ func (e *TIFFExtractor) Extract(filepath string) (map[string]interface{}, error)
 	// - Creation timestamp
 	// - EXIF data if present
 	// - Software used
-	
+
 	metadata := map[string]interface{}{
 		"format": "TIFF",
 		// Add extracted fields here
 	}
-	
+
 	return metadata, nil
 }
 
@@ -181,11 +181,11 @@ func (e *OMETIFFExtractor) Extract(filepath string) (map[string]interface{}, err
 	// - Dimensions (X, Y, Z, T, C)
 	// - Pixel size
 	// - Acquisition parameters
-	
+
 	metadata := map[string]interface{}{
 		"format": "OME-TIFF",
 	}
-	
+
 	return metadata, nil
 }
 
@@ -220,13 +220,13 @@ func (e *ZeissExtractor) Extract(filepath string) (map[string]interface{}, error
 	// - Pixel size
 	// - Acquisition date/time
 	// - Operator (if recorded)
-	
+
 	metadata := map[string]interface{}{
-		"format":              "CZI",
+		"format":                  "CZI",
 		"microscope_manufacturer": "Zeiss",
 		// Add extracted fields
 	}
-	
+
 	return metadata, nil
 }
 
@@ -253,7 +253,7 @@ func (e *NikonExtractor) CanHandle(filename string) bool {
 func (e *NikonExtractor) Extract(filepath string) (map[string]interface{}, error) {
 	// TODO: Implement ND2 metadata extraction
 	metadata := map[string]interface{}{
-		"format":              "ND2",
+		"format":                  "ND2",
 		"microscope_manufacturer": "Nikon",
 	}
 	return metadata, nil
@@ -282,7 +282,7 @@ func (e *LeicaExtractor) CanHandle(filename string) bool {
 func (e *LeicaExtractor) Extract(filepath string) (map[string]interface{}, error) {
 	// TODO: Implement LIF metadata extraction
 	metadata := map[string]interface{}{
-		"format":              "LIF",
+		"format":                  "LIF",
 		"microscope_manufacturer": "Leica",
 	}
 	return metadata, nil
@@ -321,11 +321,11 @@ func (e *FASTQExtractor) Extract(filepath string) (map[string]interface{}, error
 	// - Read length distribution
 	// - Quality score distribution
 	// - Detect paired-end from filename pattern
-	
+
 	metadata := map[string]interface{}{
 		"format": "FASTQ",
 	}
-	
+
 	return metadata, nil
 }
 
@@ -356,11 +356,11 @@ func (e *BAMExtractor) Extract(filepath string) (map[string]interface{}, error) 
 	// - Aligner used
 	// - Total reads
 	// - Mapped reads
-	
+
 	metadata := map[string]interface{}{
 		"format": "BAM",
 	}
-	
+
 	return metadata, nil
 }
 
@@ -390,11 +390,11 @@ func (e *MzMLExtractor) Extract(filepath string) (map[string]interface{}, error)
 	// - Instrument info
 	// - Acquisition parameters
 	// - Number of spectra
-	
+
 	metadata := map[string]interface{}{
 		"format": "mzML",
 	}
-	
+
 	return metadata, nil
 }
 
@@ -567,13 +567,13 @@ func (e *GenericExtractor) Extract(filepath string) (map[string]interface{}, err
 	if err != nil {
 		return nil, err
 	}
-	
+
 	metadata := map[string]interface{}{
 		"format":   detectFormat(filepath),
 		"filesize": info.Size,
 		"modified": info.ModTime,
 	}
-	
+
 	return metadata, nil
 }
 
@@ -605,21 +605,21 @@ func AutoExtractMetadata(registry *ExtractorRegistry, filepath, schemaName strin
 	if err != nil {
 		return nil, err
 	}
-	
+
 	fileInfo, _ := getFileInfo(filepath)
-	
+
 	metadata := &Metadata{
 		SchemaName:    schemaName,
 		SchemaVersion: "1.0",
 		Fields:        extracted,
 		FileInfo:      fileInfo,
 		Provenance: Provenance{
-			UploadedBy:   user,
-			UploadedAt:   time.Now(),
+			UploadedBy: user,
+			UploadedAt: time.Now(),
 		},
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	
+
 	return metadata, nil
 }

@@ -19,12 +19,12 @@ type DOIManager struct {
 
 // DOIConfig contains configuration for DOI minting
 type DOIConfig struct {
-	Provider       string // "datacite", "zenodo", "institution"
-	RepositoryID   string
-	Password       string
-	Prefix         string // e.g., "10.12345"
-	TestMode       bool   // Use DataCite test environment
-	CostPerDOI     float64 // For billing
+	Provider     string // "datacite", "zenodo", "institution"
+	RepositoryID string
+	Password     string
+	Prefix       string  // e.g., "10.12345"
+	TestMode     bool    // Use DataCite test environment
+	CostPerDOI   float64 // For billing
 }
 
 // DataCiteClient wraps DataCite API interactions
@@ -37,21 +37,21 @@ type DataCiteClient struct {
 
 // DOI represents a Digital Object Identifier
 type DOI struct {
-	DOI         string                 `json:"doi"`
-	URL         string                 `json:"url"`
-	State       string                 `json:"state"` // draft, registered, findable
-	Title       string                 `json:"title"`
-	Authors     []Author               `json:"authors"`
-	Publisher   string                 `json:"publisher"`
-	PublicationYear int                `json:"publication_year"`
-	ResourceType string                `json:"resource_type"`
-	License     string                 `json:"license"`
-	Description string                 `json:"description"`
-	Metadata    map[string]interface{} `json:"metadata"`
-	CreatedAt   time.Time              `json:"created_at"`
-	UpdatedAt   time.Time              `json:"updated_at"`
-	Downloads   int                    `json:"downloads"`
-	Citations   int                    `json:"citations"`
+	DOI             string                 `json:"doi"`
+	URL             string                 `json:"url"`
+	State           string                 `json:"state"` // draft, registered, findable
+	Title           string                 `json:"title"`
+	Authors         []Author               `json:"authors"`
+	Publisher       string                 `json:"publisher"`
+	PublicationYear int                    `json:"publication_year"`
+	ResourceType    string                 `json:"resource_type"`
+	License         string                 `json:"license"`
+	Description     string                 `json:"description"`
+	Metadata        map[string]interface{} `json:"metadata"`
+	CreatedAt       time.Time              `json:"created_at"`
+	UpdatedAt       time.Time              `json:"updated_at"`
+	Downloads       int                    `json:"downloads"`
+	Citations       int                    `json:"citations"`
 }
 
 // Author represents a dataset author
@@ -67,26 +67,26 @@ type Author struct {
 type DataCiteMetadata struct {
 	XMLName xml.Name `xml:"resource"`
 	XMLNS   string   `xml:"xmlns,attr"`
-	
-	Identifier       Identifier        `xml:"identifier"`
-	Creators         []Creator         `xml:"creators>creator"`
-	Titles           []Title           `xml:"titles>title"`
-	Publisher        string            `xml:"publisher"`
-	PublicationYear  int               `xml:"publicationYear"`
-	ResourceType     ResourceType      `xml:"resourceType"`
-	Subjects         []Subject         `xml:"subjects>subject,omitempty"`
-	Contributors     []Contributor     `xml:"contributors>contributor,omitempty"`
-	Dates            []Date            `xml:"dates>date,omitempty"`
-	Language         string            `xml:"language,omitempty"`
+
+	Identifier           Identifier            `xml:"identifier"`
+	Creators             []Creator             `xml:"creators>creator"`
+	Titles               []Title               `xml:"titles>title"`
+	Publisher            string                `xml:"publisher"`
+	PublicationYear      int                   `xml:"publicationYear"`
+	ResourceType         ResourceType          `xml:"resourceType"`
+	Subjects             []Subject             `xml:"subjects>subject,omitempty"`
+	Contributors         []Contributor         `xml:"contributors>contributor,omitempty"`
+	Dates                []Date                `xml:"dates>date,omitempty"`
+	Language             string                `xml:"language,omitempty"`
 	AlternateIdentifiers []AlternateIdentifier `xml:"alternateIdentifiers>alternateIdentifier,omitempty"`
-	RelatedIdentifiers []RelatedIdentifier `xml:"relatedIdentifiers>relatedIdentifier,omitempty"`
-	Sizes            []string          `xml:"sizes>size,omitempty"`
-	Formats          []string          `xml:"formats>format,omitempty"`
-	Version          string            `xml:"version,omitempty"`
-	RightsList       []Rights          `xml:"rightsList>rights,omitempty"`
-	Descriptions     []Description     `xml:"descriptions>description,omitempty"`
-	GeoLocations     []GeoLocation     `xml:"geoLocations>geoLocation,omitempty"`
-	FundingReferences []FundingReference `xml:"fundingReferences>fundingReference,omitempty"`
+	RelatedIdentifiers   []RelatedIdentifier   `xml:"relatedIdentifiers>relatedIdentifier,omitempty"`
+	Sizes                []string              `xml:"sizes>size,omitempty"`
+	Formats              []string              `xml:"formats>format,omitempty"`
+	Version              string                `xml:"version,omitempty"`
+	RightsList           []Rights              `xml:"rightsList>rights,omitempty"`
+	Descriptions         []Description         `xml:"descriptions>description,omitempty"`
+	GeoLocations         []GeoLocation         `xml:"geoLocations>geoLocation,omitempty"`
+	FundingReferences    []FundingReference    `xml:"fundingReferences>fundingReference,omitempty"`
 }
 
 type Identifier struct {
@@ -95,16 +95,16 @@ type Identifier struct {
 }
 
 type Creator struct {
-	CreatorName string `xml:"creatorName"`
-	GivenName   string `xml:"givenName,omitempty"`
-	FamilyName  string `xml:"familyName,omitempty"`
+	CreatorName    string          `xml:"creatorName"`
+	GivenName      string          `xml:"givenName,omitempty"`
+	FamilyName     string          `xml:"familyName,omitempty"`
 	NameIdentifier *NameIdentifier `xml:"nameIdentifier,omitempty"`
-	Affiliation []string `xml:"affiliation,omitempty"`
+	Affiliation    []string        `xml:"affiliation,omitempty"`
 }
 
 type NameIdentifier struct {
-	Value  string `xml:",chardata"`
-	Scheme string `xml:"nameIdentifierScheme,attr"`
+	Value     string `xml:",chardata"`
+	Scheme    string `xml:"nameIdentifierScheme,attr"`
 	SchemeURI string `xml:"schemeURI,attr,omitempty"`
 }
 
@@ -120,17 +120,17 @@ type ResourceType struct {
 }
 
 type Subject struct {
-	Value string `xml:",chardata"`
+	Value         string `xml:",chardata"`
 	SubjectScheme string `xml:"subjectScheme,attr,omitempty"`
-	SchemeURI string `xml:"schemeURI,attr,omitempty"`
+	SchemeURI     string `xml:"schemeURI,attr,omitempty"`
 }
 
 type Contributor struct {
-	ContributorName string `xml:"contributorName"`
-	ContributorType string `xml:"contributorType,attr"`
-	GivenName   string `xml:"givenName,omitempty"`
-	FamilyName  string `xml:"familyName,omitempty"`
-	Affiliation []string `xml:"affiliation,omitempty"`
+	ContributorName string   `xml:"contributorName"`
+	ContributorType string   `xml:"contributorType,attr"`
+	GivenName       string   `xml:"givenName,omitempty"`
+	FamilyName      string   `xml:"familyName,omitempty"`
+	Affiliation     []string `xml:"affiliation,omitempty"`
 }
 
 type Date struct {
@@ -150,8 +150,8 @@ type RelatedIdentifier struct {
 }
 
 type Rights struct {
-	Value      string `xml:",chardata"`
-	RightsURI  string `xml:"rightsURI,attr,omitempty"`
+	Value            string `xml:",chardata"`
+	RightsURI        string `xml:"rightsURI,attr,omitempty"`
 	RightsIdentifier string `xml:"rightsIdentifier,attr,omitempty"`
 }
 
@@ -179,10 +179,10 @@ type Box struct {
 }
 
 type FundingReference struct {
-	FunderName string `xml:"funderName"`
+	FunderName       string            `xml:"funderName"`
 	FunderIdentifier *FunderIdentifier `xml:"funderIdentifier,omitempty"`
-	AwardNumber string `xml:"awardNumber,omitempty"`
-	AwardTitle  string `xml:"awardTitle,omitempty"`
+	AwardNumber      string            `xml:"awardNumber,omitempty"`
+	AwardTitle       string            `xml:"awardTitle,omitempty"`
 }
 
 type FunderIdentifier struct {
@@ -196,7 +196,7 @@ func NewDOIManager(config *DOIConfig) *DOIManager {
 	if config.TestMode {
 		baseURL = "https://api.test.datacite.org"
 	}
-	
+
 	client := &DataCiteClient{
 		BaseURL:  baseURL,
 		Username: config.RepositoryID,
@@ -205,7 +205,7 @@ func NewDOIManager(config *DOIConfig) *DOIManager {
 			Timeout: 30 * time.Second,
 		},
 	}
-	
+
 	return &DOIManager{
 		client:   client,
 		config:   config,
@@ -218,55 +218,55 @@ func (m *DOIManager) MintDOI(dataset *Dataset) (*DOI, error) {
 	// Generate DOI suffix
 	suffix := generateDOISuffix(dataset)
 	doiString := fmt.Sprintf("%s/%s", m.config.Prefix, suffix)
-	
+
 	// Generate DataCite metadata XML
 	metadata := m.metadata.Generate(dataset)
 	metadata.Identifier = Identifier{
 		Value: doiString,
 		Type:  "DOI",
 	}
-	
+
 	xmlData, err := xml.MarshalIndent(metadata, "", "  ")
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal metadata: %w", err)
 	}
-	
+
 	// Add XML header
 	xmlString := xml.Header + string(xmlData)
-	
+
 	// Create DOI via DataCite API
 	payload := map[string]interface{}{
 		"data": map[string]interface{}{
 			"type": "dois",
 			"attributes": map[string]interface{}{
-				"doi":    doiString,
-				"url":    dataset.LandingPageURL,
-				"xml":    xmlString,
-				"event":  "publish", // Or "register" for draft
+				"doi":   doiString,
+				"url":   dataset.LandingPageURL,
+				"xml":   xmlString,
+				"event": "publish", // Or "register" for draft
 			},
 		},
 	}
-	
+
 	resp, err := m.client.CreateDOI(payload)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create DOI: %w", err)
 	}
-	
+
 	doi := &DOI{
-		DOI:         doiString,
-		URL:         dataset.LandingPageURL,
-		State:       "findable",
-		Title:       dataset.Title,
-		Authors:     dataset.Authors,
-		Publisher:   dataset.Publisher,
+		DOI:             doiString,
+		URL:             dataset.LandingPageURL,
+		State:           "findable",
+		Title:           dataset.Title,
+		Authors:         dataset.Authors,
+		Publisher:       dataset.Publisher,
 		PublicationYear: dataset.PublicationYear,
-		ResourceType: dataset.ResourceType,
-		License:     dataset.License,
-		Description: dataset.Description,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
+		ResourceType:    dataset.ResourceType,
+		License:         dataset.License,
+		Description:     dataset.Description,
+		CreatedAt:       time.Now(),
+		UpdatedAt:       time.Now(),
 	}
-	
+
 	return doi, nil
 }
 
@@ -277,10 +277,10 @@ func (m *DOIManager) UpdateDOI(doiString string, updates map[string]interface{})
 	if err != nil {
 		return fmt.Errorf("failed to get current DOI: %w", err)
 	}
-	
+
 	// Apply updates
 	// TODO: Merge updates into current metadata
-	
+
 	// Submit update
 	return m.client.UpdateDOI(doiString, current)
 }
@@ -301,30 +301,30 @@ func (c *DataCiteClient) CreateDOI(payload map[string]interface{}) (map[string]i
 	if err != nil {
 		return nil, err
 	}
-	
+
 	req, err := http.NewRequest("POST", c.BaseURL+"/dois", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return nil, err
 	}
-	
+
 	req.SetBasicAuth(c.Username, c.Password)
 	req.Header.Set("Content-Type", "application/vnd.api+json")
-	
+
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusCreated {
 		return nil, fmt.Errorf("API request failed with status %d", resp.StatusCode)
 	}
-	
+
 	var result map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return nil, err
 	}
-	
+
 	return result, nil
 }
 
@@ -334,20 +334,20 @@ func (c *DataCiteClient) GetDOI(doi string) (*DOI, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	req.SetBasicAuth(c.Username, c.Password)
 	req.Header.Set("Accept", "application/vnd.api+json")
-	
+
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("API request failed with status %d", resp.StatusCode)
 	}
-	
+
 	// TODO: Parse response into DOI struct
 	return nil, nil
 }
@@ -358,25 +358,25 @@ func (c *DataCiteClient) UpdateDOI(doi string, updates map[string]interface{}) e
 	if err != nil {
 		return err
 	}
-	
+
 	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/dois/%s", c.BaseURL, doi), bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err
 	}
-	
+
 	req.SetBasicAuth(c.Username, c.Password)
 	req.Header.Set("Content-Type", "application/vnd.api+json")
-	
+
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("API request failed with status %d", resp.StatusCode)
 	}
-	
+
 	return nil
 }
 
@@ -387,20 +387,20 @@ func (c *DataCiteClient) ListDOIs(repositoryID string) ([]*DOI, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	req.SetBasicAuth(c.Username, c.Password)
 	req.Header.Set("Accept", "application/vnd.api+json")
-	
+
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("API request failed with status %d", resp.StatusCode)
 	}
-	
+
 	// TODO: Parse response
 	return nil, nil
 }
@@ -426,7 +426,7 @@ type Dataset struct {
 
 // Grant represents research funding
 type Grant struct {
-	FunderName string
+	FunderName  string
 	AwardNumber string
 	AwardTitle  string
 }
@@ -452,12 +452,12 @@ func (g *StandardMetadataGenerator) Generate(dataset *Dataset) *DataCiteMetadata
 			Type:  "Dataset", // resourceTypeGeneral
 		},
 	}
-	
+
 	// Titles
 	metadata.Titles = []Title{
 		{Value: dataset.Title},
 	}
-	
+
 	// Creators (authors)
 	for _, author := range dataset.Authors {
 		creator := Creator{
@@ -465,7 +465,7 @@ func (g *StandardMetadataGenerator) Generate(dataset *Dataset) *DataCiteMetadata
 			GivenName:   author.GivenName,
 			FamilyName:  author.FamilyName,
 		}
-		
+
 		if author.ORCID != "" {
 			creator.NameIdentifier = &NameIdentifier{
 				Value:     author.ORCID,
@@ -473,21 +473,21 @@ func (g *StandardMetadataGenerator) Generate(dataset *Dataset) *DataCiteMetadata
 				SchemeURI: "https://orcid.org",
 			}
 		}
-		
+
 		if author.Affiliation != "" {
 			creator.Affiliation = []string{author.Affiliation}
 		}
-		
+
 		metadata.Creators = append(metadata.Creators, creator)
 	}
-	
+
 	// Subjects (keywords)
 	for _, keyword := range dataset.Keywords {
 		metadata.Subjects = append(metadata.Subjects, Subject{
 			Value: keyword,
 		})
 	}
-	
+
 	// Descriptions
 	if dataset.Description != "" {
 		metadata.Descriptions = []Description{
@@ -497,7 +497,7 @@ func (g *StandardMetadataGenerator) Generate(dataset *Dataset) *DataCiteMetadata
 			},
 		}
 	}
-	
+
 	// Rights (license)
 	if dataset.License != "" {
 		metadata.RightsList = []Rights{
@@ -507,18 +507,18 @@ func (g *StandardMetadataGenerator) Generate(dataset *Dataset) *DataCiteMetadata
 			},
 		}
 	}
-	
+
 	// Sizes and formats
 	if dataset.Size != "" {
 		metadata.Sizes = []string{dataset.Size}
 	}
 	metadata.Formats = dataset.Formats
-	
+
 	// Version
 	if dataset.Version != "" {
 		metadata.Version = dataset.Version
 	}
-	
+
 	// Related identifiers
 	for _, relatedDOI := range dataset.RelatedDOIs {
 		metadata.RelatedIdentifiers = append(metadata.RelatedIdentifiers, RelatedIdentifier{
@@ -527,7 +527,7 @@ func (g *StandardMetadataGenerator) Generate(dataset *Dataset) *DataCiteMetadata
 			RelationType: "References",
 		})
 	}
-	
+
 	// Funding
 	for _, grant := range dataset.Grants {
 		metadata.FundingReferences = append(metadata.FundingReferences, FundingReference{
@@ -536,7 +536,7 @@ func (g *StandardMetadataGenerator) Generate(dataset *Dataset) *DataCiteMetadata
 			AwardTitle:  grant.AwardTitle,
 		})
 	}
-	
+
 	return metadata
 }
 
@@ -555,7 +555,7 @@ func getLicenseURI(license string) string {
 		"CC0":          "https://creativecommons.org/publicdomain/zero/1.0/",
 		"MIT":          "https://opensource.org/licenses/MIT",
 	}
-	
+
 	if uri, ok := licenses[license]; ok {
 		return uri
 	}
