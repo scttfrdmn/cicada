@@ -57,6 +57,9 @@ credentials
 .cicada/
 testdata/scratch/
 
+# Planning and specification documents
+/planning/
+
 # macOS
 .DS_Store
 .AppleDouble
