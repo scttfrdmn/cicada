@@ -211,28 +211,77 @@ func (e *ZeissExtractor) CanHandle(filename string) bool {
 }
 
 func (e *ZeissExtractor) Extract(filepath string) (map[string]interface{}, error) {
-	// TODO: Implement CZI metadata extraction
-	// Use bioformats or custom parser
-	// Extract:
-	// - Microscope model (e.g., "Zeiss LSM 980")
-	// - Objective (magnification, NA, immersion)
-	// - Channels (names, wavelengths, exposure)
-	// - Dimensions
-	// - Pixel size
-	// - Acquisition date/time
-	// - Operator (if recorded)
+	// Open file
+	f, err := os.Open(filepath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open file: %w", err)
+	}
+	defer f.Close()
 
+	// Extract metadata from file
+	return e.extractCZIMetadata(f, filepath)
+}
+
+func (e *ZeissExtractor) extractCZIMetadata(r io.Reader, filename string) (map[string]interface{}, error) {
+	// Read file header to verify CZI format
+	header := make([]byte, 16)
+	if _, err := io.ReadFull(r, header); err != nil {
+		return nil, fmt.Errorf("failed to read header: %w", err)
+	}
+
+	// Verify CZI magic bytes: "ZISRAWFILE"
+	if string(header[0:10]) != "ZISRAWFILE" {
+		return nil, fmt.Errorf("not a valid CZI file: invalid magic bytes")
+	}
+
+	// Initialize metadata with known values
 	metadata := map[string]interface{}{
 		"format":                  "CZI",
 		"microscope_manufacturer": "Zeiss",
-		// Add extracted fields
+		"file_name":               filename,
+	}
+
+	// Get file info
+	if f, ok := r.(*os.File); ok {
+		if info, err := f.Stat(); err == nil {
+			metadata["file_size"] = info.Size()
+			metadata["modified_time"] = info.ModTime().Format(time.RFC3339)
+		}
+	}
+
+	// NOTE: Full CZI parsing requires complex segment reading
+	// This is a proof-of-concept that extracts basic metadata
+	// For production, consider using:
+	// - github.com/ome/bioformats (Java, requires CGo bridge)
+	// - python czifile library (via exec)
+	// - Custom complete CZI parser
+
+	// Add placeholder values that would come from full parsing
+	metadata["extraction_note"] = "Basic metadata extraction - full parsing requires CZI library"
+	metadata["suggested_library"] = "github.com/ome/bioformats or czifile (Python)"
+
+	// Fields that would be extracted with full parser:
+	metadata["expected_fields"] = []string{
+		"instrument_model",      // e.g., "LSM 980"
+		"objective_magnification", // e.g., 40
+		"objective_na",          // e.g., 1.3
+		"objective_immersion",   // e.g., "oil"
+		"channels",              // Array of channel info
+		"image_width",
+		"image_height",
+		"image_depth",           // Z-stack
+		"pixel_size_x_um",
+		"pixel_size_y_um",
+		"pixel_size_z_um",
+		"acquisition_date",
+		"operator",
 	}
 
 	return metadata, nil
 }
 
 func (e *ZeissExtractor) ExtractFromReader(r io.Reader, filename string) (map[string]interface{}, error) {
-	return nil, fmt.Errorf("not implemented")
+	return e.extractCZIMetadata(r, filename)
 }
 
 // --- Nikon ND2 Extractor ---

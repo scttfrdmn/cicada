@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/scttfrdmn/cicada)](go.mod)
 
-> **Note**: Cicada is in early development (v0.1.0). The current release focuses on core sync functionality. See [VISION.md](VISION.md) for the full roadmap.
+> **Note**: Cicada is in early development (v0.1.0). The current release focuses on core sync functionality. See **[v0.2.0 Roadmap](docs/ROADMAP_v0.2.0.md)** for upcoming metadata extraction and instrument-aware features.
 
 ## Documentation
 

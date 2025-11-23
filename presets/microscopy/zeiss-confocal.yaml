@@ -1,0 +1,112 @@
+# Zeiss Confocal Microscope Preset
+# Optimized for Zeiss LSM series (LSM 880, 900, 980)
+
+name: "Zeiss Confocal Microscope"
+id: "zeiss-confocal"
+version: "1.0"
+category: microscopy
+
+description: |
+  Preset for Zeiss LSM confocal microscopes. Optimized for large CZI files
+  with automatic metadata extraction and validation.
+
+# Instrument detection
+detection:
+  file_extensions:
+    - .czi
+  magic_bytes:
+    offset: 0
+    signature: "ZISRAWFILE"
+  confidence: high
+
+# Sync configuration
+sync:
+  # CZI files can be very large (multi-GB) and take time to write
+  debounce_seconds: 30
+
+  # Wait for file to be completely written before syncing
+  min_age_seconds: 60
+
+  # Moderate concurrency to balance speed with system load
+  concurrency: 4
+
+  # Recommended exclude patterns
+  exclude_patterns:
+    - "*.tmp"
+    - "*.partial"
+    - "*_preview.jpg"     # Zeiss preview images
+    - "*_thumb.jpg"       # Thumbnails
+    - "Experiment.czexp"  # Experiment metadata file
+    - ".zeiss/"           # Zeiss software cache
+
+# Metadata extraction
+metadata:
+  enabled: true
+  extractor: "zeiss-czi"
+  extract_on_sync: true
+
+  # Storage options
+  storage:
+    s3_tags: true          # Store key fields as S3 object tags
+    sidecar_json: true     # Store full metadata as .metadata.json
+    catalog: true          # Add to central catalog
+
+  # Fields to store as S3 tags (max 10)
+  s3_tag_mappings:
+    instrument-type: "microscopy"
+    instrument-manufacturer: "zeiss"
+    format: "czi"
+    # Dynamic fields from extracted metadata:
+    # instrument-model: "{metadata.instrument_model}"
+    # magnification: "{metadata.objective.magnification}"
+    # acquisition-date: "{metadata.acquisition_date}"
+
+# File validation
+validation:
+  enabled: true
+  checks:
+    - type: file_integrity
+      description: "Verify CZI file structure"
+    - type: minimum_file_size
+      value: 1048576  # 1 MB minimum
+      description: "Ensure file is not truncated"
+    - type: magic_bytes
+      description: "Verify ZISRAWFILE signature"
+
+# Notifications (optional)
+notifications:
+  on_sync_complete:
+    enabled: true
+    message: "Synced {file_count} CZI files ({total_size})"
+  on_validation_failure:
+    enabled: true
+    message: "⚠️  Validation failed: {file_path} - {error}"
+    action: skip  # Options: skip, retry, fail
+
+# Recommended S3 storage class
+s3:
+  storage_class: STANDARD  # Change to GLACIER for archival
+  versioning: true         # Recommended for data integrity
+
+# Tags for organization
+tags:
+  instrument_type: microscopy
+  manufacturer: zeiss
+  file_format: czi
+  data_type: imaging
+
+# Usage notes
+usage: |
+  This preset is optimized for Zeiss LSM confocal microscopes. It handles
+  large CZI files (often 500MB-5GB) with appropriate debouncing and validation.
+
+  Example usage:
+    cicada instrument setup zeiss-confocal \
+      --path /mnt/zeiss/output \
+      --destination s3://lab-data/microscopy
+
+  Manual configuration:
+    cicada watch add \
+      --preset zeiss-confocal \
+      /mnt/zeiss/output \
+      s3://lab-data/microscopy

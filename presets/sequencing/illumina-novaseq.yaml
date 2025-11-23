@@ -1,0 +1,136 @@
+# Illumina NovaSeq Sequencer Preset
+# Optimized for Illumina NovaSeq 6000 sequencing runs
+
+name: "Illumina NovaSeq 6000"
+id: "illumina-novaseq"
+version: "1.0"
+category: sequencing
+
+description: |
+  Preset for Illumina NovaSeq 6000 sequencer. Handles FASTQ and BCL files
+  with run metadata extraction. Optimized for large sequencing runs.
+
+# Instrument detection
+detection:
+  file_extensions:
+    - .fastq
+    - .fastq.gz
+    - .fq
+    - .fq.gz
+  file_patterns:
+    - "*.fastq.gz"
+    - "*_R1_*.fastq.gz"  # Illumina R1/R2 naming
+    - "*_R2_*.fastq.gz"
+    - "RunInfo.xml"      # Illumina run metadata
+  directory_patterns:
+    - "*/Data/Intensities/BaseCalls/*.fastq.gz"
+  confidence: high
+
+# Sync configuration
+sync:
+  # Sequencing runs write many files over time
+  debounce_seconds: 60
+
+  # Wait for files to be fully written (FASTQ compression takes time)
+  min_age_seconds: 300  # 5 minutes
+
+  # Higher concurrency for many small-medium files
+  concurrency: 8
+
+  # Recommended exclude patterns
+  exclude_patterns:
+    - "*.tmp"
+    - "*.incomplete"
+    - "Thumbnail_Images/"  # Image thumbnails
+    - "*.log"             # Log files (sync separately if needed)
+    - "InterOp/"          # InterOp binary data (not typically backed up)
+
+# Metadata extraction
+metadata:
+  enabled: true
+  extractor: "fastq"
+  extract_on_sync: true
+
+  # Storage options
+  storage:
+    s3_tags: true
+    sidecar_json: true
+    catalog: true
+
+  # Fields to store as S3 tags
+  s3_tag_mappings:
+    instrument-type: "sequencing"
+    instrument-manufacturer: "illumina"
+    platform: "novaseq"
+    format: "fastq"
+    # Dynamic fields:
+    # run-id: "{metadata.run_id}"
+    # flowcell-id: "{metadata.flowcell_id}"
+    # read-type: "{metadata.read_type}"  # paired, single
+
+# File validation
+validation:
+  enabled: true
+  checks:
+    - type: fastq_format
+      description: "Validate FASTQ format structure"
+    - type: quality_scores
+      description: "Verify quality score encoding (Phred+33)"
+    - type: minimum_file_size
+      value: 10240  # 10 KB minimum (even empty FASTQ.gz is > 10KB)
+    - type: gzip_integrity
+      description: "Verify gzip compression integrity"
+
+# Notifications
+notifications:
+  on_sync_complete:
+    enabled: true
+    message: "Synced sequencing run: {file_count} files ({total_size})"
+  on_validation_failure:
+    enabled: true
+    message: "⚠️  FASTQ validation failed: {file_path}"
+    action: retry  # Retry once in case of incomplete write
+
+# S3 configuration
+s3:
+  storage_class: STANDARD_IA  # Infrequent Access for cost savings
+  versioning: true
+  lifecycle:
+    enabled: true
+    transition_to_glacier: 90  # Move to Glacier after 90 days
+
+# Tags for organization
+tags:
+  instrument_type: sequencing
+  manufacturer: illumina
+  platform: novaseq
+  file_format: fastq
+  data_type: genomics
+
+# Usage notes
+usage: |
+  This preset is optimized for Illumina NovaSeq 6000 sequencing runs.
+  It handles the typical output structure with FASTQ files in BaseCalls directory.
+
+  Example usage:
+    cicada instrument setup illumina-novaseq \
+      --path /data/novaseq/output \
+      --destination s3://lab-data/sequencing
+
+  For completed runs (one-time sync):
+    cicada sync \
+      --preset illumina-novaseq \
+      /data/novaseq/230101_A00001_0001_AHXXXX \
+      s3://lab-data/sequencing/230101_A00001_0001_AHXXXX
+
+  Watch mode for auto-sync:
+    cicada watch add \
+      --preset illumina-novaseq \
+      /data/novaseq/output \
+      s3://lab-data/sequencing
+
+# Cost estimate (for reference)
+estimated_cost:
+  run_size_gb: 500-1500  # Typical NovaSeq S4 run
+  storage_cost_month: 11.50-34.50  # STANDARD_IA pricing (~$0.0125/GB)
+  upload_cost: 0  # S3 uploads are free
