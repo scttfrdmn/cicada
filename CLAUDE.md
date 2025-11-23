@@ -131,6 +131,32 @@ Issues automatically move through states:
 - `status: review` - In code review
 - `good first issue` - Good for new contributors
 
+### Adding New Labels
+
+**Labels should be added to the project as needed**, but always check if an existing label can be used first to avoid label sprawl.
+
+**Before creating a new label**:
+1. Check existing labels: `gh label list`
+2. Consider if an existing label applies (e.g., use `type: refactor` instead of creating `code-cleanup`)
+3. Only create a new label if there's a clear, recurring need
+
+**Common additional label categories**:
+- `quality: performance` - Performance optimization
+- `quality: security` - Security hardening
+- `quality: tech-debt` - Technical debt
+- `dependencies` - Dependency updates
+- `breaking-change` - Breaking API changes
+
+**How to create a new label**:
+```bash
+gh label create "quality: performance" --description "Performance optimization needed" --color "fef2c0"
+```
+
+**Label naming conventions**:
+- Use kebab-case: `tech-debt` not `Tech Debt`
+- Use prefixes for categories: `area:`, `priority:`, `type:`, `quality:`
+- Be descriptive but concise
+
 ## Creating New Issues
 
 When you identify new work, create an issue instead of editing markdown:
