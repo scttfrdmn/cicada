@@ -66,19 +66,22 @@ test-coverage: ## Show test coverage percentage
 	@go tool cover -func=coverage.out | grep total | awk '{print "Total coverage: " $$3}'
 
 .PHONY: test-integration
-test-integration: ## Run integration tests with AWS (requires .env.test)
+test-integration: ## Run integration tests with AWS (set AWS_PROFILE=aws AWS_REGION=us-west-2)
 	@echo "Running integration tests..."
-	@test -f .env.test || (echo "Error: .env.test not found. Copy .env.test.example" && exit 1)
-	@export $$(grep -v '^\#' .env.test | xargs) && \
-		go test -v -tags=integration -timeout=10m ./...
+	@echo "Using AWS_PROFILE=$${AWS_PROFILE:-aws}, AWS_REGION=$${AWS_REGION:-us-west-2}"
+	@AWS_PROFILE=$${AWS_PROFILE:-aws} AWS_REGION=$${AWS_REGION:-us-west-2} \
+		go test -v -tags=integration -timeout=10m ./internal/integration/...
+	@echo "✅ Integration tests passed"
 
 .PHONY: test-integration-setup
-test-integration-setup: ## Set up integration test infrastructure
+test-integration-setup: ## Set up integration test S3 bucket (cicada-integration-test)
 	@echo "Setting up integration test infrastructure..."
-	@test -f .env.test || (echo "Error: .env.test not found. Copy .env.test.example" && exit 1)
-	@export $$(grep -v '^\#' .env.test | xargs) && \
-		aws s3 mb s3://$${CICADA_TEST_BUCKET} --region $${AWS_REGION} 2>/dev/null || true
-	@echo "✅ Test bucket ready"
+	@AWS_PROFILE=$${AWS_PROFILE:-aws} AWS_REGION=$${AWS_REGION:-us-west-2} \
+		aws s3 mb s3://cicada-integration-test --region $${AWS_REGION:-us-west-2} 2>/dev/null || true
+	@echo "✅ Test bucket ready: s3://cicada-integration-test"
+
+.PHONY: test-all
+test-all: test test-integration ## Run all tests (unit + integration)
 
 # Development targets
 .PHONY: dev

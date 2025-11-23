@@ -1,371 +1,445 @@
-# Cicada: Dormant Data Commons for Academic Research
+# Cicada
 
-## Overview
+**Fast, reliable file sync for S3** - An rsync-like CLI tool for syncing files between local filesystems and AWS S3, with automatic file watching.
 
-Cicada is a lightweight, cost-effective data commons platform designed for academic research labs (8-10 people) with limited technical expertise and tight budgets. Like its namesake, Cicada lies dormant most of the time, consuming minimal resources, but emerges powerfully when needed.
+[![Go Report Card](https://goreportcard.com/badge/github.com/scttfrdmn/cicada)](https://goreportcard.com/report/github.com/scttfrdmn/cicada)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/scttfrdmn/cicada)](go.mod)
 
-### Key Principles
+> **Note**: Cicada is in early development (v0.1.0-alpha). The current release focuses on core sync functionality. See [VISION.md](VISION.md) for the full roadmap.
 
-- **Dormant by Design**: Resources spin up on-demand, shut down automatically
-- **Cost-Conscious**: Optimized for $50-100/month budgets
-- **FAIR by Default**: Findable, Accessible, Interoperable, Reusable
-- **Zero AWS Knowledge Required**: Abstracts cloud complexity completely
-- **Domain-Flexible**: Supports custom metadata schemas for any research domain
+## Features
 
-### Target Users
+- ✅ **Fast S3 Sync**: Concurrent transfers with MD5/ETag comparison
+- ✅ **File Watching**: Auto-sync directories on file changes
+- ✅ **Two-way Sync**: Local ↔ S3 in both directions
+- ✅ **Smart Transfers**: Only sync changed files
+- ✅ **Dry Run Mode**: Preview changes before syncing
+- ✅ **Configurable**: YAML configuration with watch persistence
+- ✅ **Cross-platform**: Linux, macOS, Windows
 
-- Small academic labs (8-10 people)
-- Non-technical researchers (biologists, chemists, physicists, etc.)
-- Limited IT support/budget
-- Need for: data protection, collaboration, computational workflows, data sharing
+## Quick Start
 
-### Core Features
+### Installation
 
-1. **Intelligent Data Sync**: rsync-like engine with automatic tiering
-2. **File Watching**: Auto-upload from instruments/workstations
-3. **Metadata Management**: Flexible, domain-specific schemas
-4. **Workflow Execution**: Snakemake, Nextflow, CWL support
-5. **Remote Workstations**: On-demand GPU instances for visualization
-6. **Data Sharing**: Public portal with DOI minting
-7. **Compliance**: NIST 800-171, HIPAA, GDPR support
-8. **User Management**: Simple IAM with Globus Auth integration
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    User Interfaces                      │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────────────┐ │
-│  │   CLI    │  │  Web UI  │  │  Public Data Portal  │ │
-│  └────┬─────┘  └────┬─────┘  └──────────┬───────────┘ │
-└───────┼─────────────┼────────────────────┼─────────────┘
-        │             │                    │
-        └─────────────┼────────────────────┘
-                      ▼
-┌─────────────────────────────────────────────────────────┐
-│                  Cicada Daemon (Local)                  │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Core Services                                    │  │
-│  │  • Sync Engine        • Metadata Manager          │  │
-│  │  • File Watcher       • Schema Validator          │  │
-│  │  • Workflow Orchestrator                          │  │
-│  │  • Workstation Manager                            │  │
-│  └──────────────────────────────────────────────────┘  │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  HTTP Server (Port 7878)                          │  │
-│  │  • REST API           • WebSocket (real-time)     │  │
-│  │  • Static Files       • SSE (progress streams)    │  │
-│  └──────────────────────────────────────────────────┘  │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│                    AWS Infrastructure                   │
-│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐ │
-│  │  S3 Storage │  │  AWS Batch   │  │  EC2/Fargate  │ │
-│  │  • Intelligent│  │  • Spot      │  │  • Workstations│ │
-│  │    Tiering   │  │    Instances │  │  • Gateway    │ │
-│  │  • Versioning│  │  • Auto-scale│  │  • On-demand  │ │
-│  └─────────────┘  └──────────────┘  └───────────────┘ │
-│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐ │
-│  │  IAM/SSO    │  │  CloudWatch  │  │  Lambda       │ │
-│  │  • Policies │  │  • Logs      │  │  • Triggers   │ │
-│  │  • Roles    │  │  • Alerts    │  │  • Cleanup    │ │
-│  └─────────────┘  └──────────────┘  └───────────────┘ │
-└─────────────────────────────────────────────────────────┘
-```
-
-## Project Structure
-
-```
-cicada/
-├── cmd/
-│   ├── cicada/              # Main CLI entry point
-│   ├── cicada-daemon/       # Background daemon service
-│   └── cicada-gateway/      # File gateway orchestrator
-│
-├── internal/
-│   ├── sync/               # rsync-like sync engine
-│   │   ├── engine.go
-│   │   ├── delta.go
-│   │   ├── checksum.go
-│   │   └── transfer.go
-│   │
-│   ├── watch/              # File system watcher
-│   │   ├── watcher.go
-│   │   ├── debounce.go
-│   │   └── patterns.go
-│   │
-│   ├── storage/            # S3 operations
-│   │   ├── s3.go
-│   │   ├── multipart.go
-│   │   ├── lifecycle.go
-│   │   └── versioning.go
-│   │
-│   ├── metadata/           # Metadata management
-│   │   ├── schema.go
-│   │   ├── extractor.go
-│   │   ├── validator.go
-│   │   ├── search.go
-│   │   └── export.go
-│   │
-│   ├── workflow/           # Workflow execution
-│   │   ├── executor.go
-│   │   ├── batch.go
-│   │   ├── snakemake.go
-│   │   ├── nextflow.go
-│   │   └── environment.go
-│   │
-│   ├── workstation/        # Remote desktop management
-│   │   ├── launcher.go
-│   │   ├── session.go
-│   │   ├── dcv.go
-│   │   └── snapshot.go
-│   │
-│   ├── auth/               # Authentication & authorization
-│   │   ├── iam.go
-│   │   ├── globus.go
-│   │   ├── session.go
-│   │   └── policy.go
-│   │
-│   ├── doi/                # DOI management
-│   │   ├── datacite.go
-│   │   ├── minter.go
-│   │   └── metadata.go
-│   │
-│   ├── portal/             # Public data portal
-│   │   ├── server.go
-│   │   ├── templates.go
-│   │   ├── search.go
-│   │   └── analytics.go
-│   │
-│   ├── compliance/         # NIST 800-171, HIPAA, etc.
-│   │   ├── audit.go
-│   │   ├── encryption.go
-│   │   ├── scanner.go
-│   │   └── reports.go
-│   │
-│   ├── cost/               # Cost tracking & optimization
-│   │   ├── tracker.go
-│   │   ├── predictor.go
-│   │   └── optimizer.go
-│   │
-│   ├── config/             # Configuration management
-│   │   ├── config.go
-│   │   ├── lab.go
-│   │   ├── project.go
-│   │   └── user.go
-│   │
-│   └── webui/              # Web UI backend
-│       ├── server.go
-│       ├── api.go
-│       ├── websocket.go
-│       └── handlers/
-│
-├── pkg/
-│   ├── instrument/         # Pluggable instrument adapters
-│   │   ├── adapter.go
-│   │   ├── zeiss.go
-│   │   ├── nikon.go
-│   │   ├── illumina.go
-│   │   └── generic.go
-│   │
-│   └── schemas/            # Community metadata schemas
-│       ├── core/
-│       ├── microscopy/
-│       ├── sequencing/
-│       ├── proteomics/
-│       ├── spectroscopy/
-│       └── custom/
-│
-├── web/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── stores/
-│   │   └── lib/
-│   ├── static/
-│   └── public/
-│
-├── templates/              # CloudFormation/Terraform templates
-│   ├── lab-init.yaml
-│   ├── file-gateway.yaml
-│   ├── batch-compute.yaml
-│   └── workstation.yaml
-│
-├── docs/
-│   ├── getting-started.md
-│   ├── domains/           # Domain-specific guides
-│   │   ├── microscopy.md
-│   │   ├── sequencing.md
-│   │   ├── proteomics.md
-│   │   └── ...
-│   ├── metadata-schemas.md
-│   ├── workflows.md
-│   └── compliance.md
-│
-└── examples/
-    ├── schemas/           # Example metadata schemas
-    ├── workflows/         # Example Snakemake/Nextflow
-    └── configs/           # Example configurations
-```
-
-## Technology Stack
-
-### Backend (Go)
-- **CLI**: cobra
-- **Config**: viper
-- **AWS SDK**: aws-sdk-go-v2
-- **File Watching**: fsnotify
-- **HTTP**: chi or gin
-- **WebSocket**: gorilla/websocket
-- **Database**: SQLite (local) + DynamoDB (cloud metadata index)
-- **Encryption**: crypto/aes, aws-encryption-sdk-go
-
-### Frontend (Web UI)
-- **Framework**: Svelte or Vue 3 (lightweight)
-- **CSS**: Tailwind CSS
-- **Charts**: Chart.js
-- **File Upload**: uppy
-- **Real-time**: WebSocket client
-
-### Infrastructure (AWS)
-- **Storage**: S3 (Intelligent-Tiering)
-- **Compute**: AWS Batch, EC2, Fargate
-- **Auth**: IAM, Cognito (optional), Globus Auth
-- **Monitoring**: CloudWatch
-- **Functions**: Lambda
-- **CDN**: CloudFront (for portal)
-- **IaC**: CloudFormation or Terraform
-
-## Development Phases
-
-### Phase 1: Core Storage & Sync (Weeks 1-6)
-- S3 sync engine (rsync-like)
-- File watching and auto-upload
-- Basic CLI commands
-- Local daemon
-- Cost tracking
-
-### Phase 2: Metadata & FAIR (Weeks 7-10)
-- Metadata schema system
-- Automatic extraction
-- Validation engine
-- Search/discovery
-- Export formats (DataCite, ISA-Tab, etc.)
-
-### Phase 3: Web UI & User Management (Weeks 11-14)
-- Web UI (file browser, upload, etc.)
-- User/group/project management
-- IAM automation
-- Globus Auth integration
-
-### Phase 4: Compute & Workflows (Weeks 15-18)
-- Workflow execution (Snakemake, Nextflow)
-- AWS Batch integration
-- Spot instance management
-- Environment capture
-
-### Phase 5: Workstations & Portal (Weeks 19-22)
-- Remote workstation launcher
-- DCV/noVNC integration
-- Public data portal
-- DOI minting (DataCite)
-
-### Phase 6: Compliance & Polish (Weeks 23-26)
-- NIST 800-171 mode
-- Audit logging
-- DLP scanning
-- Documentation
-- Community schemas
-
-## Getting Started (for Developers)
-
-### Prerequisites
 ```bash
-# Install Go 1.21+
-go version
+# From source (requires Go 1.23+)
+git clone https://github.com/scttfrdmn/cicada.git
+cd cicada
+make install
 
-# Install Node.js 20+ (for web UI)
-node --version
-
-# AWS CLI configured
-aws sts get-caller-identity
-
-# Install development tools
-go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+# Or download pre-built binary from releases
 ```
 
-### Build & Run
+### Basic Usage
+
+```bash
+# Configure AWS credentials
+aws configure
+
+# One-time sync: local to S3
+cicada sync /local/data s3://my-bucket/data
+
+# One-time sync: S3 to local
+cicada sync s3://my-bucket/data /local/data
+
+# Watch directory and auto-sync to S3
+cicada watch add /data/microscope s3://my-bucket/microscope
+cicada watch list
+
+# Preview changes without syncing
+cicada sync --dry-run /local/data s3://my-bucket/data
+
+# Delete files in destination not in source
+cicada sync --delete /local/data s3://my-bucket/data
+```
+
+## Installation
+
+### Requirements
+
+- Go 1.23+ (for building from source)
+- AWS credentials configured (`~/.aws/credentials` or environment variables)
+- S3 bucket with appropriate permissions
+
+### From Source
 
 ```bash
 # Clone repository
-git clone https://github.com/your-org/cicada.git
+git clone https://github.com/scttfrdmn/cicada.git
+cd cicada
+
+# Build and install
+make install
+
+# Verify installation
+cicada version
+```
+
+### AWS Setup
+
+Cicada needs AWS credentials with S3 permissions:
+
+```bash
+# Configure AWS CLI
+aws configure
+
+# Or set environment variables
+export AWS_PROFILE=myprofile
+export AWS_REGION=us-west-2
+```
+
+**Required S3 Permissions**:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::your-bucket",
+        "arn:aws:s3:::your-bucket/*"
+      ]
+    }
+  ]
+}
+```
+
+## Configuration
+
+Initialize configuration:
+
+```bash
+cicada config init
+```
+
+This creates `~/.cicada/config.yaml`:
+
+```yaml
+version: "1"
+
+aws:
+  profile: default
+  region: us-west-2
+
+sync:
+  concurrency: 4
+  delete: false
+  exclude:
+    - .git/**
+    - .DS_Store
+    - "*.tmp"
+    - "*.swp"
+
+watches: []
+
+settings:
+  verbose: false
+  check_updates: true
+```
+
+### Configuration Commands
+
+```bash
+# Set AWS profile
+cicada config set aws.profile myprofile
+
+# Set default concurrency
+cicada config set sync.concurrency 8
+
+# Get configuration value
+cicada config get aws.region
+
+# List all configuration
+cicada config list
+```
+
+## Usage
+
+### Sync Command
+
+Sync files between local filesystem and S3:
+
+```bash
+# Basic sync
+cicada sync <source> <destination>
+
+# Options
+  --dry-run        Preview changes without syncing
+  --delete         Delete files in destination not in source
+  --concurrency N  Number of concurrent transfers (default: 4)
+  --verbose        Show detailed output
+```
+
+**Examples**:
+
+```bash
+# Upload to S3
+cicada sync /data/experiment s3://my-bucket/experiment
+
+# Download from S3
+cicada sync s3://my-bucket/experiment /data/experiment
+
+# Dry run (preview only)
+cicada sync --dry-run /data s3://my-bucket/data
+
+# Sync with deletion
+cicada sync --delete /data s3://my-bucket/data
+
+# Increase concurrency for large transfers
+cicada sync --concurrency 16 /large-dataset s3://my-bucket/data
+```
+
+### Watch Command
+
+Monitor directories and automatically sync changes:
+
+```bash
+# Add a watch
+cicada watch add <source> <destination> [options]
+
+# Options
+  --debounce N      Seconds to wait before syncing (default: 5)
+  --min-age N       Minimum file age before sync (default: 10)
+  --delete-source   Delete source files after successful sync
+  --no-sync-on-start  Don't perform initial sync
+
+# List active watches
+cicada watch list
+
+# Remove a watch
+cicada watch remove <watch-id>
+```
+
+**Examples**:
+
+```bash
+# Watch microscope data directory
+cicada watch add /data/microscope s3://lab-data/microscope
+
+# Custom debounce and min-age
+cicada watch add \
+  --debounce 10 \
+  --min-age 30 \
+  /data/sequencer s3://lab-data/sequencing
+
+# Move files to S3 (delete after upload)
+cicada watch add \
+  --delete-source \
+  /data/completed s3://lab-archive/data
+
+# List all watches
+cicada watch list
+
+# Remove a watch
+cicada watch remove /data/microscope-1234567890
+```
+
+**Watch Behavior**:
+
+- Initial sync on start (unless `--no-sync-on-start`)
+- Debouncing: Groups rapid file changes to avoid sync storms
+- Min-age filter: Only syncs files older than threshold (prevents syncing partial writes)
+- Exclude patterns: Respects global exclude patterns from config
+- Persistence: Watches are saved to config and restored on startup
+
+## Use Cases
+
+### Instrument Data Upload
+
+Automatically upload data as instruments write files:
+
+```bash
+# Zeiss microscope auto-upload
+cicada watch add \
+  --debounce 30 \
+  --min-age 60 \
+  /mnt/zeiss/output s3://lab-data/microscopy/zeiss
+
+# Illumina sequencer
+cicada watch add \
+  --debounce 60 \
+  --min-age 300 \
+  /data/sequencer/runs s3://lab-data/sequencing
+```
+
+### Data Backup
+
+Regular backup of research data:
+
+```bash
+# Daily sync (via cron)
+0 2 * * * cicada sync /data/research s3://lab-backup/research
+
+# Continuous backup (watch mode)
+cicada watch add /data/active-projects s3://lab-backup/projects
+```
+
+### Collaborative Data Sharing
+
+Share data with team via S3:
+
+```bash
+# Upload shared data
+cicada sync /data/shared s3://team-data/shared
+
+# Download team data
+cicada sync s3://team-data/shared /data/team-shared
+```
+
+## Performance
+
+Typical performance on modern hardware:
+
+- **Small files** (< 1MB): ~100-200 files/sec
+- **Large files** (> 100MB): Limited by network bandwidth
+- **Concurrency**: 4 transfers by default (configurable)
+- **Memory**: ~50-100MB typical usage
+
+**Optimization tips**:
+
+- Increase concurrency for many small files: `--concurrency 16`
+- Use exclude patterns to skip unnecessary files
+- Run on machine with good network connectivity to AWS
+
+## Development
+
+### Building from Source
+
+```bash
+# Clone repository
+git clone https://github.com/scttfrdmn/cicada.git
 cd cicada
 
 # Install dependencies
 go mod download
 
-# Build CLI
+# Build
 make build
 
 # Run tests
 make test
 
-# Run locally
-./bin/cicada daemon start --dev
+# Run integration tests (requires AWS credentials)
+make test-integration
 
-# Build web UI
-cd web
-npm install
-npm run dev
+# Run linters
+make lint
+
+# Install locally
+make install
 ```
 
-### Development Workflow
+### Project Structure
 
-1. Create feature branch
-2. Write tests first (TDD)
-3. Implement feature
-4. Run linters: `make lint`
-5. Run tests: `make test`
-6. Manual testing with `--dev` mode
-7. Create PR with description
+```
+cicada/
+├── cmd/cicada/          # CLI entry point
+├── internal/
+│   ├── cli/             # CLI commands
+│   ├── sync/            # Sync engine (backends, engine)
+│   ├── watch/           # File watching system
+│   ├── config/          # Configuration management
+│   ├── metadata/        # Metadata extraction (future)
+│   ├── doi/             # DOI management (future)
+│   └── integration/     # Integration tests
+├── Makefile             # Build targets
+└── README.md
+```
 
-## Documentation
+### Testing
 
-- [Getting Started Guide](docs/getting-started.md)
-- [Architecture Deep Dive](docs/architecture.md)
-- [Metadata Schema Guide](docs/metadata-schemas.md)
-- [Domain-Specific Guides](docs/domains/)
-- [API Reference](docs/api.md)
-- [Contributing](CONTRIBUTING.md)
+```bash
+# Unit tests
+go test ./...
 
-## Community
+# Integration tests (requires AWS)
+AWS_PROFILE=aws AWS_REGION=us-west-2 \
+  go test -v -tags=integration ./internal/integration/...
 
-- GitHub: https://github.com/your-org/cicada
-- Discussions: https://github.com/your-org/cicada/discussions
-- Slack: cicada-data.slack.com
-- Twitter: @cicada_data
+# Test coverage
+go test -cover ./...
+```
+
+## Troubleshooting
+
+### AWS Credentials Issues
+
+```bash
+# Verify AWS configuration
+aws sts get-caller-identity
+
+# Test S3 access
+aws s3 ls s3://your-bucket
+
+# Use specific profile
+AWS_PROFILE=myprofile cicada sync /data s3://bucket/data
+```
+
+### Permission Denied
+
+Ensure your AWS user/role has required S3 permissions (see [AWS Setup](#aws-setup))
+
+### Slow Syncs
+
+- Check network connectivity to AWS region
+- Increase concurrency: `--concurrency 8`
+- Ensure exclude patterns are working (check with `--dry-run --verbose`)
+
+### File Not Syncing
+
+- Check exclude patterns in config
+- Verify file age meets `--min-age` threshold (watch mode)
+- Enable verbose mode: `--verbose`
+
+## Roadmap
+
+**v0.1.0 (Current)**: Core sync and watch functionality
+
+**v0.2.0**:
+- Background daemon service
+- Improved path handling
+- Multipart uploads for large files
+- Bandwidth throttling
+
+**v0.3.0+**:
+- Metadata extraction and management
+- DOI minting integration
+- Public data portal
+- Workflow execution support
+
+See [VISION.md](VISION.md) for the complete roadmap and [CHANGELOG.md](CHANGELOG.md) for release history.
+
+## Contributing
+
+Contributions welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE)
-
-## Funding
-
-This project was developed with support from:
-- [Grant agency if applicable]
-- Community contributions
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
 
 ## Citation
 
 If you use Cicada in your research, please cite:
 
-```
-@software{cicada2024,
-  title = {Cicada: Dormant Data Commons for Academic Research},
-  author = {Your Name and Contributors},
-  year = {2024},
-  url = {https://github.com/your-org/cicada}
+```bibtex
+@software{cicada2025,
+  title = {Cicada: Fast File Sync for S3},
+  author = {Scott Friedman},
+  year = {2025},
+  url = {https://github.com/scttfrdmn/cicada},
+  version = {0.1.0}
 }
 ```
+
+## Acknowledgments
+
+- Built with [cobra](https://github.com/spf13/cobra) and [viper](https://github.com/spf13/viper)
+- AWS SDK for Go v2
+- Inspired by rsync, rclone, and aws-cli
