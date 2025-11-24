@@ -224,45 +224,8 @@ func (e *LeicaExtractor) ExtractFromReader(r io.Reader, filename string) (map[st
 }
 
 // --- FASTQ Extractor ---
-
-type FASTQExtractor struct{}
-
-func (e *FASTQExtractor) Name() string {
-	return "FASTQ"
-}
-
-func (e *FASTQExtractor) SupportedFormats() []string {
-	return []string{".fastq", ".fq", ".fastq.gz", ".fq.gz"}
-}
-
-func (e *FASTQExtractor) CanHandle(filename string) bool {
-	lower := strings.ToLower(filename)
-	for _, format := range e.SupportedFormats() {
-		if strings.HasSuffix(lower, format) {
-			return true
-		}
-	}
-	return false
-}
-
-func (e *FASTQExtractor) Extract(filepath string) (map[string]interface{}, error) {
-	// TODO: Implement FASTQ metadata extraction
-	// Extract:
-	// - Total reads (count sequences)
-	// - Read length distribution
-	// - Quality score distribution
-	// - Detect paired-end from filename pattern
-
-	metadata := map[string]interface{}{
-		"format": "FASTQ",
-	}
-
-	return metadata, nil
-}
-
-func (e *FASTQExtractor) ExtractFromReader(r io.Reader, filename string) (map[string]interface{}, error) {
-	return nil, fmt.Errorf("not implemented")
-}
+// The full implementation is in fastq.go
+// This comment kept for reference in extractor sequence
 
 // --- BAM Extractor ---
 
