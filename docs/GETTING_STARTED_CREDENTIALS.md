@@ -6,6 +6,290 @@
 
 This guide will help you set up Cicada to publish DOIs (Digital Object Identifiers) for your research data. No technical background required - just follow the steps!
 
+## What Should Get a DOI?
+
+Before setting up credentials, it's helpful to understand what research outputs typically get DOIs and what your field expects.
+
+### What is a DOI?
+
+A **DOI (Digital Object Identifier)** is a permanent identifier for your research data - like a permanent web address that never breaks. Even if you move your data to a different server or repository, the DOI always points to the correct location.
+
+**Example DOI:** `10.5281/zenodo.123456`
+- Anyone can click this and find your data
+- It works forever, even if URLs change
+- It's citable in publications
+
+### What Typically Gets a DOI
+
+**✅ Should have a DOI:**
+
+**Research Data:**
+- Raw data that supports a publication
+- Datasets that others might reuse
+- Data required by journal or funder policies
+- Data that you want to cite in papers
+
+**Examples:**
+- Sequencing data (FASTQ, BAM files)
+- Microscopy images (CZI, OME-TIFF files)
+- Tabular data (CSV, Excel files)
+- Simulation outputs
+- Survey data
+
+**Software & Code:**
+- Research software releases
+- Analysis scripts and pipelines
+- Computational models
+
+**Other Research Outputs:**
+- Protocols
+- Supplementary materials
+- Technical reports
+- Preprints (though use preprint servers like bioRxiv)
+
+### What Typically Doesn't Need a DOI
+
+**❌ Usually doesn't need a DOI:**
+
+- **Intermediate/temporary files** - Processing outputs that aren't final
+- **Duplicate data** - Data already published elsewhere with a DOI
+- **Preliminary data** - Still collecting or analyzing
+- **Personal notes** - Lab notebooks, internal documentation
+- **Already published data** - Available in established databases (NCBI, ENA, etc.)
+- **Tiny test files** - Sample data for tutorials
+
+### Domain-Specific Practices
+
+Different research fields have different expectations and norms:
+
+#### Genomics & Bioinformatics
+
+**Common practice:**
+- Raw sequencing data (FASTQ) → Submit to NCBI SRA/ENA (they provide accessions)
+- Assembled genomes → Submit to NCBI GenBank
+- Supporting data (metadata, analysis results) → DOI via Zenodo/DataCite
+- Software/pipelines → DOI via Zenodo + GitHub release
+
+**When to use Cicada:**
+- Small-scale sequencing projects not in public databases
+- Supplementary data for publications
+- Custom reference datasets
+- Analysis pipelines and scripts
+
+**Example:**
+```bash
+# Raw reads submitted to SRA (gets accession: SRR123456)
+# Supplementary metadata gets DOI via Cicada:
+cicada doi publish sample_metadata.csv quality_metrics.csv \
+  --provider zenodo \
+  --enrich metadata.yaml
+```
+
+#### Microscopy & Imaging
+
+**Common practice:**
+- Publication-quality images → DOI via institutional repository or Zenodo
+- Large imaging datasets → Specialized repositories (IDR, BioImage Archive)
+- Instrument calibration data → DOI for reproducibility
+- Image analysis workflows → DOI for transparency
+
+**When to use Cicada:**
+- Original microscopy files (CZI, OME-TIFF) with metadata
+- Supporting images for papers
+- Method validation datasets
+- Training datasets for analysis
+
+**Example:**
+```bash
+# Publish microscopy dataset with DOI
+cicada doi publish experiment_*.czi \
+  --preset zeiss-lsm-880 \
+  --provider zenodo \
+  --enrich metadata.yaml
+```
+
+#### Structural Biology & Chemistry
+
+**Common practice:**
+- Crystal structures → PDB (Protein Data Bank)
+- NMR data → BMRB
+- Supporting data → DOI via Zenodo/DataCite
+- Protocols → DOI via protocols.io or Zenodo
+
+**When to use Cicada:**
+- Supplementary crystallography data
+- Raw diffraction images
+- Validation datasets
+- Custom structure libraries
+
+#### Ecology & Environmental Science
+
+**Common practice:**
+- Long-term datasets → Domain repositories (LTER, DataONE)
+- Species occurrence data → GBIF
+- Climate/sensor data → Specialized repositories
+- Small studies → DOI via Zenodo/DataCite
+
+**When to use Cicada:**
+- Field study data
+- Sensor/instrument data
+- Observation records
+- Derived datasets
+
+#### Social Sciences & Humanities
+
+**Common practice:**
+- Survey data → Domain repositories (ICPSR, UK Data Service)
+- Qualitative data → Institutional repositories + DOI
+- Interview transcripts → Repository + DOI
+- Datasets for replication → DOI required
+
+**When to use Cicada:**
+- Anonymized survey data
+- Supplementary data for publications
+- Replication packages
+- Coded datasets
+
+### Publisher & Funder Requirements
+
+Many journals and funding agencies now **require** data DOIs:
+
+**Publishers with data policies:**
+- Nature journals - "Data availability statement" with DOIs
+- PLOS - Data deposition required
+- eLife - Data must be accessible with identifiers
+- Cell Press - Data availability required
+
+**Funders requiring data sharing:**
+- NIH - Data Management and Sharing Policy
+- NSF - Data sharing plans required
+- Wellcome Trust - Data must be accessible
+- European Commission (Horizon) - Open data by default
+
+**Check your requirements:**
+1. Journal submission guidelines ("Data Availability")
+2. Funder data management plan
+3. Institutional policies
+
+### Best Practices
+
+#### When to Create a DOI
+
+**✅ Create a DOI when:**
+- Data is finalized and won't change significantly
+- You're ready to share publicly (or with embargo)
+- Data supports a publication
+- Required by journal/funder
+- You want others to cite your data
+
+**⏸️ Wait to create a DOI if:**
+- Still collecting/analyzing data
+- Data quality is uncertain
+- Need institutional approval first
+- Preparing for submission to domain repository
+
+#### Versioning
+
+**When to create a new version (same DOI):**
+- Minor corrections to metadata
+- Adding additional files
+- Fixing errors in existing data
+- Updating documentation
+
+**When to create a new DOI:**
+- Major changes to dataset
+- Different analysis/processing
+- Conceptually different dataset
+- Different paper/project
+
+**Example:**
+```bash
+# Original dataset (DOI: 10.5281/zenodo.123456)
+cicada doi publish data_v1.fastq --provider zenodo
+
+# Minor update (new version, same DOI concept)
+cicada doi update 10.5281/zenodo.123456 \
+  --add-file corrected_metadata.csv
+
+# Major reanalysis (new DOI)
+cicada doi publish reanalyzed_data_v2.fastq --provider zenodo
+# Gets new DOI: 10.5281/zenodo.789012
+```
+
+#### What Metadata to Include
+
+**Minimum (required):**
+- Title (descriptive, not just filename)
+- Authors/Creators (with affiliations)
+- Description (what is the data, how was it collected)
+- Keywords (for discoverability)
+- License (how can others use it?)
+
+**Recommended:**
+- Related publications (DOIs)
+- Funding information
+- Methods/protocols
+- File formats and software requirements
+- Related identifiers (ORCID, grant numbers)
+
+**Example metadata file:**
+```yaml
+title: "RNA-seq data from drought stress experiment in Arabidopsis"
+description: |
+  Paired-end Illumina RNA sequencing (150bp) from Arabidopsis thaliana
+  leaves under drought stress and control conditions. Three biological
+  replicates per condition. Sequenced on NovaSeq 6000.
+creators:
+  - name: "Jane Smith"
+    affiliation: "Plant Biology Lab, State University"
+    orcid: "0000-0002-1234-5678"
+  - name: "John Doe"
+    affiliation: "Plant Biology Lab, State University"
+keywords:
+  - RNA-seq
+  - Arabidopsis thaliana
+  - drought stress
+  - transcriptomics
+license: "CC-BY-4.0"
+related_publications:
+  - doi: "10.1234/journal.2024.123"
+    relation: "IsSupplementTo"
+funding:
+  - funder: "National Science Foundation"
+    award: "NSF-1234567"
+```
+
+### Quick Decision Guide
+
+**Ask yourself:**
+
+1. **Is this data final?**
+   - Yes → Create DOI ✅
+   - No → Wait ⏸️
+
+2. **Will others need to cite or access it?**
+   - Yes → Create DOI ✅
+   - No → Maybe not needed ❌
+
+3. **Is there a domain-specific repository?**
+   - Yes → Check if they provide DOIs (use that first)
+   - No → Use Zenodo/DataCite via Cicada ✅
+
+4. **Does my journal/funder require it?**
+   - Yes → Create DOI ✅
+   - No → Optional but recommended
+
+5. **Is the data already public with a stable ID?**
+   - Yes → Use existing identifier ❌
+   - No → Create DOI ✅
+
+**Still not sure?** Ask your:
+- Institutional library
+- Research data office
+- Department administrator
+- Journal editor
+- Colleagues in your field
+
 ## What You Need
 
 To publish DOIs with Cicada, you need credentials (like a password) from a DOI registration service.
