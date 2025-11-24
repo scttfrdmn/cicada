@@ -55,6 +55,7 @@ resources, but emerges powerfully when needed.`,
 	rootCmd.AddCommand(NewSyncCmd())
 	rootCmd.AddCommand(NewWatchCmd())
 	rootCmd.AddCommand(NewConfigCmd())
+	rootCmd.AddCommand(NewMetadataCmd())
 	rootCmd.AddCommand(NewVersionCmd(version))
 
 	return rootCmd
