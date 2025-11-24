@@ -48,8 +48,8 @@ func TestZeissExtractor_ExtractFromReader(t *testing.T) {
 			t.Errorf("Expected format=CZI, got %v", metadata["format"])
 		}
 
-		if metadata["microscope_manufacturer"] != "Zeiss" {
-			t.Errorf("Expected manufacturer=Zeiss, got %v", metadata["microscope_manufacturer"])
+		if metadata["manufacturer"] != "Zeiss" {
+			t.Errorf("Expected manufacturer=Zeiss, got %v", metadata["manufacturer"])
 		}
 
 		if metadata["file_name"] != "test.czi" {
