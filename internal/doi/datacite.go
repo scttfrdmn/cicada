@@ -75,7 +75,7 @@ type DataCiteMetadata struct {
 	PublicationYear      int                   `xml:"publicationYear"`
 	ResourceType         ResourceType          `xml:"resourceType"`
 	Subjects             []Subject             `xml:"subjects>subject,omitempty"`
-	Contributors         []Contributor         `xml:"contributors>contributor,omitempty"`
+	Contributors         []DataCiteContributor `xml:"contributors>contributor,omitempty"`
 	Dates                []Date                `xml:"dates>date,omitempty"`
 	Language             string                `xml:"language,omitempty"`
 	AlternateIdentifiers []AlternateIdentifier `xml:"alternateIdentifiers>alternateIdentifier,omitempty"`
@@ -85,7 +85,7 @@ type DataCiteMetadata struct {
 	Version              string                `xml:"version,omitempty"`
 	RightsList           []Rights              `xml:"rightsList>rights,omitempty"`
 	Descriptions         []Description         `xml:"descriptions>description,omitempty"`
-	GeoLocations         []GeoLocation         `xml:"geoLocations>geoLocation,omitempty"`
+	GeoLocations         []DataCiteGeoLocation `xml:"geoLocations>geoLocation,omitempty"`
 	FundingReferences    []FundingReference    `xml:"fundingReferences>fundingReference,omitempty"`
 }
 
@@ -125,7 +125,7 @@ type Subject struct {
 	SchemeURI     string `xml:"schemeURI,attr,omitempty"`
 }
 
-type Contributor struct {
+type DataCiteContributor struct {
 	ContributorName string   `xml:"contributorName"`
 	ContributorType string   `xml:"contributorType,attr"`
 	GivenName       string   `xml:"givenName,omitempty"`
@@ -160,7 +160,7 @@ type Description struct {
 	Type  string `xml:"descriptionType,attr"`
 }
 
-type GeoLocation struct {
+type DataCiteGeoLocation struct {
 	GeoLocationPlace string `xml:"geoLocationPlace,omitempty"`
 	GeoLocationPoint *Point `xml:"geoLocationPoint,omitempty"`
 	GeoLocationBox   *Box   `xml:"geoLocationBox,omitempty"`
@@ -240,7 +240,7 @@ func (m *DOIManager) MintDOI(dataset *Dataset) (*DOI, error) {
 			"type": "dois",
 			"attributes": map[string]interface{}{
 				"doi":   doiString,
-				"url":   dataset.LandingPageURL,
+				"url":   dataset.URL,
 				"xml":   xmlString,
 				"event": "publish", // Or "register" for draft
 			},
@@ -254,7 +254,7 @@ func (m *DOIManager) MintDOI(dataset *Dataset) (*DOI, error) {
 
 	doi := &DOI{
 		DOI:             doiString,
-		URL:             dataset.LandingPageURL,
+		URL:             dataset.URL,
 		State:           "findable",
 		Title:           dataset.Title,
 		Authors:         dataset.Authors,
@@ -407,33 +407,8 @@ func (c *DataCiteClient) ListDOIs(repositoryID string) ([]*DOI, error) {
 	return nil, nil
 }
 
-// Dataset represents a dataset to be published with a DOI
-type Dataset struct {
-	Title           string
-	Description     string
-	Authors         []Author
-	Keywords        []string
-	Publisher       string
-	PublicationYear int
-	ResourceType    string // "Dataset", "Software", "Image", etc.
-	License         string
-	LandingPageURL  string
-	Size            string
-	Formats         []string
-	Version         string
-	RelatedDOIs     []string
-	Grants          []Grant
-	GeoLocation     *GeoLocation
-}
-
-// Grant represents research funding
-type Grant struct {
-	FunderName  string
-	AwardNumber string
-	AwardTitle  string
-}
-
 // MetadataGenerator generates DataCite metadata
+// Uses Dataset from provider.go
 type MetadataGenerator interface {
 	Generate(dataset *Dataset) *DataCiteMetadata
 }
@@ -511,10 +486,12 @@ func (g *StandardMetadataGenerator) Generate(dataset *Dataset) *DataCiteMetadata
 	}
 
 	// Sizes and formats
-	if dataset.Size != "" {
-		metadata.Sizes = []string{dataset.Size}
+	if len(dataset.Sizes) > 0 {
+		metadata.Sizes = dataset.Sizes
 	}
-	metadata.Formats = dataset.Formats
+	if len(dataset.Formats) > 0 {
+		metadata.Formats = dataset.Formats
+	}
 
 	// Version
 	if dataset.Version != "" {
@@ -522,21 +499,77 @@ func (g *StandardMetadataGenerator) Generate(dataset *Dataset) *DataCiteMetadata
 	}
 
 	// Related identifiers
-	for _, relatedDOI := range dataset.RelatedDOIs {
+	for _, relatedID := range dataset.RelatedIdentifiers {
 		metadata.RelatedIdentifiers = append(metadata.RelatedIdentifiers, RelatedIdentifier{
-			Value:        relatedDOI,
-			Type:         "DOI",
-			RelationType: "References",
+			Value:        relatedID.Identifier,
+			Type:         relatedID.Type,
+			RelationType: relatedID.Relation,
 		})
 	}
 
 	// Funding
-	for _, grant := range dataset.Grants {
-		metadata.FundingReferences = append(metadata.FundingReferences, FundingReference{
-			FunderName:  grant.FunderName,
-			AwardNumber: grant.AwardNumber,
-			AwardTitle:  grant.AwardTitle,
+	for _, funding := range dataset.FundingReferences {
+		fundingRef := FundingReference{
+			FunderName:  funding.FunderName,
+			AwardNumber: funding.AwardNumber,
+			AwardTitle:  funding.AwardTitle,
+		}
+		if funding.FunderIdentifier != "" {
+			fundingRef.FunderIdentifier = &FunderIdentifier{
+				Value: funding.FunderIdentifier,
+				Type:  "Crossref Funder ID",
+			}
+		}
+		metadata.FundingReferences = append(metadata.FundingReferences, fundingRef)
+	}
+
+	// GeoLocations
+	for _, geoLoc := range dataset.GeoLocations {
+		dcGeoLoc := DataCiteGeoLocation{
+			GeoLocationPlace: geoLoc.Place,
+		}
+		if geoLoc.Point != nil {
+			dcGeoLoc.GeoLocationPoint = &Point{
+				PointLongitude: geoLoc.Point.Longitude,
+				PointLatitude:  geoLoc.Point.Latitude,
+			}
+		}
+		if geoLoc.Box != nil {
+			dcGeoLoc.GeoLocationBox = &Box{
+				WestBoundLongitude: geoLoc.Box.WestLongitude,
+				EastBoundLongitude: geoLoc.Box.EastLongitude,
+				SouthBoundLatitude: geoLoc.Box.SouthLatitude,
+				NorthBoundLatitude: geoLoc.Box.NorthLatitude,
+			}
+		}
+		metadata.GeoLocations = append(metadata.GeoLocations, dcGeoLoc)
+	}
+
+	// Dates
+	for _, dateInfo := range dataset.Dates {
+		metadata.Dates = append(metadata.Dates, Date{
+			Value: dateInfo.Date,
+			Type:  dateInfo.Type,
 		})
+	}
+
+	// Language
+	if dataset.Language != "" {
+		metadata.Language = dataset.Language
+	}
+
+	// Contributors
+	for _, contrib := range dataset.Contributors {
+		dcContrib := DataCiteContributor{
+			ContributorName: contrib.Name,
+			ContributorType: contrib.Type,
+			GivenName:       contrib.GivenName,
+			FamilyName:      contrib.FamilyName,
+		}
+		if len(contrib.Affiliations) > 0 {
+			dcContrib.Affiliation = contrib.Affiliations
+		}
+		metadata.Contributors = append(metadata.Contributors, dcContrib)
 	}
 
 	return metadata

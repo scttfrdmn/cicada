@@ -66,6 +66,8 @@ type Dataset struct {
 	RelatedIdentifiers []RelatedID    `json:"related_identifiers,omitempty"`
 	Contributors    []Contributor     `json:"contributors,omitempty"`
 	FundingReferences []FundingRef    `json:"funding_references,omitempty"`
+	Sizes           []string          `json:"sizes,omitempty"`           // Size information
+	Formats         []string          `json:"formats,omitempty"`         // Format information (MIME types, etc.)
 
 	// Dates
 	Dates           []DateInfo        `json:"dates,omitempty"`
