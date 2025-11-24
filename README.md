@@ -6,27 +6,44 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/scttfrdmn/cicada)](go.mod)
 
-> **Note**: Cicada is in early development (v0.1.0). The current release implements the foundational storage and sync layer. See **[v0.2.0 Roadmap](docs/ROADMAP_v0.2.0.md)** for upcoming metadata extraction and instrument-aware features, and **[planning/PROJECT-SUMMARY.md](planning/PROJECT-SUMMARY.md)** for the complete data commons vision.
+> **Current Version**: v0.2.0 - Adds comprehensive metadata extraction and DOI preparation capabilities. See **[CHANGELOG.md](CHANGELOG.md)** for release details and **[planning/PROJECT-SUMMARY.md](planning/PROJECT-SUMMARY.md)** for the complete data commons vision.
 
 ## Documentation
 
-- 📖 **[User Scenarios](docs/USER_SCENARIOS.md)** - Detailed persona-based walkthroughs showing real-world usage:
-  - Lab researcher automating instrument data uploads
-  - PhD student backing up research data
-  - Bioinformatician integrating with analysis pipelines
-  - Lab manager ensuring data governance compliance
+- 📖 **[User Scenarios v0.2.0](docs/USER_SCENARIOS_v0.2.0.md)** - Detailed persona-based walkthroughs:
+  - Postdoc extracting metadata from sequencing data
+  - Graduate student preparing datasets for publication with DOI
+  - Lab manager validating compliance with instrument presets
+  - Data curator enriching metadata for repositories
+  - Small lab complete adoption journey (target users)
+- 📚 **User Guides**:
+  - [Metadata Extraction Guide](docs/METADATA_EXTRACTION.md) - Extract metadata from scientific files
+  - [DOI Workflow Guide](docs/DOI_WORKFLOW.md) - Prepare datasets for DOI registration
+  - [Instrument Presets Guide](docs/PRESETS.md) - Validate metadata with instrument-specific presets
+  - [Provider Setup Guide](docs/PROVIDERS.md) - Configure DataCite/Zenodo integration
 - 🚀 **Quick Start** (below) - Get started in 5 minutes
 - 📋 **[Full Documentation](#usage)** - Complete command reference
 
 ## Features
 
+### Storage & Sync (v0.1.0)
 - ✅ **Fast S3 Sync**: Concurrent transfers with MD5/ETag comparison
 - ✅ **File Watching**: Auto-sync directories on file changes
 - ✅ **Two-way Sync**: Local ↔ S3 in both directions
 - ✅ **Smart Transfers**: Only sync changed files
 - ✅ **Dry Run Mode**: Preview changes before syncing
-- ✅ **Configurable**: YAML configuration with watch persistence
+
+### Metadata & DOI (v0.2.0)
+- ✅ **Metadata Extraction**: Automatic extraction from FASTQ files (sequencing data)
+- ✅ **Instrument Presets**: 8 built-in presets (Illumina, Zeiss, generic)
+- ✅ **DOI Preparation**: DataCite Schema v4.5 compliance validation
+- ✅ **Quality Scoring**: 0-100 scale for metadata completeness
+- ✅ **Provider Integration**: DataCite and Zenodo support (API structure ready)
+
+### Cross-Cutting
+- ✅ **Configurable**: YAML configuration with extensible design
 - ✅ **Cross-platform**: Linux, macOS, Windows
+- ✅ **Performant**: < 1 ms metadata extraction, 4-8x concurrent speedup
 
 ## Quick Start
 
@@ -42,6 +59,8 @@ make install
 ```
 
 ### Basic Usage
+
+#### Storage & Sync (v0.1.0)
 
 ```bash
 # Configure AWS credentials
@@ -62,6 +81,41 @@ cicada sync --dry-run /local/data s3://my-bucket/data
 
 # Delete files in destination not in source
 cicada sync --delete /local/data s3://my-bucket/data
+```
+
+#### Metadata Extraction (v0.2.0)
+
+```bash
+# Extract metadata from FASTQ file
+cicada metadata extract sample_R1.fastq.gz
+
+# Extract with preset validation
+cicada metadata extract sample_R1.fastq.gz --preset illumina-novaseq
+
+# Save metadata to file
+cicada metadata extract sample_R1.fastq.gz --format json --output metadata.json
+
+# List available instrument presets
+cicada metadata preset list
+
+# Show preset details
+cicada metadata preset show illumina-novaseq
+```
+
+#### DOI Preparation (v0.2.0)
+
+```bash
+# Validate metadata for DOI readiness
+cicada doi validate sample.fastq
+
+# Prepare dataset for DOI registration with enrichment
+cicada doi prepare sample_R1.fastq sample_R2.fastq \
+  --enrich metadata.yaml \
+  --publisher "My Lab" \
+  --output doi-ready.json
+
+# Check quality score
+jq '.validation.score' doi-ready.json
 ```
 
 ## Installation

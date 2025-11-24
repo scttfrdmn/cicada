@@ -7,6 +7,95 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-01-23
+
+Major release adding comprehensive metadata extraction and DOI preparation capabilities for research data management.
+
+### Added
+
+- **Metadata Extraction System**:
+  - FASTQ metadata extractor with quality score analysis
+  - Gzip compression support (.fastq.gz)
+  - Automatic file format detection
+  - Paired-end read detection (R1/R2, _1/_2 patterns)
+  - Large file sampling (10,000 read limit for performance)
+  - Thread-safe concurrent extraction
+  - Extractor registry with plugin architecture
+  - CLI commands: `cicada metadata extract`, `cicada metadata validate`
+
+- **Instrument Preset System**:
+  - 8 default presets: Illumina (NovaSeq, MiSeq, NextSeq), Zeiss (LSM 880/900/980), Generic (sequencing, microscopy)
+  - Field-level validation (required vs optional fields)
+  - Quality scoring system (0-100 scale: 60% required + 40% optional)
+  - Preset search by manufacturer and instrument type
+  - Template generation support
+  - CLI commands: `cicada metadata preset list`, `cicada metadata preset show`
+
+- **DOI Preparation Workflow**:
+  - DataCite Metadata Schema v4.5 mapping
+  - DOI readiness validation (6 required + 14 recommended fields)
+  - Quality scoring with actionable recommendations
+  - Metadata enrichment from YAML/JSON files
+  - Multi-file dataset support
+  - Author/creator handling with ORCID support
+  - Related identifier tracking
+  - Funding reference support
+  - CLI commands: `cicada doi prepare`, `cicada doi validate`
+
+- **Provider Infrastructure**:
+  - Provider registry (DataCite, Zenodo, future: Dryad, Figshare)
+  - API structure for DOI minting and updates
+  - Sandbox and production environment support
+  - Configuration management for provider credentials
+
+- **Testing**:
+  - 29 integration tests using real data (no mocks)
+  - 11 performance benchmarks
+  - 129 total tests (all passing)
+  - 50-83% test coverage across packages
+  - < 1 second integration test runtime
+
+- **Performance**:
+  - Small files: 31 μs per extraction (32,268 ops/sec)
+  - Medium files: 128 μs per extraction (7,809 ops/sec)
+  - Large files: 1 ms per extraction (constant due to sampling)
+  - Complete DOI workflow: 36 μs end-to-end
+  - Preset validation: 478 ns (sub-microsecond)
+  - 4-8x speedup with concurrent processing
+
+- **Documentation** (5,550+ lines):
+  - Metadata Extraction Guide (800+ lines)
+  - DOI Workflow Guide (900+ lines)
+  - Instrument Preset Guide (900+ lines)
+  - Provider Setup Guide (1,000+ lines)
+  - User Scenarios v0.2.0 with 5 personas (1,950 lines)
+  - Integration Testing Guide (377 lines)
+  - Performance Benchmarks (400+ lines)
+  - CLI examples for Nextflow, Snakemake, Python, Bash
+
+### Changed
+
+- Updated user scenarios with v0.2.0 metadata features
+- Expanded target user profile to include small labs (2-10 people)
+
+### Performance
+
+- Metadata extraction: 31 μs - 1 ms per file
+- Monthly processing for small lab (200 files): < 30 ms
+- Annual archive (10,000 files): < 2 seconds
+- Memory efficiency: < 1 MB per concurrent operation
+
+### Known Limitations
+
+- File format support: FASTQ only (CZI, OME-TIFF placeholders for v0.3.0)
+- Provider integration: API structure complete, actual API calls stubbed (v0.3.0)
+- Custom presets: 8 built-in presets, no user-defined presets yet (v0.3.0)
+- Metadata enrichment: Manual YAML/JSON editing (no interactive UI, v0.3.0)
+
+### Breaking Changes
+
+**None.** v0.2.0 is fully backward compatible with v0.1.0.
+
 ## [0.1.0] - 2025-11-23
 
 Initial release of Cicada - Foundational storage and sync layer for the dormant data commons platform.
@@ -76,5 +165,6 @@ Initial release of Cicada - Foundational storage and sync layer for the dormant 
 - No background daemon (runs in foreground)
 - No resume capability for interrupted transfers
 
-[Unreleased]: https://github.com/scttfrdmn/cicada/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/scttfrdmn/cicada/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/scttfrdmn/cicada/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/scttfrdmn/cicada/releases/tag/v0.1.0
