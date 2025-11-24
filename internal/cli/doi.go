@@ -15,14 +15,18 @@
 package cli
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
+	"github.com/scttfrdmn/cicada/internal/config"
 	"github.com/scttfrdmn/cicada/internal/doi"
 	"github.com/scttfrdmn/cicada/internal/metadata"
 )
@@ -398,9 +402,14 @@ Examples:
 // newDOIMintCmd creates the doi mint subcommand
 func newDOIMintCmd() *cobra.Command {
 	var (
-		provider string
-		dryRun   bool
-		draft    bool
+		providerName   string
+		dryRun         bool
+		draft          bool
+		publisher      string
+		license        string
+		enrichmentFile string
+		presetID       string
+		sandbox        bool
 	)
 
 	cmd := &cobra.Command{
@@ -411,30 +420,51 @@ func newDOIMintCmd() *cobra.Command {
 Validates metadata, interacts with configured provider (DataCite or Zenodo),
 and returns the minted DOI.
 
-NOTE: This requires provider configuration. See 'cicada doi config' for setup.
+NOTE: This requires provider configuration. Set credentials via environment
+variables, config file (~/.config/cicada/config.yaml), or .env file.
+
+Environment Variables:
+  Zenodo:
+    CICADA_ZENODO_TOKEN or ZENODO_TOKEN
+    CICADA_ZENODO_SANDBOX=true (optional)
+
+  DataCite:
+    CICADA_DATACITE_REPOSITORY_ID or DATACITE_REPOSITORY_ID
+    CICADA_DATACITE_PASSWORD or DATACITE_PASSWORD
+    CICADA_DATACITE_SANDBOX=true (optional)
 
 Examples:
-  # Mint DOI with default provider
-  cicada doi mint data/experiment.czi
+  # Mint DOI with Zenodo (free)
+  export CICADA_ZENODO_TOKEN="your-token"
+  cicada doi mint data/experiment.fastq --provider zenodo
+
+  # Mint with DataCite
+  export CICADA_DATACITE_REPOSITORY_ID="10.5072/FK2"
+  export CICADA_DATACITE_PASSWORD="your-password"
+  cicada doi mint data/sample.fastq --provider datacite
 
   # Dry run (validate without minting)
-  cicada doi mint data/sample.fastq --dry-run
+  cicada doi mint data/sample.fastq --provider zenodo --dry-run
 
-  # Mint as draft (not published)
-  cicada doi mint data/image.czi --draft
+  # With enrichment metadata
+  cicada doi mint data/image.czi --provider zenodo --enrich metadata.yaml
 
-  # Mint with specific provider
-  cicada doi mint data/sample.fastq --provider zenodo`,
+  # Use sandbox for testing
+  cicada doi mint data/test.fastq --provider zenodo --sandbox`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return fmt.Errorf("DOI minting not yet implemented - provider configuration required\n" +
-				"See 'cicada doi config' for setup instructions")
+			return runDOIMint(args[0], providerName, publisher, license, enrichmentFile, presetID, sandbox, dryRun, draft)
 		},
 	}
 
-	cmd.Flags().StringVar(&provider, "provider", "", "DOI provider (datacite, zenodo)")
+	cmd.Flags().StringVar(&providerName, "provider", "zenodo", "DOI provider (datacite, zenodo)")
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false, "Validate without actually minting")
 	cmd.Flags().BoolVar(&draft, "draft", false, "Create as draft (not published)")
+	cmd.Flags().StringVar(&publisher, "publisher", "", "Publisher name")
+	cmd.Flags().StringVar(&license, "license", "CC-BY-4.0", "License (default: CC-BY-4.0)")
+	cmd.Flags().StringVar(&enrichmentFile, "enrich", "", "Enrichment metadata file (JSON or YAML)")
+	cmd.Flags().StringVar(&presetID, "preset", "", "Instrument preset ID")
+	cmd.Flags().BoolVar(&sandbox, "sandbox", false, "Use sandbox/test environment")
 
 	return cmd
 }
@@ -547,4 +577,245 @@ Examples:
 	})
 
 	return cmd
+}
+
+// runDOIMint implements the DOI minting logic
+func runDOIMint(filePath, providerName, publisher, license, enrichmentFile, presetID string, sandbox, dryRun, draft bool) error {
+	ctx := context.Background()
+
+	// Check if file exists
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		return fmt.Errorf("file not found: %s", filePath)
+	}
+
+	fmt.Printf("Minting DOI for: %s\n", filepath.Base(filePath))
+	fmt.Printf("Provider: %s\n", providerName)
+	if sandbox {
+		fmt.Printf("Environment: SANDBOX (test)\n")
+	} else {
+		fmt.Printf("Environment: PRODUCTION\n")
+	}
+	if dryRun {
+		fmt.Printf("Mode: DRY RUN (no actual minting)\n")
+	}
+	fmt.Println()
+
+	// Step 1: Load credentials
+	fmt.Println("→ Loading credentials...")
+	credentials := config.NewProviderCredentials()
+	
+	// Load from all sources
+	credentials.LoadFromEnvironment()
+	
+	// Try to load from config file
+	configPath, err := config.ConfigPath()
+	if err == nil {
+		_ = credentials.LoadFromConfigFile(configPath)
+	}
+	
+	// Try to load from .env in current directory
+	workDir, err := os.Getwd()
+	if err == nil {
+		_ = credentials.LoadFromDotEnv(workDir)
+	}
+
+	// Step 2: Create provider
+	fmt.Printf("→ Initializing %s provider...\n", providerName)
+	var provider doi.Provider
+	
+	switch strings.ToLower(providerName) {
+	case "zenodo":
+		tokenCred := credentials.GetCredential("zenodo_token")
+		if tokenCred.Source == config.SourceNotFound {
+			return fmt.Errorf("Zenodo token not found. Set CICADA_ZENODO_TOKEN environment variable or configure in ~/.config/cicada/config.yaml")
+		}
+		
+		// Validate token
+		if err := config.ValidateZenodoToken(tokenCred.Value); err != nil {
+			return fmt.Errorf("invalid Zenodo token: %w", err)
+		}
+		
+		fmt.Printf("  Using token from %s: %s\n", tokenCred.Source, config.RedactToken(tokenCred.Value))
+		
+		zenodoConfig := &doi.ZenodoConfig{
+			Token:   tokenCred.Value,
+			Sandbox: sandbox,
+		}
+		
+		provider, err = doi.NewZenodoProvider(zenodoConfig)
+		if err != nil {
+			return fmt.Errorf("create Zenodo provider: %w", err)
+		}
+		
+	case "datacite":
+		repoIDCred := credentials.GetCredential("datacite_repository_id")
+		passwordCred := credentials.GetCredential("datacite_password")
+		
+		if repoIDCred.Source == config.SourceNotFound {
+			return fmt.Errorf("DataCite repository ID not found. Set CICADA_DATACITE_REPOSITORY_ID environment variable or configure in ~/.config/cicada/config.yaml")
+		}
+		if passwordCred.Source == config.SourceNotFound {
+			return fmt.Errorf("DataCite password not found. Set CICADA_DATACITE_PASSWORD environment variable or configure in ~/.config/cicada/config.yaml")
+		}
+		
+		// Validate credentials
+		if err := config.ValidateDataCiteRepositoryID(repoIDCred.Value); err != nil {
+			return fmt.Errorf("invalid DataCite repository ID: %w", err)
+		}
+		if err := config.ValidateDataCitePassword(passwordCred.Value); err != nil {
+			return fmt.Errorf("invalid DataCite password: %w", err)
+		}
+		
+		fmt.Printf("  Using repository ID from %s: %s\n", repoIDCred.Source, repoIDCred.Value)
+		fmt.Printf("  Using password from %s: %s\n", passwordCred.Source, config.RedactToken(passwordCred.Value))
+		
+		dataciteConfig := &doi.DataCiteConfig{
+			RepositoryID: repoIDCred.Value,
+			Password:     passwordCred.Value,
+			Sandbox:      sandbox,
+		}
+		
+		provider, err = doi.NewDataCiteProvider(dataciteConfig)
+		if err != nil {
+			return fmt.Errorf("create DataCite provider: %w", err)
+		}
+		
+	default:
+		return fmt.Errorf("unknown provider: %s (supported: zenodo, datacite)", providerName)
+	}
+
+	// Step 3: Extract metadata
+	fmt.Println("\n→ Extracting metadata...")
+	registry := metadata.NewExtractorRegistry()
+	registry.RegisterDefaults()
+	
+	extractedMeta, err := registry.Extract(filePath)
+	if err != nil {
+		return fmt.Errorf("extract metadata: %w", err)
+	}
+
+	fmt.Printf("  Extracted %d metadata fields\n", len(extractedMeta))
+
+	// Step 4: Load enrichment if provided
+	var enrichment map[string]interface{}
+	if enrichmentFile != "" {
+		fmt.Printf("\n→ Loading enrichment from %s...\n", enrichmentFile)
+		enrichData, err := os.ReadFile(enrichmentFile)
+		if err != nil {
+			return fmt.Errorf("read enrichment file: %w", err)
+		}
+		
+		if err := yaml.Unmarshal(enrichData, &enrichment); err != nil {
+			if err := json.Unmarshal(enrichData, &enrichment); err != nil {
+				return fmt.Errorf("parse enrichment file: %w", err)
+			}
+		}
+	}
+
+	// Step 5: Prepare dataset
+	fmt.Println("\n→ Preparing DOI metadata...")
+	
+	providerRegistry := doi.NewProviderRegistry()
+	providerRegistry.Register(provider)
+	_ = providerRegistry.SetActive(provider.Name())
+	
+	workflowConfig := &doi.WorkflowConfig{
+		Publisher:          publisher,
+		License:            license,
+		MinQualityScore:    60.0,
+		RequireRealAuthors: true,
+		RequireDescription: true,
+	}
+	
+	workflow := doi.NewDOIWorkflow(workflowConfig, providerRegistry)
+	
+	prepReq := &doi.PrepareRequest{
+		FilePath:   filePath,
+		Metadata:   extractedMeta,
+		Enrichment: enrichment,
+		PresetID:   presetID,
+	}
+	
+	result, err := workflow.Prepare(prepReq)
+	if err != nil {
+		return fmt.Errorf("prepare metadata: %w", err)
+	}
+
+	// Step 6: Validate
+	fmt.Printf("\n→ Validating metadata...\n")
+	fmt.Printf("  Quality Score: %.1f/100 (%s)\n", result.Validation.Score, doi.GetQualityLevel(result.Validation.Score))
+	
+	if len(result.Validation.Errors) > 0 {
+		fmt.Printf("  ✗ %d errors found:\n", len(result.Validation.Errors))
+		for _, err := range result.Validation.Errors {
+			fmt.Printf("    • %s\n", err)
+		}
+		return fmt.Errorf("validation failed")
+	}
+	
+	if len(result.Validation.Warnings) > 0 {
+		fmt.Printf("  ⚠ %d warnings:\n", len(result.Validation.Warnings))
+		for _, warning := range result.Validation.Warnings {
+			fmt.Printf("    • %s\n", warning)
+		}
+	}
+	
+	if result.Validation.IsReady {
+		fmt.Printf("  ✓ Ready for DOI minting\n")
+	}
+
+	// Show dataset info
+	fmt.Printf("\n→ Dataset Information:\n")
+	fmt.Printf("  Title: %s\n", result.Dataset.Title)
+	fmt.Printf("  Authors: %d\n", len(result.Dataset.Authors))
+	for i, author := range result.Dataset.Authors {
+		fmt.Printf("    %d. %s", i+1, author.Name)
+		if author.ORCID != "" {
+			fmt.Printf(" (ORCID: %s)", author.ORCID)
+		}
+		if author.Affiliation != "" {
+			fmt.Printf(" - %s", author.Affiliation)
+		}
+		fmt.Println()
+	}
+	fmt.Printf("  Publisher: %s\n", result.Dataset.Publisher)
+	fmt.Printf("  License: %s\n", result.Dataset.License)
+
+	// Step 7: Dry run check
+	if dryRun {
+		fmt.Println("\n✓ DRY RUN COMPLETE")
+		fmt.Println("  Metadata is valid and ready for minting.")
+		fmt.Println("  Remove --dry-run flag to actually mint the DOI.")
+		return nil
+	}
+
+	// Step 8: Mint DOI
+	fmt.Println("\n→ Minting DOI...")
+	fmt.Println("  This may take a few moments...")
+	
+	startTime := time.Now()
+	mintedDOI, err := provider.Mint(ctx, result.Dataset)
+	if err != nil {
+		return fmt.Errorf("mint DOI: %w", err)
+	}
+	duration := time.Since(startTime)
+
+	// Step 9: Success!
+	fmt.Printf("\n✓ DOI MINTED SUCCESSFULLY in %.1fs\n\n", duration.Seconds())
+	fmt.Printf("DOI: %s\n", mintedDOI.DOI)
+	if mintedDOI.URL != "" {
+		fmt.Printf("URL: %s\n", mintedDOI.URL)
+	}
+	fmt.Printf("State: %s\n", mintedDOI.State)
+	fmt.Printf("Created: %s\n", mintedDOI.CreatedAt.Format(time.RFC3339))
+	
+	fmt.Println("\n🎉 Your data now has a permanent identifier!")
+	fmt.Println("   You can cite this DOI in publications.")
+	
+	if sandbox {
+		fmt.Println("\n⚠ NOTE: This is a SANDBOX DOI (test only)")
+		fmt.Println("   Remove --sandbox flag to mint a production DOI.")
+	}
+
+	return nil
 }
