@@ -156,43 +156,8 @@ func (e *TIFFExtractor) ExtractFromReader(r io.Reader, filename string) (map[str
 }
 
 // --- OME-TIFF Extractor ---
-
-type OMETIFFExtractor struct{}
-
-func (e *OMETIFFExtractor) Name() string {
-	return "OME-TIFF"
-}
-
-func (e *OMETIFFExtractor) SupportedFormats() []string {
-	return []string{".ome.tif", ".ome.tiff"}
-}
-
-func (e *OMETIFFExtractor) CanHandle(filename string) bool {
-	lower := strings.ToLower(filename)
-	return strings.HasSuffix(lower, ".ome.tif") || strings.HasSuffix(lower, ".ome.tiff")
-}
-
-func (e *OMETIFFExtractor) Extract(filepath string) (map[string]interface{}, error) {
-	// TODO: Implement OME-TIFF metadata extraction
-	// Parse OME-XML embedded in TIFF
-	// Extract:
-	// - Instrument information
-	// - Objective details
-	// - Channel information
-	// - Dimensions (X, Y, Z, T, C)
-	// - Pixel size
-	// - Acquisition parameters
-
-	metadata := map[string]interface{}{
-		"format": "OME-TIFF",
-	}
-
-	return metadata, nil
-}
-
-func (e *OMETIFFExtractor) ExtractFromReader(r io.Reader, filename string) (map[string]interface{}, error) {
-	return nil, fmt.Errorf("not implemented")
-}
+// The full implementation is in ome_tiff.go
+// This comment kept for reference in extractor sequence
 
 // --- Zeiss CZI Extractor ---
 // The full implementation is in zeiss_czi.go
