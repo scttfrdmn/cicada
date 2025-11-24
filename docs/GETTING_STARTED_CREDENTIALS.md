@@ -1,16 +1,72 @@
-# Getting Started: Setting Up Your Credentials
+# Getting Started with DOI Publishing
+
+**Setting up Cicada to publish DOIs for your research data**
 
 **For researchers and lab managers with minimal technical experience**
 
-This guide will help you set up Cicada to publish DOIs. No technical background required - just follow the steps!
+This guide will help you set up Cicada to publish DOIs (Digital Object Identifiers) for your research data. No technical background required - just follow the steps!
 
 ## What You Need
 
-To publish DOIs with Cicada, you need credentials (like a password) from either:
+To publish DOIs with Cicada, you need credentials (like a password) from a DOI registration service.
+
+**Two main options:**
 - **Zenodo** (free for everyone)
 - **DataCite** (requires institutional membership)
 
-**We recommend Zenodo** for most users because it's completely free and easy to set up.
+### Understanding Zenodo vs DataCite
+
+**What are these services?**
+
+Both Zenodo and DataCite are services that create permanent DOIs (Digital Object Identifiers) for your research data. A DOI is like a permanent web address that always points to your data, even if it moves to a different server.
+
+**Zenodo:**
+- A **free repository and DOI service** run by CERN (the European physics lab)
+- Anyone can create an account and start publishing immediately
+- Includes free file storage (up to 50 GB per dataset)
+- DOIs look like: `10.5281/zenodo.123456`
+- Perfect for: Individual researchers, small labs, open science projects
+- Website: https://zenodo.org
+
+**DataCite:**
+- A **membership-based DOI service** for institutions
+- Your university or research institution needs to be a member
+- You use your institution's credentials through Cicada
+- DOIs include your institution's prefix: `10.12345/yourdata`
+- Perfect for: Large institutions, institutional repositories, compliance requirements
+- Website: https://datacite.org
+
+### Which One Should You Use?
+
+**Check with your institution's library FIRST!**
+
+Before setting anything up, contact your institutional library or research data office and ask:
+
+> "Does our institution have a DataCite membership or preferred DOI service for research data?"
+
+**If they say YES to DataCite:**
+- ✅ Use DataCite (see [Part 2B: DataCite Setup](#for-datacite-users))
+- Your DOIs will be under your institution's prefix
+- May be required for institutional compliance
+- Ask them for your credentials (repository ID and password)
+
+**If they say NO or don't have DOI services:**
+- ✅ Use Zenodo (see [Part 1: Zenodo Setup](#part-1-getting-your-zenodo-credentials-5-minutes))
+- Free and easy to set up yourself
+- No institutional approval needed
+- Works great for most research data
+
+**If you're not sure or don't have institutional support:**
+- ✅ Start with Zenodo - it's free and takes 5 minutes
+- You can always add DataCite later if needed
+
+**Can I use both?**
+
+Yes! Cicada supports both, and you can switch between them with a simple flag:
+```bash
+cicada doi publish data.fastq --provider zenodo
+cicada doi publish data.fastq --provider datacite
+```
 
 ## Part 1: Getting Your Zenodo Credentials (5 minutes)
 
@@ -214,9 +270,9 @@ You probably want to add more details about your data:
 
 ---
 
-## For DataCite Users
+## Part 2B: DataCite Setup (For Institutional Users)
 
-If your institution has a DataCite membership instead of using Zenodo:
+If your institution has a DataCite membership (recommended to check with your library first):
 
 ### Step 1: Get Your Credentials from Your Institution
 
