@@ -12,6 +12,143 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package metadata provides metadata extraction for scientific instrument files.
+//
+// # Zeiss CZI Format
+//
+// This file implements metadata extraction for Carl Zeiss Image (CZI) files,
+// the native file format of ZEN software by Carl Zeiss Microscopy GmbH.
+//
+// CZI files are used by Zeiss confocal and light microscopy systems including:
+//   - LSM 880, LSM 900, LSM 980 (confocal microscopes)
+//   - Axio Scan.Z1 (slide scanner)
+//   - ELYRA systems (super-resolution microscopy)
+//   - Other Zeiss microscopy platforms running ZEN software
+//
+// ## File Format Overview
+//
+// CZI files use a proprietary binary format with the following structure:
+//   - File Header: 16-byte header with magic bytes "ZISRAWFILE"
+//   - Segments: Sequential segments containing metadata and image data
+//   - Metadata: UTF-8 encoded XML describing acquisition parameters
+//   - SubBlocks: Compressed image data tiles
+//   - Attachments: Thumbnails, labels, and supplementary data
+//
+// The format is designed for multi-dimensional microscopy data with support for:
+//   - Multiple channels (fluorescence, brightfield, etc.)
+//   - Z-stacks (3D imaging)
+//   - Time series (4D imaging)
+//   - Multi-position/tile imaging
+//   - Pyramidal resolution levels
+//
+// ## Metadata Extraction
+//
+// This extractor focuses on the XML metadata segment which contains:
+//   - Instrument configuration (microscope model, objectives, detectors)
+//   - Image dimensions (X, Y, Z, C, T)
+//   - Pixel scaling (physical dimensions)
+//   - Channel information (wavelengths, dyes, detector settings)
+//   - Acquisition parameters (exposure, laser power, gain)
+//   - Operator and timestamp information
+//
+// The implementation uses only Go standard library (no CGo dependencies) by:
+//   1. Parsing the binary segment structure
+//   2. Locating the metadata segment by ID
+//   3. Extracting and parsing the XML content
+//
+// ## References and Sources
+//
+// ### Official Documentation
+//
+// ZEISS CZI Image File Format:
+// https://www.zeiss.com/microscopy/us/products/software/zeiss-zen/czi-image-file-format.html
+//
+// ZEISS describes CZI as a fully documented file format specifically developed
+// for microscopy imaging requirements. The format specification is available
+// under license from ZEISS for software developers.
+//
+// ### Open Source Libraries
+//
+// libCZI - Official C++ Library (ZEISS):
+// https://github.com/zeiss-microscopy/libCZI
+// https://zeiss.github.io/libczi/
+//
+// Open source cross-platform C++ library for reading and writing CZI files.
+// This is the reference implementation maintained by ZEISS.
+//
+// pylibCZIrw - Python Wrapper (ZEISS):
+// https://github.com/ZEISS/pylibczirw
+// https://pypi.org/project/pylibCZIrw/
+//
+// Official Python wrapper for libCZI, providing Python access to CZI files.
+//
+// czifile - Python Library (Community):
+// https://github.com/cgohlke/czifile
+// https://github.com/AllenCellModeling/czifile
+//
+// Pure Python library for reading CZI files, widely used in the scientific
+// Python community. Developed by Christoph Gohlke at UC Irvine.
+//
+// ### Bio-Formats Integration
+//
+// Bio-Formats - OME Consortium:
+// https://bio-formats.readthedocs.io/en/v8.1.0/formats/zeiss-czi.html
+// https://docs.openmicroscopy.org/bio-formats/
+//
+// Open Microscopy Environment's Bio-Formats library includes comprehensive
+// CZI support with detailed format documentation and metadata mapping.
+//
+// ### Format Specification
+//
+// ZISRAW File Format Design Specification:
+// (Confidential - Available under license from ZEISS)
+//
+// The complete format specification is available from ZEISS for developers
+// who need to implement CZI support. Contact ZEISS Microscopy for access.
+//
+// ### Research and Development Resources
+//
+// ZEISS Microscopy Developer Community:
+// https://forums.zeiss.com/microscopy/community/
+//
+// Community forum for developers working with ZEISS microscopy file formats
+// and APIs. Includes discussions on CZI format, metadata extraction, and
+// integration with analysis software.
+//
+// Allen Cell Modeling - AIND Metadata Mapper:
+// https://github.com/AllenNeuralDynamics/aind-metadata-mapper/issues/36
+//
+// Discussion on CZI metadata extraction requirements for large-scale
+// neuroscience research data pipelines.
+//
+// ## Implementation Notes
+//
+// This implementation is based on:
+//   - Analysis of the Bio-Formats CZI reader implementation
+//   - Study of the czifile Python library structure
+//   - Documentation from the libCZI C++ library
+//   - Testing with real CZI files from LSM 880/900/980 systems
+//
+// The extractor handles the most common CZI metadata fields but does not
+// implement the complete specification. It focuses on metadata extraction
+// for FAIR data compliance and instrument awareness.
+//
+// ## Limitations
+//
+//   - Does not extract image pixel data (metadata only)
+//   - Does not parse all segment types (focuses on metadata segment)
+//   - XML structure based on ZEN 2.x/3.x format (may need updates for older versions)
+//   - Does not handle all CZI format variations (e.g., CZI with incomplete metadata)
+//
+// ## Future Enhancements
+//
+// This implementation could be extracted into a standalone Go library for
+// the broader scientific Go ecosystem. There are currently no pure Go
+// libraries for CZI file format support.
+//
+// Potential library name: go-czi or czi-go
+// Potential features: Full segment parsing, image tile extraction, pyramidal access
+//
 package metadata
 
 import (
