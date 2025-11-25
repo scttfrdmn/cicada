@@ -9,23 +9,23 @@
 
 ## Overview
 
-v0.4.0 transforms Cicada from a data management platform into a complete data publication platform with live DOI provider integration, multi-cloud storage, and advanced metadata capabilities.
+v0.4.0 transforms Cicada from a data management platform into a complete data publication platform with live DOI provider integration, advanced AWS S3 features, and enhanced metadata capabilities.
 
 ### Goals
 
 1. **Live Provider Integration**: Connect to DataCite and Zenodo for real DOI minting
-2. **Multi-Cloud Storage**: Expand beyond S3 to Azure Blob and Google Cloud Storage
+2. **Advanced AWS S3 Features**: Intelligent-Tiering, Batch Operations, S3 Select, Object Lock
 3. **Advanced Metadata**: Custom extractors, metadata search, and enhanced validation
 4. **Production Readiness**: Comprehensive error handling, retry logic, and monitoring
 
 ### Success Criteria
 
 - ✅ Mint real DOIs via DataCite and Zenodo
-- ✅ Sync data to Azure and GCS in addition to S3
+- ✅ Advanced S3 features (Intelligent-Tiering, Batch Ops, Select, Object Lock)
 - ✅ Users can create custom metadata extractors
 - ✅ Enhanced metadata search and filtering
 - ✅ 95%+ test coverage on new code
-- ✅ Complete provider integration documentation
+- ✅ Complete provider integration and advanced features documentation
 
 ---
 
@@ -56,24 +56,29 @@ v0.4.0 transforms Cicada from a data management platform into a complete data pu
 - Comprehensive error handling and retry logic
 - Complete integration documentation
 
-### Theme 2: Multi-Cloud Storage (Weeks 5-6)
+### Theme 2: Advanced AWS S3 Features (Weeks 5-6)
 
-**Goal**: Expand storage backend support to Azure and GCS
+**Goal**: Enhance AWS S3 integration with advanced features
 
 **New Issues**:
-- Azure Blob Storage backend implementation
-- Google Cloud Storage backend implementation
-- Unified backend configuration system
-- Cross-cloud sync capabilities
-- Multi-cloud CLI commands
-- Storage backend documentation
+- S3 Intelligent-Tiering automation
+- S3 Batch Operations support
+- S3 Select for querying data
+- S3 Object Lock for compliance
+- S3 Transfer Acceleration
+- Cross-region replication
+- S3 Inventory reports
+- Advanced S3 cost optimization tools
 
 **Deliverables**:
-- Azure Blob Storage backend
-- Google Cloud Storage backend
-- Unified configuration for all storage backends
-- Documentation for each storage backend
-- Migration guides from S3 to other backends
+- S3 Intelligent-Tiering automation
+- S3 Batch Operations CLI commands
+- S3 Select query interface
+- Object Lock for compliance workflows
+- Transfer Acceleration support
+- Cross-region replication setup
+- Cost analysis and optimization tools
+- Advanced S3 documentation
 
 ### Theme 3: Advanced Metadata Features (Weeks 7-8)
 
@@ -155,28 +160,26 @@ v0.4.0 transforms Cicada from a data management platform into a complete data pu
 - ✅ Documentation complete
 - ✅ Ready for production testing
 
-### Phase 3: Multi-Cloud Storage (Weeks 5-6)
+### Phase 3: Advanced AWS S3 Features (Weeks 5-6)
 
-**Week 5: Azure Blob Storage**
-- [ ] Create Azure backend interface implementation (2 days)
-- [ ] Azure authentication and configuration (1 day)
-- [ ] Azure-specific operations (list, upload, download) (2 days)
-- [ ] Azure integration tests (1 day)
-- [ ] Azure documentation (1 day)
+**Week 5: S3 Advanced Features Part 1**
+- [ ] S3 Intelligent-Tiering automation (2 days)
+- [ ] S3 Batch Operations support (2 days)
+- [ ] S3 Transfer Acceleration (1 day)
+- [ ] Documentation and examples (2 days)
 
-**Week 6: Google Cloud Storage**
-- [ ] Create GCS backend interface implementation (2 days)
-- [ ] GCS authentication and configuration (1 day)
-- [ ] GCS-specific operations (list, upload, download) (2 days)
-- [ ] GCS integration tests (1 day)
-- [ ] GCS documentation (1 day)
-- [ ] Cross-cloud sync examples (1 day)
+**Week 6: S3 Advanced Features Part 2**
+- [ ] S3 Select query interface (2 days)
+- [ ] S3 Object Lock for compliance (1 day)
+- [ ] Cross-region replication (1 day)
+- [ ] S3 cost optimization tools (2 days)
+- [ ] Documentation and examples (1 day)
 
 **Milestones**:
-- ✅ Azure backend functional
-- ✅ GCS backend functional
-- ✅ Unified backend configuration
-- ✅ Documentation for all backends
+- ✅ S3 advanced features implemented
+- ✅ Cost optimization tools functional
+- ✅ Compliance features ready
+- ✅ Documentation complete
 
 ### Phase 4: Advanced Metadata (Weeks 7-8)
 
@@ -302,27 +305,47 @@ v0.4.0 transforms Cicada from a data management platform into a complete data pu
 
 ## New Issues to Create
 
-### Multi-Cloud Storage Issues
+### Advanced AWS S3 Issues
 
-1. **Azure Blob Storage Backend** (#TBD)
+1. **S3 Intelligent-Tiering Automation** (#TBD)
    - Priority: High
-   - Estimate: 5 days
-   - Labels: `type: feature`, `area: storage`, `priority: high`
+   - Estimate: 2 days
+   - Labels: `type: feature`, `area: sync`, `priority: high`
 
-2. **Google Cloud Storage Backend** (#TBD)
-   - Priority: High
-   - Estimate: 5 days
-   - Labels: `type: feature`, `area: storage`, `priority: high`
-
-3. **Unified Backend Configuration** (#TBD)
+2. **S3 Batch Operations Support** (#TBD)
    - Priority: Medium
    - Estimate: 2 days
-   - Labels: `type: feature`, `area: config`, `priority: medium`
+   - Labels: `type: feature`, `area: sync`, `priority: medium`
 
-4. **Cross-Cloud Sync Documentation** (#TBD)
+3. **S3 Select Query Interface** (#TBD)
    - Priority: Medium
    - Estimate: 2 days
-   - Labels: `type: documentation`, `area: storage`
+   - Labels: `type: feature`, `area: sync`, `priority: medium`
+
+4. **S3 Object Lock for Compliance** (#TBD)
+   - Priority: Medium
+   - Estimate: 1 day
+   - Labels: `type: feature`, `area: compliance`, `priority: medium`
+
+5. **S3 Transfer Acceleration** (#TBD)
+   - Priority: Low
+   - Estimate: 1 day
+   - Labels: `type: feature`, `area: sync`, `priority: low`
+
+6. **S3 Cross-Region Replication** (#TBD)
+   - Priority: Medium
+   - Estimate: 1 day
+   - Labels: `type: feature`, `area: sync`, `priority: medium`
+
+7. **S3 Cost Optimization Tools** (#TBD)
+   - Priority: High
+   - Estimate: 2 days
+   - Labels: `type: feature`, `area: sync`, `priority: high`
+
+8. **Advanced S3 Features Documentation** (#TBD)
+   - Priority: High
+   - Estimate: 2 days
+   - Labels: `type: documentation`, `area: sync`
 
 ### Advanced Metadata Issues
 
@@ -394,16 +417,11 @@ v0.4.0 transforms Cicada from a data management platform into a complete data pu
 
 ### External Dependencies
 
-**Azure SDK for Go**:
+**AWS SDK for Go v2** (already included):
 ```go
-github.com/Azure/azure-sdk-for-go/sdk/storage/azblob
-github.com/Azure/azure-sdk-for-go/sdk/azidentity
-```
-
-**Google Cloud SDK for Go**:
-```go
-cloud.google.com/go/storage
-google.golang.org/api/option
+github.com/aws/aws-sdk-go-v2/service/s3
+github.com/aws/aws-sdk-go-v2/feature/s3/manager
+github.com/aws/aws-sdk-go-v2/config
 ```
 
 **Prometheus Client**:
@@ -473,11 +491,14 @@ github.com/go-python/gpython
    - Provider configuration
    - Troubleshooting
 
-2. **MULTI_CLOUD_STORAGE.md**
-   - Azure Blob Storage setup
-   - Google Cloud Storage setup
-   - Cross-cloud sync patterns
-   - Cost comparison
+2. **ADVANCED_S3_FEATURES.md**
+   - S3 Intelligent-Tiering setup and automation
+   - S3 Batch Operations usage
+   - S3 Select query examples
+   - S3 Object Lock for compliance
+   - S3 Transfer Acceleration
+   - Cross-region replication
+   - Cost optimization strategies
 
 3. **CUSTOM_EXTRACTORS.md**
    - Plugin system architecture
@@ -493,9 +514,10 @@ github.com/go-python/gpython
 
 ### Documentation Updates
 
-- Update GETTING_STARTED.md with Azure/GCS examples
+- Update GETTING_STARTED.md with DOI publication examples
 - Update WORKFLOWS.md with DOI publication workflows
 - Update TROUBLESHOOTING.md with provider-specific issues
+- Update STORAGE.md with advanced S3 features
 - Update ADVANCED.md with custom extractors and monitoring
 
 ---
