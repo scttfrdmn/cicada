@@ -169,6 +169,7 @@ const (
 )
 
 // CZI segment types
+//nolint:unused // Reserved for future CZI parsing functionality
 const (
 	segmentMetadata = 0x00000001 // XML metadata segment
 	segmentSubBlock = 0x00000002 // Image data subblock
@@ -301,7 +302,7 @@ func (e *ZeissCZIExtractor) Extract(filepath string) (map[string]interface{}, er
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	// Get file info
 	info, err := f.Stat()

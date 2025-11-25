@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build integration
-// +build integration
 
 package integration
 
@@ -29,6 +28,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/scttfrdmn/cicada/internal/metadata"
 	cicadasync "github.com/scttfrdmn/cicada/internal/sync"
 )
 
@@ -458,4 +458,233 @@ func cleanupS3Prefix(ctx context.Context, client *s3.Client, bucket, prefix stri
 	}
 
 	return nil
+}
+
+// TestS3TaggingIntegration tests S3 object tagging with metadata.
+func TestS3TaggingIntegration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration test in short mode")
+	}
+
+	// Set AWS environment variables
+	originalProfile := os.Getenv("AWS_PROFILE")
+	originalRegion := os.Getenv("AWS_REGION")
+	if err := os.Setenv("AWS_PROFILE", testProfile); err != nil {
+		t.Fatalf("Failed to set AWS_PROFILE: %v", err)
+	}
+	if err := os.Setenv("AWS_REGION", testRegion); err != nil {
+		t.Fatalf("Failed to set AWS_REGION: %v", err)
+	}
+	defer func() {
+		_ = os.Setenv("AWS_PROFILE", originalProfile)
+		_ = os.Setenv("AWS_REGION", originalRegion)
+	}()
+
+	ctx := context.Background()
+
+	// Load AWS config
+	cfg, err := config.LoadDefaultConfig(ctx,
+		config.WithSharedConfigProfile(testProfile),
+		config.WithRegion(testRegion),
+	)
+	if err != nil {
+		t.Fatalf("Failed to load AWS config: %v", err)
+	}
+
+	// Create S3 client
+	client := s3.NewFromConfig(cfg)
+
+	// Create test prefix
+	testPrefix := fmt.Sprintf("tagging-test-%d/", time.Now().Unix())
+	testKey := testPrefix + "test-file.txt"
+
+	// Clean up at end
+	defer func() {
+		if err := cleanupS3Prefix(ctx, client, testBucket, testPrefix); err != nil {
+			t.Logf("Warning: failed to cleanup S3 prefix: %v", err)
+		}
+	}()
+
+	// Create S3 backend
+	backend, err := cicadasync.NewS3Backend(ctx, testBucket)
+	if err != nil {
+		t.Fatalf("NewS3Backend() error: %v", err)
+	}
+
+	t.Run("WriteWithMetadata", func(t *testing.T) {
+		// Import metadata package for creating test metadata
+		testContent := "Test file content with metadata"
+		testMetadata := &metadata.Metadata{
+			SchemaName: "test_schema",
+			Fields: map[string]interface{}{
+				"instrument_type":  "microscopy",
+				"manufacturer":     "Zeiss",
+				"instrument_model": "LSM 880",
+				"format":           "CZI",
+				"operator":         "test-user",
+				"acquisition_date": "2025-11-24",
+			},
+			FileInfo: metadata.FileInfo{
+				Filename: "test-file.txt",
+				Format:   "TXT",
+			},
+		}
+
+		// Write file with metadata
+		err := backend.WriteWithMetadata(ctx, testKey, bytes.NewReader([]byte(testContent)), int64(len(testContent)), testMetadata)
+		if err != nil {
+			t.Fatalf("WriteWithMetadata() error: %v", err)
+		}
+
+		// Retrieve tags
+		tags, err := backend.GetObjectTagging(ctx, testKey)
+		if err != nil {
+			t.Fatalf("GetObjectTagging() error: %v", err)
+		}
+
+		// Verify tags were written
+		if len(tags) == 0 {
+			t.Error("Expected tags to be present, got empty map")
+		}
+
+		// Verify specific tags
+		expectedTags := map[string]string{
+			"instrument_type":  "microscopy",
+			"manufacturer":     "Zeiss",
+			"instrument_model": "LSM 880",
+		}
+
+		for key, expectedValue := range expectedTags {
+			if gotValue, ok := tags[key]; !ok {
+				t.Errorf("Expected tag %q to be present", key)
+			} else if gotValue != expectedValue {
+				t.Errorf("Tag %q = %v, want %v", key, gotValue, expectedValue)
+			}
+		}
+
+		t.Logf("Successfully wrote file with %d tags", len(tags))
+	})
+
+	t.Run("PutObjectTagging", func(t *testing.T) {
+		// Create a file without tags first
+		testKey2 := testPrefix + "test-file-2.txt"
+		testContent := "Test file without initial tags"
+		err := backend.Write(ctx, testKey2, bytes.NewReader([]byte(testContent)), int64(len(testContent)))
+		if err != nil {
+			t.Fatalf("Write() error: %v", err)
+		}
+
+		// Now add tags to existing object
+		testMetadata := &metadata.Metadata{
+			SchemaName: "updated_schema",
+			Fields: map[string]interface{}{
+				"instrument_type": "sequencing",
+				"manufacturer":    "Illumina",
+				"format":          "FASTQ",
+			},
+			FileInfo: metadata.FileInfo{
+				Format: "FASTQ",
+			},
+		}
+
+		err = backend.PutObjectTagging(ctx, testKey2, testMetadata)
+		if err != nil {
+			t.Fatalf("PutObjectTagging() error: %v", err)
+		}
+
+		// Retrieve and verify tags
+		tags, err := backend.GetObjectTagging(ctx, testKey2)
+		if err != nil {
+			t.Fatalf("GetObjectTagging() error: %v", err)
+		}
+
+		if len(tags) == 0 {
+			t.Error("Expected tags to be present after PutObjectTagging, got empty map")
+		}
+
+		// Verify tags
+		if instrumentType, ok := tags["instrument_type"]; !ok || instrumentType != "sequencing" {
+			t.Errorf("Expected instrument_type=sequencing, got %v", instrumentType)
+		}
+
+		t.Logf("Successfully added %d tags to existing object", len(tags))
+	})
+
+	t.Run("GetObjectTagging_NoTags", func(t *testing.T) {
+		// Create a file without tags
+		testKey3 := testPrefix + "test-file-no-tags.txt"
+		testContent := "File without tags"
+		err := backend.Write(ctx, testKey3, bytes.NewReader([]byte(testContent)), int64(len(testContent)))
+		if err != nil {
+			t.Fatalf("Write() error: %v", err)
+		}
+
+		// Retrieve tags
+		tags, err := backend.GetObjectTagging(ctx, testKey3)
+		if err != nil {
+			t.Fatalf("GetObjectTagging() error: %v", err)
+		}
+
+		if len(tags) != 0 {
+			t.Errorf("Expected no tags, got %d tags", len(tags))
+		}
+
+		t.Log("Correctly returned empty map for object without tags")
+	})
+
+	t.Run("TagPrioritization", func(t *testing.T) {
+		// Create metadata with more than 10 fields to test prioritization
+		testKey4 := testPrefix + "test-file-many-fields.txt"
+		testContent := "File with many metadata fields"
+		testMetadata := &metadata.Metadata{
+			SchemaName: "test_schema",
+			Fields: map[string]interface{}{
+				"instrument_type":  "microscopy",
+				"manufacturer":     "Zeiss",
+				"instrument_model": "LSM 880",
+				"operator":         "test-user",
+				"acquisition_date": "2025-11-24",
+				"extractor_name":   "zeiss_czi",
+				"extra_field_1":    "value1",
+				"extra_field_2":    "value2",
+				"extra_field_3":    "value3",
+				"extra_field_4":    "value4",
+				"extra_field_5":    "value5",
+			},
+			FileInfo: metadata.FileInfo{
+				Format: "CZI",
+			},
+		}
+
+		err := backend.WriteWithMetadata(ctx, testKey4, bytes.NewReader([]byte(testContent)), int64(len(testContent)), testMetadata)
+		if err != nil {
+			t.Fatalf("WriteWithMetadata() error: %v", err)
+		}
+
+		// Retrieve tags
+		tags, err := backend.GetObjectTagging(ctx, testKey4)
+		if err != nil {
+			t.Fatalf("GetObjectTagging() error: %v", err)
+		}
+
+		// Verify no more than 10 tags (S3 limit)
+		if len(tags) > 10 {
+			t.Errorf("Expected at most 10 tags (S3 limit), got %d", len(tags))
+		}
+
+		// Verify priority fields are present (instrument_type has highest priority)
+		if _, ok := tags["instrument_type"]; !ok {
+			t.Error("Expected high-priority field 'instrument_type' to be present")
+		}
+		if _, ok := tags["manufacturer"]; !ok {
+			t.Error("Expected high-priority field 'manufacturer' to be present")
+		}
+
+		// Verify extra fields are NOT present (lower priority, exceeded limit)
+		if _, ok := tags["extra_field_1"]; ok {
+			t.Error("Expected low-priority field 'extra_field_1' to be excluded due to 10-tag limit")
+		}
+
+		t.Logf("Correctly prioritized fields: %d tags written", len(tags))
+	})
 }

@@ -63,12 +63,22 @@ func BenchmarkMetadataExtraction_MediumFASTQ(b *testing.B) {
 		b.Fatalf("Failed to create test file: %v", err)
 	}
 	for i := 0; i < 1000; i++ {
-		f.WriteString("@SEQ_ID_" + string(rune(48+i%10)) + "\n")
-		f.WriteString("ACGTACGTACGTACGT\n")
-		f.WriteString("+\n")
-		f.WriteString("IIIIIIIIIIIIIIII\n")
+		if _, err := f.WriteString("@SEQ_ID_" + string(rune(48+i%10)) + "\n"); err != nil {
+			b.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString("ACGTACGTACGTACGT\n"); err != nil {
+			b.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString("+\n"); err != nil {
+			b.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString("IIIIIIIIIIIIIIII\n"); err != nil {
+			b.Fatalf("Failed to write to test file: %v", err)
+		}
 	}
-	f.Close()
+	if err := f.Close(); err != nil {
+		b.Fatalf("Failed to close test file: %v", err)
+	}
 
 	// Setup
 	registry := metadata.NewExtractorRegistry()
@@ -93,12 +103,22 @@ func BenchmarkMetadataExtraction_LargeFASTQ(b *testing.B) {
 		b.Fatalf("Failed to create test file: %v", err)
 	}
 	for i := 0; i < 10000; i++ {
-		f.WriteString("@SEQ_ID_" + string(rune(48+i%10)) + "\n")
-		f.WriteString("ACGTACGTACGTACGT\n")
-		f.WriteString("+\n")
-		f.WriteString("IIIIIIIIIIIIIIII\n")
+		if _, err := f.WriteString("@SEQ_ID_" + string(rune(48+i%10)) + "\n"); err != nil {
+			b.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString("ACGTACGTACGTACGT\n"); err != nil {
+			b.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString("+\n"); err != nil {
+			b.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString("IIIIIIIIIIIIIIII\n"); err != nil {
+			b.Fatalf("Failed to write to test file: %v", err)
+		}
 	}
-	f.Close()
+	if err := f.Close(); err != nil {
+		b.Fatalf("Failed to close test file: %v", err)
+	}
 
 	// Setup
 	registry := metadata.NewExtractorRegistry()
@@ -124,13 +144,25 @@ func BenchmarkMetadataExtraction_GzipFASTQ(b *testing.B) {
 	}
 	gzWriter := gzip.NewWriter(f)
 	for i := 0; i < 1000; i++ {
-		gzWriter.Write([]byte("@SEQ_ID_" + string(rune(48+i%10)) + "\n"))
-		gzWriter.Write([]byte("ACGTACGTACGTACGT\n"))
-		gzWriter.Write([]byte("+\n"))
-		gzWriter.Write([]byte("IIIIIIIIIIIIIIII\n"))
+		if _, err := gzWriter.Write([]byte("@SEQ_ID_" + string(rune(48+i%10)) + "\n")); err != nil {
+			b.Fatalf("Failed to write to gzip writer: %v", err)
+		}
+		if _, err := gzWriter.Write([]byte("ACGTACGTACGTACGT\n")); err != nil {
+			b.Fatalf("Failed to write to gzip writer: %v", err)
+		}
+		if _, err := gzWriter.Write([]byte("+\n")); err != nil {
+			b.Fatalf("Failed to write to gzip writer: %v", err)
+		}
+		if _, err := gzWriter.Write([]byte("IIIIIIIIIIIIIIII\n")); err != nil {
+			b.Fatalf("Failed to write to gzip writer: %v", err)
+		}
 	}
-	gzWriter.Close()
-	f.Close()
+	if err := gzWriter.Close(); err != nil {
+		b.Fatalf("Failed to close gzip writer: %v", err)
+	}
+	if err := f.Close(); err != nil {
+		b.Fatalf("Failed to close test file: %v", err)
+	}
 
 	// Setup
 	registry := metadata.NewExtractorRegistry()

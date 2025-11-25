@@ -85,15 +85,24 @@ func TestProviderCredentialsPrecedence(t *testing.T) {
 
 func TestLoadFromEnvironment(t *testing.T) {
 	// Set environment variables
-	os.Setenv("CICADA_ZENODO_TOKEN", "test-token-1")
-	os.Setenv("ZENODO_TOKEN", "test-token-2") // Should be overridden by CICADA_ prefix
-	os.Setenv("CICADA_DATACITE_REPOSITORY_ID", "10.5072/TEST")
-	os.Setenv("DATACITE_PASSWORD", "test-password")
+	if err := os.Setenv("CICADA_ZENODO_TOKEN", "test-token-1"); err != nil {
+		t.Fatalf("failed to set CICADA_ZENODO_TOKEN: %v", err)
+	}
+	if err := os.Setenv("ZENODO_TOKEN", "test-token-2"); err != nil {
+		t.Fatalf("failed to set ZENODO_TOKEN: %v", err)
+	}
+	if err := os.Setenv("CICADA_DATACITE_REPOSITORY_ID", "10.5072/TEST"); err != nil {
+		t.Fatalf("failed to set CICADA_DATACITE_REPOSITORY_ID: %v", err)
+	}
+	if err := os.Setenv("DATACITE_PASSWORD", "test-password"); err != nil {
+		t.Fatalf("failed to set DATACITE_PASSWORD: %v", err)
+	}
 	defer func() {
-		os.Unsetenv("CICADA_ZENODO_TOKEN")
-		os.Unsetenv("ZENODO_TOKEN")
-		os.Unsetenv("CICADA_DATACITE_REPOSITORY_ID")
-		os.Unsetenv("DATACITE_PASSWORD")
+		// Cleanup - errors here are not critical
+		_ = os.Unsetenv("CICADA_ZENODO_TOKEN")
+		_ = os.Unsetenv("ZENODO_TOKEN")
+		_ = os.Unsetenv("CICADA_DATACITE_REPOSITORY_ID")
+		_ = os.Unsetenv("DATACITE_PASSWORD")
 	}()
 
 	pc := NewProviderCredentials()

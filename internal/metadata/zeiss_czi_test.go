@@ -17,6 +17,8 @@ package metadata
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
+	"os"
 	"strings"
 	"testing"
 )
@@ -365,6 +367,73 @@ func TestZeissCZIExtractor_ExtractXMLMetadata(t *testing.T) {
 	}
 }
 
+func TestZeissCZIExtractor_Extract_FromFile(t *testing.T) {
+	extractor := &ZeissCZIExtractor{}
+
+	// Create test CZI file with XML metadata
+	xmlData := []byte(`<?xml version="1.0" encoding="utf-8"?>
+<ImageDocument>
+  <Metadata>
+    <Information>
+      <Instrument>
+        <Microscopes>
+          <Microscope Name="LSM880">
+            <System>LSM 880</System>
+          </Microscope>
+        </Microscopes>
+      </Instrument>
+      <Image>
+        <SizeX>512</SizeX>
+        <SizeY>512</SizeY>
+      </Image>
+    </Information>
+  </Metadata>
+  <Information>
+    <Application>
+      <Name>ZEN</Name>
+      <Version>3.0</Version>
+    </Application>
+  </Information>
+</ImageDocument>`)
+
+	data := createMinimalCZIFile(xmlData)
+
+	// Write to temporary file
+	tmpFile := t.TempDir() + "/test.czi"
+	if err := os.WriteFile(tmpFile, data, 0644); err != nil {
+		t.Fatalf("Failed to write temp file: %v", err)
+	}
+
+	// Extract from file
+	metadata, err := extractor.Extract(tmpFile)
+	if err != nil {
+		t.Fatalf("Extract() error = %v", err)
+	}
+
+	// Verify metadata
+	if metadata["format"] != "CZI" {
+		t.Errorf("format = %v, want CZI", metadata["format"])
+	}
+	if metadata["instrument_model"] != "LSM 880" {
+		t.Errorf("instrument_model = %v, want LSM 880", metadata["instrument_model"])
+	}
+	if metadata["image_width"] != 512 {
+		t.Errorf("image_width = %v, want 512", metadata["image_width"])
+	}
+}
+
+func TestZeissCZIExtractor_Extract_NonExistentFile(t *testing.T) {
+	extractor := &ZeissCZIExtractor{}
+
+	_, err := extractor.Extract("/nonexistent/file.czi")
+	if err == nil {
+		t.Error("Extract() should return error for non-existent file")
+	}
+	if !strings.Contains(err.Error(), "failed to open file") {
+		t.Errorf("Extract() error = %v, want error containing 'failed to open file'", err)
+	}
+}
+
 // createMinimalCZIFile creates a minimal valid CZI file structure for testing.
 // CZI file structure:
 //   - 16-byte file header with magic bytes "ZISRAWFILE"
@@ -390,11 +459,15 @@ func createMinimalCZIFile(xmlMetadata []byte) []byte {
 
 		// Allocated size = used size for simplicity
 		allocatedSize := int64(len(xmlMetadata))
-		binary.Write(buf, binary.LittleEndian, allocatedSize)
+		if err := binary.Write(buf, binary.LittleEndian, allocatedSize); err != nil {
+			panic(fmt.Sprintf("failed to write allocated size: %v", err))
+		}
 
 		// Used size
 		usedSize := int64(len(xmlMetadata))
-		binary.Write(buf, binary.LittleEndian, usedSize)
+		if err := binary.Write(buf, binary.LittleEndian, usedSize); err != nil {
+			panic(fmt.Sprintf("failed to write used size: %v", err))
+		}
 
 		// XML data
 		buf.Write(xmlMetadata)

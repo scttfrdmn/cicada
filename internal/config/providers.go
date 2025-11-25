@@ -366,13 +366,13 @@ func (pc *ProviderCredentials) checkGitRepository(path string) error {
 // ValidateZenodoToken validates a Zenodo token format
 func ValidateZenodoToken(token string) error {
 	if token == "" {
-		return fmt.Errorf("Zenodo token is empty")
+		return fmt.Errorf("zenodo token is empty")
 	}
 	if len(token) < 20 {
-		return fmt.Errorf("Zenodo token too short (expected 40+ characters, got %d)", len(token))
+		return fmt.Errorf("zenodo token too short (expected 40+ characters, got %d)", len(token))
 	}
 	if strings.Contains(token, " ") {
-		return fmt.Errorf("Zenodo token contains whitespace")
+		return fmt.Errorf("zenodo token contains whitespace")
 	}
 	return nil
 }

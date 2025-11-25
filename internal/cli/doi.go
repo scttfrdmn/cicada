@@ -310,19 +310,20 @@ Examples:
 			}
 
 			// Display results
-			if outputFormat == "json" {
+			switch outputFormat {
+			case "json":
 				data, err := json.MarshalIndent(result.Validation, "", "  ")
 				if err != nil {
 					return err
 				}
 				fmt.Println(string(data))
-			} else if outputFormat == "yaml" {
+			case "yaml":
 				data, err := yaml.Marshal(result.Validation)
 				if err != nil {
 					return err
 				}
 				fmt.Println(string(data))
-			} else {
+			default:
 				// Table format
 				fmt.Printf("DOI Validation Results\n")
 				fmt.Printf("======================\n\n")
@@ -627,7 +628,7 @@ func runDOIMint(filePath, providerName, publisher, license, enrichmentFile, pres
 	case "zenodo":
 		tokenCred := credentials.GetCredential("zenodo_token")
 		if tokenCred.Source == config.SourceNotFound {
-			return fmt.Errorf("Zenodo token not found. Set CICADA_ZENODO_TOKEN environment variable or configure in ~/.config/cicada/config.yaml")
+			return fmt.Errorf("zenodo token not found: set CICADA_ZENODO_TOKEN environment variable or configure in ~/.config/cicada/config.yaml")
 		}
 		
 		// Validate token

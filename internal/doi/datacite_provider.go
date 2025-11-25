@@ -90,6 +90,55 @@ func (p *DataCiteProvider) Name() string {
 	return "datacite"
 }
 
+// doRequestWithRetry wraps an HTTP request with retry logic
+//nolint:unused // Will be integrated into existing methods in future refactoring
+func (p *DataCiteProvider) doRequestWithRetry(ctx context.Context, req *http.Request) (*http.Response, error) {
+	var resp *http.Response
+	var lastErr error
+
+	retryFunc := func() error {
+		// Execute the request
+		var err error
+		resp, err = p.client.Do(req)
+		if err != nil {
+			// Network error - retryable
+			return NewNetworkError(err)
+		}
+
+		// Check status code and create appropriate error
+		if resp.StatusCode >= 400 {
+			bodyBytes, _ := io.ReadAll(resp.Body)
+			_ = resp.Body.Close()
+			message := string(bodyBytes)
+
+			// Parse API error response if JSON
+			var apiResp struct {
+				Errors []struct {
+					Title  string `json:"title"`
+					Detail string `json:"detail"`
+				} `json:"errors"`
+			}
+			if json.Unmarshal(bodyBytes, &apiResp) == nil && len(apiResp.Errors) > 0 {
+				message = apiResp.Errors[0].Detail
+				if message == "" {
+					message = apiResp.Errors[0].Title
+				}
+			}
+
+			return NewAPIError(resp.StatusCode, message)
+		}
+
+		return nil
+	}
+
+	lastErr = WithRetry(ctx, DefaultRetryConfig(), retryFunc)
+	if lastErr != nil {
+		return nil, lastErr
+	}
+
+	return resp, nil
+}
+
 // Mint creates a new DOI for a dataset
 func (p *DataCiteProvider) Mint(ctx context.Context, dataset *Dataset) (*DOI, error) {
 	// Generate DOI suffix
@@ -188,7 +237,7 @@ func (p *DataCiteProvider) Update(ctx context.Context, doiString string, dataset
 	if err != nil {
 		return fmt.Errorf("execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -216,7 +265,7 @@ func (p *DataCiteProvider) Get(ctx context.Context, doiString string) (*DOI, err
 	if err != nil {
 		return nil, fmt.Errorf("execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, fmt.Errorf("DOI not found: %s", doiString)
@@ -270,12 +319,12 @@ func (p *DataCiteProvider) List(ctx context.Context) ([]*DOI, error) {
 
 		if resp.StatusCode != http.StatusOK {
 			bodyBytes, _ := io.ReadAll(resp.Body)
-			resp.Body.Close()
+			_ = resp.Body.Close()
 			return nil, fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, string(bodyBytes))
 		}
 
 		bodyBytes, err := io.ReadAll(resp.Body)
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		if err != nil {
 			return nil, fmt.Errorf("read response body: %w", err)
 		}
@@ -384,7 +433,7 @@ func (p *DataCiteProvider) createDOI(ctx context.Context, payload map[string]int
 	if err != nil {
 		return nil, fmt.Errorf("execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {

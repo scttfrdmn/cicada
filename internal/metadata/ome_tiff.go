@@ -105,6 +105,7 @@ type OMETIFFExtractor struct{}
 
 // omeXML represents the root OME-XML structure.
 // This is a simplified representation focusing on commonly-used metadata fields.
+//nolint:unused // Reserved for future OME-XML parsing functionality
 type omeXML struct {
 	XMLName      xml.Name      `xml:"OME"`
 	Images       []omeImage    `xml:"Image"`
@@ -112,6 +113,7 @@ type omeXML struct {
 	Experimenters []omeExperimenter `xml:"Experimenter"`
 }
 
+//nolint:unused // Reserved for future OME-XML parsing functionality
 type omeImage struct {
 	ID               string        `xml:"ID,attr"`
 	Name             string        `xml:"Name,attr"`
@@ -121,6 +123,7 @@ type omeImage struct {
 	ExperimenterRef  *omeRef       `xml:"ExperimenterRef"`
 }
 
+//nolint:unused // Reserved for future OME-XML parsing functionality
 type omePixels struct {
 	ID               string        `xml:"ID,attr"`
 	Type             string        `xml:"Type,attr"`
@@ -136,6 +139,7 @@ type omePixels struct {
 	Channels         []omeChannel  `xml:"Channel"`
 }
 
+//nolint:unused // Reserved for future OME-XML parsing functionality
 type omeChannel struct {
 	ID                   string  `xml:"ID,attr"`
 	Name                 string  `xml:"Name,attr"`
@@ -145,18 +149,21 @@ type omeChannel struct {
 	Fluor                string  `xml:"Fluor,attr"`
 }
 
+//nolint:unused // Reserved for future OME-XML parsing functionality
 type omeInstrument struct {
 	ID           string         `xml:"ID,attr"`
 	Microscopes  []omeMicroscope `xml:"Microscope"`
 	Objectives   []omeObjective  `xml:"Objective"`
 }
 
+//nolint:unused // Reserved for future OME-XML parsing functionality
 type omeMicroscope struct {
 	Type         string  `xml:"Type,attr"`
 	Manufacturer string  `xml:"Manufacturer,attr"`
 	Model        string  `xml:"Model,attr"`
 }
 
+//nolint:unused // Reserved for future OME-XML parsing functionality
 type omeObjective struct {
 	ID               string  `xml:"ID,attr"`
 	Manufacturer     string  `xml:"Manufacturer,attr"`
@@ -166,6 +173,7 @@ type omeObjective struct {
 	Immersion        string  `xml:"Immersion,attr"`
 }
 
+//nolint:unused // Reserved for future OME-XML parsing functionality
 type omeExperimenter struct {
 	ID        string `xml:"ID,attr"`
 	FirstName string `xml:"FirstName"`
@@ -173,6 +181,7 @@ type omeExperimenter struct {
 	Email     string `xml:"Email"`
 }
 
+//nolint:unused // Reserved for future OME-XML parsing functionality
 type omeRef struct {
 	ID string `xml:"ID,attr"`
 }
@@ -199,7 +208,7 @@ func (e *OMETIFFExtractor) Extract(filepath string) (map[string]interface{}, err
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	return e.extractFromReader(f, filepath)
 }
@@ -243,6 +252,7 @@ func (e *OMETIFFExtractor) extractFromReader(r io.Reader, filepath string) (map[
 
 // parseOMEXML parses OME-XML and extracts metadata fields.
 // This will be used once we have full TIFF tag access.
+//nolint:unused // Reserved for future OME-XML parsing functionality
 func (e *OMETIFFExtractor) parseOMEXML(xmlData []byte, metadata map[string]interface{}) error {
 	var ome omeXML
 	if err := xml.Unmarshal(xmlData, &ome); err != nil {

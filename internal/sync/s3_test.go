@@ -162,3 +162,7 @@ func TestTagsToString(t *testing.T) {
 		})
 	}
 }
+
+// Note: WriteWithMetadata, PutObjectTagging, and GetObjectTagging require
+// actual S3 client operations and are tested in integration tests.
+// See internal/integration/s3_test.go for integration tests with real S3/LocalStack.

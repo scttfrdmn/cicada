@@ -203,7 +203,7 @@ func (e *FASTQExtractor) Extract(filepath string) (map[string]interface{}, error
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	return e.extractFromReader(f, filepath)
 }
@@ -238,7 +238,7 @@ func (e *FASTQExtractor) extractFromReader(r io.Reader, filepath string) (map[st
 		if err != nil {
 			return nil, fmt.Errorf("failed to create gzip reader: %w", err)
 		}
-		defer gzReader.Close()
+		defer func() { _ = gzReader.Close() }()
 		r = gzReader
 	} else {
 		metadata["compression"] = "none"

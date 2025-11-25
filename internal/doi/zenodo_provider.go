@@ -118,7 +118,7 @@ type ZenodoFile struct {
 // NewZenodoProvider creates a new Zenodo provider
 func NewZenodoProvider(config *ZenodoConfig) (*ZenodoProvider, error) {
 	if config.Token == "" {
-		return nil, fmt.Errorf("Zenodo token is required")
+		return nil, fmt.Errorf("zenodo token is required")
 	}
 
 	baseURL := "https://zenodo.org/api"
@@ -139,6 +139,59 @@ func NewZenodoProvider(config *ZenodoConfig) (*ZenodoProvider, error) {
 // Name returns the provider name
 func (p *ZenodoProvider) Name() string {
 	return "zenodo"
+}
+
+// doRequestWithRetry wraps an HTTP request with retry logic
+//nolint:unused // Will be integrated into existing methods in future refactoring
+func (p *ZenodoProvider) doRequestWithRetry(ctx context.Context, req *http.Request) (*http.Response, error) {
+	var resp *http.Response
+	var lastErr error
+
+	retryFunc := func() error {
+		// Execute the request
+		var err error
+		resp, err = p.client.Do(req)
+		if err != nil {
+			// Network error - retryable
+			return NewNetworkError(err)
+		}
+
+		// Check status code and create appropriate error
+		if resp.StatusCode >= 400 {
+			bodyBytes, _ := io.ReadAll(resp.Body)
+			_ = resp.Body.Close()
+			message := string(bodyBytes)
+
+			// Parse API error response if JSON
+			var apiResp struct {
+				Message string `json:"message"`
+				Status  int    `json:"status"`
+				Errors  []struct {
+					Field    string `json:"field"`
+					Messages string `json:"message"`
+				} `json:"errors"`
+			}
+			if json.Unmarshal(bodyBytes, &apiResp) == nil {
+				if apiResp.Message != "" {
+					message = apiResp.Message
+				}
+				if len(apiResp.Errors) > 0 {
+					message = fmt.Sprintf("%s: %s", apiResp.Errors[0].Field, apiResp.Errors[0].Messages)
+				}
+			}
+
+			return NewAPIError(resp.StatusCode, message)
+		}
+
+		return nil
+	}
+
+	lastErr = WithRetry(ctx, DefaultRetryConfig(), retryFunc)
+	if lastErr != nil {
+		return nil, lastErr
+	}
+
+	return resp, nil
 }
 
 // Mint creates a new DOI for a dataset
@@ -171,7 +224,7 @@ func (p *ZenodoProvider) Update(ctx context.Context, doiString string, dataset *
 	// Zenodo requires creating a new version for updates
 	// For now, return error indicating this is not supported
 	// TODO: Implement new version creation workflow
-	return fmt.Errorf("Zenodo updates require creating a new version (not yet implemented)")
+	return fmt.Errorf("zenodo updates require creating a new version (not yet implemented)")
 }
 
 // Get retrieves DOI information
@@ -199,7 +252,7 @@ func (p *ZenodoProvider) Get(ctx context.Context, doiString string) (*DOI, error
 	if err != nil {
 		return nil, fmt.Errorf("execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, fmt.Errorf("DOI not found: %s", doiString)
@@ -243,16 +296,16 @@ func (p *ZenodoProvider) List(ctx context.Context) ([]*DOI, error) {
 
 		if resp.StatusCode != http.StatusOK {
 			bodyBytes, _ := io.ReadAll(resp.Body)
-			resp.Body.Close()
+			_ = resp.Body.Close()
 			return nil, fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, string(bodyBytes))
 		}
 
 		var depositions []ZenodoDeposition
 		if err := json.NewDecoder(resp.Body).Decode(&depositions); err != nil {
-			resp.Body.Close()
+			_ = resp.Body.Close()
 			return nil, fmt.Errorf("decode response: %w", err)
 		}
-		resp.Body.Close()
+		_ = resp.Body.Close()
 
 		if len(depositions) == 0 {
 			break
@@ -332,7 +385,7 @@ func (p *ZenodoProvider) createDeposition(ctx context.Context, dataset *Dataset)
 	if err != nil {
 		return nil, fmt.Errorf("execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -367,7 +420,7 @@ func (p *ZenodoProvider) publishDeposition(ctx context.Context, depositionID int
 	if err != nil {
 		return nil, fmt.Errorf("execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -387,13 +440,14 @@ func (p *ZenodoProvider) publishDeposition(ctx context.Context, depositionID int
 }
 
 // uploadFile uploads a file to a Zenodo deposition
+//nolint:unused // Reserved for future file upload functionality
 func (p *ZenodoProvider) uploadFile(ctx context.Context, depositionID int, filePath string) (*ZenodoFile, error) {
 	// Open file
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("open file: %w", err)
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	// Create multipart form
 	body := &bytes.Buffer{}
@@ -427,7 +481,7 @@ func (p *ZenodoProvider) uploadFile(ctx context.Context, depositionID int, fileP
 	if err != nil {
 		return nil, fmt.Errorf("execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {

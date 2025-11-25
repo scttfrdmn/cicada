@@ -159,79 +159,174 @@ gh label create "quality: performance" --description "Performance optimization n
 
 ## Go Coding Standards
 
-**Write idiomatic Go code that passes all linters.** Cicada maintains a Go Report Card grade of A+.
+**Core Principle: Write idiomatic, production-quality code from the start - not as an afterthought.**
 
-### Key Idioms to Follow
+Every line of code you write should pass linting checks and follow Go idioms. Follow these guidelines proactively when writing new code to avoid costly remediation cycles.
 
-1. **Always handle errors explicitly**
-   ```go
-   // ❌ BAD: Silently ignoring errors
-   defer file.Close()
+**Token Cost:** Fixing non-idiomatic code after the fact costs 10-100x more tokens than writing it correctly initially.
 
-   // ✅ GOOD: Explicitly ignoring errors
-   defer func() { _ = file.Close() }()
-   ```
+### Always Check Errors
 
-2. **Use short variable names in limited scopes**
-   ```go
-   // ✅ GOOD: Short names in small scopes
-   for i, f := range files {
-       if err := processFile(f); err != nil {
-           return fmt.Errorf("file %d: %w", i, err)
-       }
-   }
-   ```
+**WRONG:**
+```go
+defer file.Close()
+resp.Body.Close()
+os.Setenv("VAR", "value")
+f.WriteString("data")
+```
 
-3. **Return early, avoid else**
-   ```go
-   // ❌ BAD: Unnecessary else
-   if err != nil {
-       return err
-   } else {
-       doWork()
-   }
+**CORRECT:**
+```go
+// For defer cleanup where you can't handle errors
+defer func() { _ = file.Close() }()
+defer func() { _ = resp.Body.Close() }()
 
-   // ✅ GOOD: Early return
-   if err != nil {
-       return err
-   }
-   doWork()
-   ```
+// For test setup where errors matter
+if err := os.Setenv("TEST_VAR", "value"); err != nil {
+    t.Fatalf("failed to set env var: %v", err)
+}
 
-4. **Wrap errors with context**
-   ```go
-   // ❌ BAD: Losing error context
-   return err
+// For file operations where errors matter
+if _, err := f.WriteString("data"); err != nil {
+    return fmt.Errorf("write data: %w", err)
+}
+```
 
-   // ✅ GOOD: Adding context
-   return fmt.Errorf("sync file %s: %w", path, err)
-   ```
+### Error Messages
 
-5. **Use defer for cleanup**
-   ```go
-   f, err := os.Open(path)
-   if err != nil {
-       return err
-   }
-   defer func() { _ = f.Close() }()
+**WRONG:**
+```go
+return fmt.Errorf("Zenodo token not found")  // Capitalized
+return fmt.Errorf("Failed to connect")       // Capitalized
+```
 
-   // Work with file...
-   ```
+**CORRECT:**
+```go
+return fmt.Errorf("zenodo token not found")  // Lowercase
+return fmt.Errorf("failed to connect")       // Lowercase
+```
+
+### Switch vs If-Else Chains
+
+**WRONG:**
+```go
+if format == "json" {
+    // ...
+} else if format == "yaml" {
+    // ...
+} else if format == "xml" {
+    // ...
+}
+```
+
+**CORRECT:**
+```go
+switch format {
+case "json":
+    // ...
+case "yaml":
+    // ...
+case "xml":
+    // ...
+}
+```
+
+### Build Tags
+
+**WRONG:**
+```go
+//go:build integration
+// +build integration  // Obsolete format - remove this line!
+```
+
+**CORRECT:**
+```go
+//go:build integration  // Only the new format
+```
+
+### Nil Checks
+
+**WRONG:**
+```go
+if files != nil && len(files) > 0 {  // Redundant nil check
+    // ...
+}
+```
+
+**CORRECT:**
+```go
+if len(files) > 0 {  // len() returns 0 for nil slices/maps
+    // ...
+}
+```
+
+### Test Code Error Handling
+
+**WRONG:**
+```go
+// In tests - ignoring errors silently
+os.Setenv("VAR", "value")
+file.Close()
+```
+
+**CORRECT:**
+```go
+// Test setup - fail on errors
+if err := os.Setenv("TEST_VAR", "value"); err != nil {
+    t.Fatalf("failed to set env var: %v", err)
+}
+
+// Test cleanup - explicitly ignore with intent
+defer func() { _ = os.Unsetenv("TEST_VAR") }()
+```
+
+### Proactive Code Review Checklist
+
+**Before committing code, verify:**
+- [ ] All error returns are checked or explicitly ignored with `_ =`
+- [ ] `defer Close()` operations use `defer func() { _ = x.Close() }()`
+- [ ] Error messages start with lowercase
+- [ ] Switch statements used instead of if-else chains on same variable
+- [ ] No redundant nil checks before `len()`
+- [ ] Build tags use only `//go:build` format (not `// +build`)
+- [ ] Test setup errors fail the test with `t.Fatalf()` or `b.Fatalf()`
+- [ ] File write operations in tests check errors
 
 ### Linting Requirements
 
-Before committing, ensure code passes all linters:
+**Run linters frequently during development** to catch issues early and avoid costly remediation later:
 
 ```bash
 make lint    # Must show "0 issues"
+make test    # All tests must pass
 ```
+
+**Best practice**: Run linters after implementing each feature or fixing each issue, not just before committing.
+
+**Cicada maintains a Go Report Card grade of A+.**
 
 Common linter errors to avoid:
 - **errcheck**: All errors must be checked or explicitly ignored
 - **gocyclo**: Keep cyclomatic complexity < 15
 - **gosec**: No security vulnerabilities
 - **govet**: No suspicious constructs
+- **staticcheck**: Follow Go idioms (e.g., lowercase error strings, use switch not if-else chains)
 - **misspell**: Check spelling in comments
+
+### Why This Matters
+
+**Quality:** Code written idiomatically from the start:
+- Has fewer bugs
+- Is easier to maintain
+- Serves as better documentation
+- Passes code review faster
+- Teaches users correct patterns
+
+**Process:** Follow this workflow:
+1. **Write** code using patterns from this guide
+2. **Verify** against the checklist above
+3. **Test** locally with linters before committing
+4. **Iterate** if issues found - don't disable linters
 
 ### Test Coverage
 

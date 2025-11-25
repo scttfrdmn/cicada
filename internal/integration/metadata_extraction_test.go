@@ -305,17 +305,30 @@ func TestMetadataExtraction_LargeFile(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create test file: %v", err)
 	}
-	defer f.Close()
 
 	for i := 0; i < 50000; i++ {
-		f.WriteString("@SEQ_ID_")
-		f.WriteString(string(rune(48 + (i % 10)))) // Write digits 0-9
-		f.WriteString("\n")
-		f.WriteString("ACGTACGTACGTACGT\n")
-		f.WriteString("+\n")
-		f.WriteString("IIIIIIIIIIIIIIII\n")
+		if _, err := f.WriteString("@SEQ_ID_"); err != nil {
+			t.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString(string(rune(48 + (i % 10)))); err != nil {
+			t.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString("\n"); err != nil {
+			t.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString("ACGTACGTACGTACGT\n"); err != nil {
+			t.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString("+\n"); err != nil {
+			t.Fatalf("Failed to write to test file: %v", err)
+		}
+		if _, err := f.WriteString("IIIIIIIIIIIIIIII\n"); err != nil {
+			t.Fatalf("Failed to write to test file: %v", err)
+		}
 	}
-	f.Close()
+	if err := f.Close(); err != nil {
+		t.Fatalf("Failed to close test file: %v", err)
+	}
 
 	// Extract metadata
 	registry := metadata.NewExtractorRegistry()
