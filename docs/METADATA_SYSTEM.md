@@ -1,6 +1,6 @@
 # Metadata System Guide
 
-**Last Updated:** 2025-01-24
+**Last Updated:** 2025-11-25
 
 Complete guide to Cicada's metadata extraction and management system for scientific data.
 

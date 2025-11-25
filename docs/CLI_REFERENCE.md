@@ -1,6 +1,6 @@
 # Cicada CLI Reference
 
-**Last Updated:** 2025-01-24
+**Last Updated:** 2025-11-25
 
 Complete reference for all Cicada command-line interface commands, flags, and options.
 

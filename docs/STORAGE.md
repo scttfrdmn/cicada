@@ -1,6 +1,6 @@
 # Storage Backends Guide
 
-**Last Updated:** 2025-01-24
+**Last Updated:** 2025-11-25
 
 Complete guide to Cicada's storage backend system for local filesystem and AWS S3.
 

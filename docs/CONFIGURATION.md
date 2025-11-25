@@ -1,6 +1,6 @@
 # Cicada Configuration Guide
 
-**Last Updated:** 2025-01-24
+**Last Updated:** 2025-11-25
 
 Complete guide to configuring Cicada for your lab's data commons.
 

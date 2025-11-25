@@ -1,6 +1,6 @@
 # Cicada Architecture
 
-**Last Updated:** 2025-01-24
+**Last Updated:** 2025-11-25
 
 ## Table of Contents
 
