@@ -4,16 +4,17 @@
 
 ## 🎉 Major Features
 
-Cicada v0.2.0 adds comprehensive **metadata extraction** and **DOI preparation** capabilities, enabling labs to automatically extract metadata from scientific files and prepare datasets for publication with DOI registration.
+Cicada v0.2.0 transforms your lab into a comprehensive **data commons platform** with automated metadata extraction, multi-format support, and data quality validation. This release enables labs to organize, track, and manage research data effectively, with optional support for dataset publication when needed.
 
-### Metadata Extraction
+### Metadata Extraction & Multi-Format Support
 
-Automatically extract rich metadata from scientific files:
+Automatically extract rich metadata from 14 scientific file formats:
 
-- **FASTQ support**: Extract metadata from sequencing files including read counts, quality scores, GC content, and pairing detection
-- **Compression handling**: Transparent support for gzipped files (.fastq.gz)
-- **Performance**: 31 μs for small files, < 1 ms for files of any size (thanks to smart sampling)
-- **Concurrent processing**: 4-8x speedup with parallel extraction
+- **Multi-Format Support**: 14 extractors across microscopy (TIFF, OME-TIFF, CZI, ND2, LIF), sequencing (FASTQ, BAM), mass spec (mzML, MGF), data arrays (HDF5, Zarr), and medical imaging (DICOM, FCS)
+- **Instrument-Specific Metadata**: 6 metadata types (Microscopy, Sequencing, Mass Spec, Flow Cytometry, Cryo-EM, X-Ray)
+- **S3 Integration**: Automatic metadata tagging of S3 objects for enhanced organization
+- **Performance**: Sub-millisecond extraction with smart sampling for large files
+- **Concurrent Processing**: 4-8x speedup with parallel extraction
 
 ```bash
 # Extract metadata from FASTQ file
@@ -23,14 +24,15 @@ cicada metadata extract sample_R1.fastq.gz
 cicada metadata extract sample_R1.fastq.gz --preset illumina-novaseq
 ```
 
-### Instrument Presets
+### Data Quality & Validation
 
-Validate metadata against instrument-specific requirements:
+Ensure data commons quality with instrument-specific presets:
 
-- **8 built-in presets**: Illumina (NovaSeq, MiSeq, NextSeq), Zeiss (LSM 880/900/980), Generic (sequencing, microscopy)
-- **Quality scoring**: 0-100 scale showing metadata completeness (60% required fields + 40% optional)
-- **Field validation**: Automatic checking of required vs optional fields
-- **Instant lookup**: Sub-microsecond preset operations
+- **8 Built-in Presets**: Illumina (NovaSeq, MiSeq, NextSeq), Zeiss (LSM 880/900/980), Generic (sequencing, microscopy)
+- **Quality Scoring**: 0-100 scale for objective metadata completeness assessment
+- **Automated Validation**: Catch missing or incorrect metadata immediately
+- **Lab Standardization**: Consistent quality practices across your data commons
+- **Instant Performance**: Sub-microsecond preset operations
 
 ```bash
 # List available presets
@@ -40,9 +42,9 @@ cicada metadata preset list
 cicada metadata extract sample.fastq --preset illumina-novaseq
 ```
 
-### DOI Preparation
+### Optional: DOI Preparation for Publication
 
-Prepare datasets for publication with DOI registration:
+When you need to publish datasets, Cicada provides DOI preparation support:
 
 - **DataCite Schema v4.5**: Full compliance with metadata schema
 - **Quality assessment**: Automatic validation with actionable recommendations
