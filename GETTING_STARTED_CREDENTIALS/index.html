@@ -1,0 +1,2956 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Small lab data commons platform for storing, syncing, and managing research data">
+      
+      
+        <meta name="author" content="Scott Friedman">
+      
+      
+        <link rel="canonical" href="https://scttfrdmn.github.io/cicada/GETTING_STARTED_CREDENTIALS/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Getting Started with DOI Publishing - Cicada</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started-with-doi-publishing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Cicada" class="md-header__button md-logo" aria-label="Cicada" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cicada
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting Started with DOI Publishing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/scttfrdmn/cicada" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scttfrdmn/cicada
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../user-guide/overview/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../advanced/doi-workflow/" class="md-tabs__link">
+          
+  
+  
+  Advanced
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/cli/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../development/contributing/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../about/changelog/" class="md-tabs__link">
+          
+  
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Cicada" class="md-nav__button md-logo" aria-label="Cicada" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    Cicada
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/scttfrdmn/cicada" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scttfrdmn/cicada
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/storage-sync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage & Sync
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/watch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Watch Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/presets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Quality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/doi-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DOI Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provider Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/integrations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/formats/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    File Formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/building/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    License
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/citation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-should-get-a-doi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Should Get a DOI?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Should Get a DOI?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-doi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a DOI?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-typically-gets-a-doi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Typically Gets a DOI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-typically-doesnt-need-a-doi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Typically Doesn't Need a DOI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-specific-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain-Specific Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publisher-funder-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publisher &amp; Funder Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-decision-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Decision Guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Need
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What You Need">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-zenodo-vs-datacite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Zenodo vs DataCite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-one-should-you-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which One Should You Use?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-getting-your-zenodo-credentials-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1: Getting Your Zenodo Credentials (5 minutes)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 1: Getting Your Zenodo Credentials (5 minutes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-a-zenodo-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create a Zenodo Account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-an-access-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create an Access Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-giving-cicada-your-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2: Giving Cicada Your Credentials
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2: Giving Cicada Your Credentials">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-simple-setup-recommended-for-most-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Simple Setup (Recommended for Most Users)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-manual-setup-config-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Manual Setup (Config File)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-project-specific-setup-for-advanced-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C: Project-Specific Setup (For Advanced Users)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-testing-your-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3: Testing Your Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-publishing-your-first-doi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 4: Publishing Your First DOI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 4: Publishing Your First DOI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simple-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-additional-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Additional Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2b-datacite-setup-for-institutional-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2B: DataCite Setup (For Institutional Users)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2B: DataCite Setup (For Institutional Users)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-get-your-credentials-from-your-institution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Get Your Credentials from Your Institution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-cicada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure Cicada
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-test-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Test It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-publish-dois" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Publish DOIs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-not-found-cicada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Command not found: cicada"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Authentication failed"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insecure-permissions-on-configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Insecure permissions on config.yaml"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-not-found-configcicadaconfigyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "File not found: ~/.config/cicada/config.yaml"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#env-file-is-tracked-by-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ".env file is tracked by git"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cant-connect-to-zenododatacite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Can't connect to Zenodo/DataCite"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-with-sandbox-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing with Sandbox (Optional)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing with Sandbox (Optional)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zenodo-sandbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zenodo Sandbox
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datacite-sandbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DataCite Sandbox
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-tips-please-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Tips (Please Read!)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Tips (Please Read!)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ DO:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ DON'T:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-your-token-is-exposed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If Your Token is Exposed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publishing-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publishing Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-complete-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Complete Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-more-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting More Help
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting More Help">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zenodo-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zenodo Help
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datacite-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DataCite Help
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="getting-started-with-doi-publishing">Getting Started with DOI Publishing<a class="headerlink" href="#getting-started-with-doi-publishing" title="Permanent link">&para;</a></h1>
+<p><strong>Setting up Cicada to publish DOIs for your research data</strong></p>
+<p><strong>For researchers and lab managers with minimal technical experience</strong></p>
+<p>This guide will help you set up Cicada to publish DOIs (Digital Object Identifiers) for your research data. No technical background required - just follow the steps!</p>
+<h2 id="what-should-get-a-doi">What Should Get a DOI?<a class="headerlink" href="#what-should-get-a-doi" title="Permanent link">&para;</a></h2>
+<p>Before setting up credentials, it's helpful to understand what research outputs typically get DOIs and what your field expects.</p>
+<h3 id="what-is-a-doi">What is a DOI?<a class="headerlink" href="#what-is-a-doi" title="Permanent link">&para;</a></h3>
+<p>A <strong>DOI (Digital Object Identifier)</strong> is a permanent identifier for your research data - like a permanent web address that never breaks. Even if you move your data to a different server or repository, the DOI always points to the correct location.</p>
+<p><strong>Example DOI:</strong> <code>10.5281/zenodo.123456</code>
+- Anyone can click this and find your data
+- It works forever, even if URLs change
+- It's citable in publications</p>
+<h3 id="what-typically-gets-a-doi">What Typically Gets a DOI<a class="headerlink" href="#what-typically-gets-a-doi" title="Permanent link">&para;</a></h3>
+<p><strong>✅ Should have a DOI:</strong></p>
+<p><strong>Research Data:</strong>
+- Raw data that supports a publication
+- Datasets that others might reuse
+- Data required by journal or funder policies
+- Data that you want to cite in papers</p>
+<p><strong>Examples:</strong>
+- Sequencing data (FASTQ, BAM files)
+- Microscopy images (CZI, OME-TIFF files)
+- Tabular data (CSV, Excel files)
+- Simulation outputs
+- Survey data</p>
+<p><strong>Software &amp; Code:</strong>
+- Research software releases
+- Analysis scripts and pipelines
+- Computational models</p>
+<p><strong>Other Research Outputs:</strong>
+- Protocols
+- Supplementary materials
+- Technical reports
+- Preprints (though use preprint servers like bioRxiv)</p>
+<h3 id="what-typically-doesnt-need-a-doi">What Typically Doesn't Need a DOI<a class="headerlink" href="#what-typically-doesnt-need-a-doi" title="Permanent link">&para;</a></h3>
+<p><strong>❌ Usually doesn't need a DOI:</strong></p>
+<ul>
+<li><strong>Intermediate/temporary files</strong> - Processing outputs that aren't final</li>
+<li><strong>Duplicate data</strong> - Data already published elsewhere with a DOI</li>
+<li><strong>Preliminary data</strong> - Still collecting or analyzing</li>
+<li><strong>Personal notes</strong> - Lab notebooks, internal documentation</li>
+<li><strong>Already published data</strong> - Available in established databases (NCBI, ENA, etc.)</li>
+<li><strong>Tiny test files</strong> - Sample data for tutorials</li>
+</ul>
+<h3 id="domain-specific-practices">Domain-Specific Practices<a class="headerlink" href="#domain-specific-practices" title="Permanent link">&para;</a></h3>
+<p>Different research fields have different expectations and norms:</p>
+<h4 id="genomics-bioinformatics">Genomics &amp; Bioinformatics<a class="headerlink" href="#genomics-bioinformatics" title="Permanent link">&para;</a></h4>
+<p><strong>Common practice:</strong>
+- Raw sequencing data (FASTQ) → Submit to NCBI SRA/ENA (they provide accessions)
+- Assembled genomes → Submit to NCBI GenBank
+- Supporting data (metadata, analysis results) → DOI via Zenodo/DataCite
+- Software/pipelines → DOI via Zenodo + GitHub release</p>
+<p><strong>When to use Cicada:</strong>
+- Small-scale sequencing projects not in public databases
+- Supplementary data for publications
+- Custom reference datasets
+- Analysis pipelines and scripts</p>
+<p><strong>Example:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Raw reads submitted to SRA (gets accession: SRR123456)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Supplementary metadata gets DOI via Cicada:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>sample_metadata.csv<span class="w"> </span>quality_metrics.csv<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--provider<span class="w"> </span>zenodo<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--enrich<span class="w"> </span>metadata.yaml
+</span></code></pre></div></p>
+<h4 id="microscopy-imaging">Microscopy &amp; Imaging<a class="headerlink" href="#microscopy-imaging" title="Permanent link">&para;</a></h4>
+<p><strong>Common practice:</strong>
+- Publication-quality images → DOI via institutional repository or Zenodo
+- Large imaging datasets → Specialized repositories (IDR, BioImage Archive)
+- Instrument calibration data → DOI for reproducibility
+- Image analysis workflows → DOI for transparency</p>
+<p><strong>When to use Cicada:</strong>
+- Original microscopy files (CZI, OME-TIFF) with metadata
+- Supporting images for papers
+- Method validation datasets
+- Training datasets for analysis</p>
+<p><strong>Example:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Publish microscopy dataset with DOI</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>experiment_*.czi<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--preset<span class="w"> </span>zeiss-lsm-880<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--provider<span class="w"> </span>zenodo<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--enrich<span class="w"> </span>metadata.yaml
+</span></code></pre></div></p>
+<h4 id="structural-biology-chemistry">Structural Biology &amp; Chemistry<a class="headerlink" href="#structural-biology-chemistry" title="Permanent link">&para;</a></h4>
+<p><strong>Common practice:</strong>
+- Crystal structures → PDB (Protein Data Bank)
+- NMR data → BMRB
+- Supporting data → DOI via Zenodo/DataCite
+- Protocols → DOI via protocols.io or Zenodo</p>
+<p><strong>When to use Cicada:</strong>
+- Supplementary crystallography data
+- Raw diffraction images
+- Validation datasets
+- Custom structure libraries</p>
+<h4 id="ecology-environmental-science">Ecology &amp; Environmental Science<a class="headerlink" href="#ecology-environmental-science" title="Permanent link">&para;</a></h4>
+<p><strong>Common practice:</strong>
+- Long-term datasets → Domain repositories (LTER, DataONE)
+- Species occurrence data → GBIF
+- Climate/sensor data → Specialized repositories
+- Small studies → DOI via Zenodo/DataCite</p>
+<p><strong>When to use Cicada:</strong>
+- Field study data
+- Sensor/instrument data
+- Observation records
+- Derived datasets</p>
+<h4 id="social-sciences-humanities">Social Sciences &amp; Humanities<a class="headerlink" href="#social-sciences-humanities" title="Permanent link">&para;</a></h4>
+<p><strong>Common practice:</strong>
+- Survey data → Domain repositories (ICPSR, UK Data Service)
+- Qualitative data → Institutional repositories + DOI
+- Interview transcripts → Repository + DOI
+- Datasets for replication → DOI required</p>
+<p><strong>When to use Cicada:</strong>
+- Anonymized survey data
+- Supplementary data for publications
+- Replication packages
+- Coded datasets</p>
+<h3 id="publisher-funder-requirements">Publisher &amp; Funder Requirements<a class="headerlink" href="#publisher-funder-requirements" title="Permanent link">&para;</a></h3>
+<p>Many journals and funding agencies now <strong>require</strong> data DOIs:</p>
+<p><strong>Publishers with data policies:</strong>
+- Nature journals - "Data availability statement" with DOIs
+- PLOS - Data deposition required
+- eLife - Data must be accessible with identifiers
+- Cell Press - Data availability required</p>
+<p><strong>Funders requiring data sharing:</strong>
+- NIH - Data Management and Sharing Policy
+- NSF - Data sharing plans required
+- Wellcome Trust - Data must be accessible
+- European Commission (Horizon) - Open data by default</p>
+<p><strong>Check your requirements:</strong>
+1. Journal submission guidelines ("Data Availability")
+2. Funder data management plan
+3. Institutional policies</p>
+<h3 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h3>
+<h4 id="when-to-create-a-doi">When to Create a DOI<a class="headerlink" href="#when-to-create-a-doi" title="Permanent link">&para;</a></h4>
+<p><strong>✅ Create a DOI when:</strong>
+- Data is finalized and won't change significantly
+- You're ready to share publicly (or with embargo)
+- Data supports a publication
+- Required by journal/funder
+- You want others to cite your data</p>
+<p><strong>⏸️ Wait to create a DOI if:</strong>
+- Still collecting/analyzing data
+- Data quality is uncertain
+- Need institutional approval first
+- Preparing for submission to domain repository</p>
+<h4 id="versioning">Versioning<a class="headerlink" href="#versioning" title="Permanent link">&para;</a></h4>
+<p><strong>When to create a new version (same DOI):</strong>
+- Minor corrections to metadata
+- Adding additional files
+- Fixing errors in existing data
+- Updating documentation</p>
+<p><strong>When to create a new DOI:</strong>
+- Major changes to dataset
+- Different analysis/processing
+- Conceptually different dataset
+- Different paper/project</p>
+<p><strong>Example:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Original dataset (DOI: 10.5281/zenodo.123456)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>data_v1.fastq<span class="w"> </span>--provider<span class="w"> </span>zenodo
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Minor update (new version, same DOI concept)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cicada<span class="w"> </span>doi<span class="w"> </span>update<span class="w"> </span><span class="m">10</span>.5281/zenodo.123456<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--add-file<span class="w"> </span>corrected_metadata.csv
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Major reanalysis (new DOI)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>reanalyzed_data_v2.fastq<span class="w"> </span>--provider<span class="w"> </span>zenodo
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Gets new DOI: 10.5281/zenodo.789012</span>
+</span></code></pre></div></p>
+<h4 id="what-metadata-to-include">What Metadata to Include<a class="headerlink" href="#what-metadata-to-include" title="Permanent link">&para;</a></h4>
+<p><strong>Minimum (required):</strong>
+- Title (descriptive, not just filename)
+- Authors/Creators (with affiliations)
+- Description (what is the data, how was it collected)
+- Keywords (for discoverability)
+- License (how can others use it?)</p>
+<p><strong>Recommended:</strong>
+- Related publications (DOIs)
+- Funding information
+- Methods/protocols
+- File formats and software requirements
+- Related identifiers (ORCID, grant numbers)</p>
+<p><strong>Example metadata file:</strong>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;RNA-seq</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">drought</span><span class="nv"> </span><span class="s">stress</span><span class="nv"> </span><span class="s">experiment</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">Arabidopsis&quot;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="no">Paired-end Illumina RNA sequencing (150bp) from Arabidopsis thaliana</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="no">leaves under drought stress and control conditions. Three biological</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="no">replicates per condition. Sequenced on NovaSeq 6000.</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nt">creators</span><span class="p">:</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Jane</span><span class="nv"> </span><span class="s">Smith&quot;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">affiliation</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Plant</span><span class="nv"> </span><span class="s">Biology</span><span class="nv"> </span><span class="s">Lab,</span><span class="nv"> </span><span class="s">State</span><span class="nv"> </span><span class="s">University&quot;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nt">orcid</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0000-0002-1234-5678&quot;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John</span><span class="nv"> </span><span class="s">Doe&quot;</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nt">affiliation</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Plant</span><span class="nv"> </span><span class="s">Biology</span><span class="nv"> </span><span class="s">Lab,</span><span class="nv"> </span><span class="s">State</span><span class="nv"> </span><span class="s">University&quot;</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nt">keywords</span><span class="p">:</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RNA-seq</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Arabidopsis thaliana</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">drought stress</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">transcriptomics</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;CC-BY-4.0&quot;</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="nt">related_publications</span><span class="p">:</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">doi</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10.1234/journal.2024.123&quot;</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="nt">relation</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;IsSupplementTo&quot;</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="nt">funding</span><span class="p">:</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">funder</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;National</span><span class="nv"> </span><span class="s">Science</span><span class="nv"> </span><span class="s">Foundation&quot;</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">    </span><span class="nt">award</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NSF-1234567&quot;</span>
+</span></code></pre></div></p>
+<h3 id="quick-decision-guide">Quick Decision Guide<a class="headerlink" href="#quick-decision-guide" title="Permanent link">&para;</a></h3>
+<p><strong>Ask yourself:</strong></p>
+<ol>
+<li><strong>Is this data final?</strong></li>
+<li>Yes → Create DOI ✅</li>
+<li>
+<p>No → Wait ⏸️</p>
+</li>
+<li>
+<p><strong>Will others need to cite or access it?</strong></p>
+</li>
+<li>Yes → Create DOI ✅</li>
+<li>
+<p>No → Maybe not needed ❌</p>
+</li>
+<li>
+<p><strong>Is there a domain-specific repository?</strong></p>
+</li>
+<li>Yes → Check if they provide DOIs (use that first)</li>
+<li>
+<p>No → Use Zenodo/DataCite via Cicada ✅</p>
+</li>
+<li>
+<p><strong>Does my journal/funder require it?</strong></p>
+</li>
+<li>Yes → Create DOI ✅</li>
+<li>
+<p>No → Optional but recommended</p>
+</li>
+<li>
+<p><strong>Is the data already public with a stable ID?</strong></p>
+</li>
+<li>Yes → Use existing identifier ❌</li>
+<li>No → Create DOI ✅</li>
+</ol>
+<p><strong>Still not sure?</strong> Ask your:
+- Institutional library
+- Research data office
+- Department administrator
+- Journal editor
+- Colleagues in your field</p>
+<h2 id="what-you-need">What You Need<a class="headerlink" href="#what-you-need" title="Permanent link">&para;</a></h2>
+<p>To publish DOIs with Cicada, you need credentials (like a password) from a DOI registration service.</p>
+<p><strong>Two main options:</strong>
+- <strong>Zenodo</strong> (free for everyone)
+- <strong>DataCite</strong> (requires institutional membership)</p>
+<h3 id="understanding-zenodo-vs-datacite">Understanding Zenodo vs DataCite<a class="headerlink" href="#understanding-zenodo-vs-datacite" title="Permanent link">&para;</a></h3>
+<p><strong>What are these services?</strong></p>
+<p>Both Zenodo and DataCite are services that create permanent DOIs (Digital Object Identifiers) for your research data. A DOI is like a permanent web address that always points to your data, even if it moves to a different server.</p>
+<p><strong>Zenodo:</strong>
+- A <strong>free repository and DOI service</strong> run by CERN (the European physics lab)
+- Anyone can create an account and start publishing immediately
+- Includes free file storage (up to 50 GB per dataset)
+- DOIs look like: <code>10.5281/zenodo.123456</code>
+- Perfect for: Individual researchers, small labs, open science projects
+- Website: https://zenodo.org</p>
+<p><strong>DataCite:</strong>
+- A <strong>membership-based DOI service</strong> for institutions
+- Your university or research institution needs to be a member
+- You use your institution's credentials through Cicada
+- DOIs include your institution's prefix: <code>10.12345/yourdata</code>
+- Perfect for: Large institutions, institutional repositories, compliance requirements
+- Website: https://datacite.org</p>
+<h3 id="which-one-should-you-use">Which One Should You Use?<a class="headerlink" href="#which-one-should-you-use" title="Permanent link">&para;</a></h3>
+<p><strong>Check with your institution's library FIRST!</strong></p>
+<p>Before setting anything up, contact your institutional library or research data office and ask:</p>
+<blockquote>
+<p>"Does our institution have a DataCite membership or preferred DOI service for research data?"</p>
+</blockquote>
+<p><strong>If they say YES to DataCite:</strong>
+- ✅ Use DataCite (see <a href="#for-datacite-users">Part 2B: DataCite Setup</a>)
+- Your DOIs will be under your institution's prefix
+- May be required for institutional compliance
+- Ask them for your credentials (repository ID and password)</p>
+<p><strong>If they say NO or don't have DOI services:</strong>
+- ✅ Use Zenodo (see <a href="#part-1-getting-your-zenodo-credentials-5-minutes">Part 1: Zenodo Setup</a>)
+- Free and easy to set up yourself
+- No institutional approval needed
+- Works great for most research data</p>
+<p><strong>If you're not sure or don't have institutional support:</strong>
+- ✅ Start with Zenodo - it's free and takes 5 minutes
+- You can always add DataCite later if needed</p>
+<p><strong>Can I use both?</strong></p>
+<p>Yes! Cicada supports both, and you can switch between them with a simple flag:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>data.fastq<span class="w"> </span>--provider<span class="w"> </span>zenodo
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>data.fastq<span class="w"> </span>--provider<span class="w"> </span>datacite
+</span></code></pre></div></p>
+<h2 id="part-1-getting-your-zenodo-credentials-5-minutes">Part 1: Getting Your Zenodo Credentials (5 minutes)<a class="headerlink" href="#part-1-getting-your-zenodo-credentials-5-minutes" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-create-a-zenodo-account">Step 1: Create a Zenodo Account<a class="headerlink" href="#step-1-create-a-zenodo-account" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Go to https://zenodo.org</li>
+<li>Click <strong>"Sign Up"</strong> in the top right corner</li>
+<li>You can sign up with:</li>
+<li>Your email address</li>
+<li>Your GitHub account (if you have one)</li>
+<li>Your ORCID (if you have one)</li>
+<li>Follow the instructions to complete sign-up</li>
+</ol>
+<p><strong>That's it! Your Zenodo account is ready.</strong></p>
+<h3 id="step-2-create-an-access-token">Step 2: Create an Access Token<a class="headerlink" href="#step-2-create-an-access-token" title="Permanent link">&para;</a></h3>
+<p>An access token is like a password that Cicada uses to publish DOIs on your behalf.</p>
+<ol>
+<li>Log in to Zenodo: https://zenodo.org</li>
+<li>Click your <strong>name/profile icon</strong> in the top right</li>
+<li>Click <strong>"Applications"</strong> in the dropdown menu</li>
+<li>Click the <strong>"New Token"</strong> button</li>
+<li>Give your token a name (e.g., "Cicada DOI Publishing")</li>
+<li>Under <strong>"Scopes"</strong>, check the box for <strong>"deposit:write"</strong></li>
+<li>This lets Cicada create DOIs for you</li>
+<li>Don't worry - it can only create DOIs, not delete anything</li>
+<li>Click <strong>"Create"</strong></li>
+<li><strong>Important:</strong> Copy the token that appears - you'll need it in the next step</li>
+<li>It looks like: <code>AbCdEf123456...</code> (40+ characters)</li>
+<li>You can only see it once, so copy it now!</li>
+</ol>
+<p><strong>✓ You now have your Zenodo access token!</strong></p>
+<hr />
+<h2 id="part-2-giving-cicada-your-credentials">Part 2: Giving Cicada Your Credentials<a class="headerlink" href="#part-2-giving-cicada-your-credentials" title="Permanent link">&para;</a></h2>
+<p>You have <strong>three options</strong> for giving Cicada your token. Choose the one that sounds easiest to you.</p>
+<h3 id="option-a-simple-setup-recommended-for-most-users">Option A: Simple Setup (Recommended for Most Users)<a class="headerlink" href="#option-a-simple-setup-recommended-for-most-users" title="Permanent link">&para;</a></h3>
+<p>This is the easiest method. Cicada will guide you through setup.</p>
+<p><strong>On macOS or Linux:</strong></p>
+<ol>
+<li>Open Terminal (don't worry, we'll guide you!)</li>
+<li><strong>macOS:</strong> Press <code>Cmd + Space</code>, type "Terminal", press Enter</li>
+<li>
+<p><strong>Linux:</strong> Press <code>Ctrl + Alt + T</code></p>
+</li>
+<li>
+<p>Type this command and press Enter:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cicada<span class="w"> </span>config<span class="w"> </span>init
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Cicada will ask: "Enter your Zenodo token:"</p>
+</li>
+<li>Paste the token you copied earlier (right-click → Paste)</li>
+<li>Don't worry if you don't see the token when you paste - that's for security!</li>
+<li>
+<p>Press Enter</p>
+</li>
+<li>
+<p>Cicada will save your token securely</p>
+</li>
+</ol>
+<p><strong>That's it! Your credentials are set up.</strong></p>
+<p>To test that it worked:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cicada<span class="w"> </span>config<span class="w"> </span><span class="nb">test</span><span class="w"> </span>zenodo
+</span></code></pre></div></p>
+<p>You should see: <code>✓ Zenodo authentication successful</code></p>
+<h3 id="option-b-manual-setup-config-file">Option B: Manual Setup (Config File)<a class="headerlink" href="#option-b-manual-setup-config-file" title="Permanent link">&para;</a></h3>
+<p>If you prefer to create the file yourself:</p>
+<p><strong>On macOS or Linux:</strong></p>
+<ol>
+<li>
+<p>Create a folder for Cicada settings:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.config/cicada
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Create a settings file:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>nano<span class="w"> </span>~/.config/cicada/config.yaml
+</span></code></pre></div>
+   (You can also use your favorite text editor instead of <code>nano</code>)</p>
+</li>
+<li>
+<p>Copy and paste this into the file:
+   <div class="language-yaml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">providers</span><span class="p">:</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">zenodo</span><span class="p">:</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;PASTE_YOUR_TOKEN_HERE&quot;</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Replace <code>PASTE_YOUR_TOKEN_HERE</code> with the token you copied from Zenodo</p>
+</li>
+<li>Keep the quotes around it!</li>
+<li>
+<p>Example: <code>token: "AbCdEf123456..."</code></p>
+</li>
+<li>
+<p>Save and close the file:</p>
+</li>
+<li>
+<p>In nano: Press <code>Ctrl + X</code>, then <code>Y</code>, then Enter</p>
+</li>
+<li>
+<p>Secure your file (important!):
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.config/cicada/config.yaml
+</span></code></pre></div>
+   This makes sure only you can read your credentials.</p>
+</li>
+</ol>
+<p><strong>On Windows:</strong></p>
+<ol>
+<li>
+<p>Open Notepad</p>
+</li>
+<li>
+<p>Copy and paste this:
+   <div class="language-yaml highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">providers</span><span class="p">:</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">zenodo</span><span class="p">:</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;PASTE_YOUR_TOKEN_HERE&quot;</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Replace <code>PASTE_YOUR_TOKEN_HERE</code> with your Zenodo token</p>
+</li>
+<li>
+<p>Save the file as:
+   <div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>C:\Users\YourUsername\AppData\Roaming\cicada\config.yaml
+</span></code></pre></div>
+   Replace <code>YourUsername</code> with your Windows username.</p>
+</li>
+</ol>
+<h3 id="option-c-project-specific-setup-for-advanced-users">Option C: Project-Specific Setup (For Advanced Users)<a class="headerlink" href="#option-c-project-specific-setup-for-advanced-users" title="Permanent link">&para;</a></h3>
+<p>If you're working on a specific project and want credentials just for that project:</p>
+<ol>
+<li>
+<p>In your project folder, create a file named <code>.env</code></p>
+</li>
+<li>
+<p>Add this line:
+   <div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>CICADA_ZENODO_TOKEN=your-token-here
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Important:</strong> Tell Git to ignore this file (so you don't accidentally share your token):
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.env&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+</span></code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="part-3-testing-your-setup">Part 3: Testing Your Setup<a class="headerlink" href="#part-3-testing-your-setup" title="Permanent link">&para;</a></h2>
+<p>Let's make sure everything is working:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>cicada<span class="w"> </span>config<span class="w"> </span><span class="nb">test</span><span class="w"> </span>zenodo
+</span></code></pre></div>
+<p><strong>If you see:</strong> <code>✓ Zenodo authentication successful</code>
+- <strong>Success!</strong> You're all set up and ready to publish DOIs.</p>
+<p><strong>If you see an error</strong>, see the <a href="#troubleshooting">Troubleshooting</a> section below.</p>
+<hr />
+<h2 id="part-4-publishing-your-first-doi">Part 4: Publishing Your First DOI<a class="headerlink" href="#part-4-publishing-your-first-doi" title="Permanent link">&para;</a></h2>
+<p>Now that you're set up, here's how to publish a DOI:</p>
+<h3 id="simple-example">Simple Example<a class="headerlink" href="#simple-example" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>my-data-file.fastq<span class="w"> </span>--provider<span class="w"> </span>zenodo
+</span></code></pre></div>
+<p>This will:
+1. Extract metadata from your file
+2. Upload it to Zenodo
+3. Create a DOI for it
+4. Print the DOI (something like <code>10.5281/zenodo.123456</code>)</p>
+<h3 id="with-additional-information">With Additional Information<a class="headerlink" href="#with-additional-information" title="Permanent link">&para;</a></h3>
+<p>You probably want to add more details about your data:</p>
+<ol>
+<li>
+<p>Create a file called <code>metadata.yaml</code> with your information:
+   <div class="language-yaml highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;My</span><span class="nv"> </span><span class="s">Research</span><span class="nv"> </span><span class="s">Data&quot;</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;RNA</span><span class="nv"> </span><span class="s">sequencing</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">from...&quot;</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nt">creators</span><span class="p">:</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Jane</span><span class="nv"> </span><span class="s">Smith&quot;</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="nt">affiliation</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;University</span><span class="nv"> </span><span class="s">Lab&quot;</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="nt">keywords</span><span class="p">:</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RNA-seq</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">genomics</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Publish with the extra information:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>my-data-file.fastq<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>--enrich<span class="w"> </span>metadata.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>--provider<span class="w"> </span>zenodo
+</span></code></pre></div></p>
+</li>
+</ol>
+<p><strong>That's it!</strong> You've published your first DOI.</p>
+<hr />
+<h2 id="part-2b-datacite-setup-for-institutional-users">Part 2B: DataCite Setup (For Institutional Users)<a class="headerlink" href="#part-2b-datacite-setup-for-institutional-users" title="Permanent link">&para;</a></h2>
+<p>If your institution has a DataCite membership (recommended to check with your library first):</p>
+<h3 id="step-1-get-your-credentials-from-your-institution">Step 1: Get Your Credentials from Your Institution<a class="headerlink" href="#step-1-get-your-credentials-from-your-institution" title="Permanent link">&para;</a></h3>
+<p>Contact your institution's library, IT department, or research data office and ask:</p>
+<blockquote>
+<p>"I need DataCite credentials to publish DOIs. Can you provide me with:
+- A DataCite repository ID
+- A DataCite password
+- Information about our DOI allocation"</p>
+</blockquote>
+<p>They should give you:
+- <strong>Repository ID</strong>: Looks like <code>10.12345/INST</code> or <code>CLIENT.MEMBER</code>
+- <strong>Password</strong>: A password for that repository</p>
+<h3 id="step-2-configure-cicada">Step 2: Configure Cicada<a class="headerlink" href="#step-2-configure-cicada" title="Permanent link">&para;</a></h3>
+<p><strong>Option 1: Simple setup (recommended):</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>cicada<span class="w"> </span>config<span class="w"> </span>init
+</span></code></pre></div>
+When prompted, enter your DataCite repository ID and password.</p>
+<p><strong>Option 2: Manual config file:</strong></p>
+<p>Create <code>~/.config/cicada/config.yaml</code>:
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nt">providers</span><span class="p">:</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="nt">datacite</span><span class="p">:</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span><span class="nt">repository_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-repo-id-here&quot;</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-password-here&quot;</span>
+</span></code></pre></div></p>
+<p>Then secure it:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.config/cicada/config.yaml
+</span></code></pre></div></p>
+<h3 id="step-3-test-it">Step 3: Test It<a class="headerlink" href="#step-3-test-it" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>cicada<span class="w"> </span>config<span class="w"> </span><span class="nb">test</span><span class="w"> </span>datacite
+</span></code></pre></div>
+<p>Should show: <code>✓ DataCite authentication successful</code></p>
+<h3 id="step-4-publish-dois">Step 4: Publish DOIs<a class="headerlink" href="#step-4-publish-dois" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>my-data-file.fastq<span class="w"> </span>--provider<span class="w"> </span>datacite
+</span></code></pre></div>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="command-not-found-cicada">"Command not found: cicada"<a class="headerlink" href="#command-not-found-cicada" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Your computer doesn't know where Cicada is installed.</p>
+<p><strong>Solution:</strong>
+1. Make sure you installed Cicada (see main README)
+2. Try the full path: <code>/usr/local/bin/cicada</code> instead of just <code>cicada</code></p>
+<h3 id="authentication-failed">"Authentication failed"<a class="headerlink" href="#authentication-failed" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Your credentials aren't working.</p>
+<p><strong>Check these:</strong></p>
+<ol>
+<li><strong>Did you copy the token correctly?</strong></li>
+<li>Go back to Zenodo and create a new token</li>
+<li>Make sure you copy the entire token (no spaces before/after)</li>
+<li>
+<p>Try pasting it again</p>
+</li>
+<li>
+<p><strong>Did you create the token with the right permissions?</strong></p>
+</li>
+<li>The token needs "deposit:write" scope</li>
+<li>
+<p>Create a new token if you're not sure</p>
+</li>
+<li>
+<p><strong>Are you using sandbox vs production?</strong></p>
+</li>
+<li>If you're testing, make sure you use a sandbox token</li>
+<li>See "Testing with Sandbox" below</li>
+</ol>
+<h3 id="insecure-permissions-on-configyaml">"Insecure permissions on config.yaml"<a class="headerlink" href="#insecure-permissions-on-configyaml" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Your credentials file can be read by other users on your computer.</p>
+<p><strong>Solution:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.config/cicada/config.yaml
+</span></code></pre></div></p>
+<p>This command makes the file readable only by you.</p>
+<h3 id="file-not-found-configcicadaconfigyaml">"File not found: ~/.config/cicada/config.yaml"<a class="headerlink" href="#file-not-found-configcicadaconfigyaml" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> The config file doesn't exist yet.</p>
+<p><strong>Solution:</strong> Run the setup command:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>cicada<span class="w"> </span>config<span class="w"> </span>init
+</span></code></pre></div></p>
+<p>Or create the file manually (see Option B above).</p>
+<h3 id="env-file-is-tracked-by-git">".env file is tracked by git"<a class="headerlink" href="#env-file-is-tracked-by-git" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Your credentials are about to be shared on GitHub!</p>
+<p><strong>Solution:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.env&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>git<span class="w"> </span>rm<span class="w"> </span>--cached<span class="w"> </span>.env
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Remove credentials from git&quot;</span>
+</span></code></pre></div></p>
+<p>This removes the credentials from git and prevents it from happening again.</p>
+<h3 id="cant-connect-to-zenododatacite">"Can't connect to Zenodo/DataCite"<a class="headerlink" href="#cant-connect-to-zenododatacite" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Network or service issue.</p>
+<p><strong>Check:</strong>
+1. Do you have internet connection?
+2. Can you access https://zenodo.org in your browser?
+3. Is your institution's firewall blocking API access?</p>
+<p><strong>Try:</strong>
+- Wait a few minutes and try again
+- Contact your IT department if the problem persists</p>
+<hr />
+<h2 id="testing-with-sandbox-optional">Testing with Sandbox (Optional)<a class="headerlink" href="#testing-with-sandbox-optional" title="Permanent link">&para;</a></h2>
+<p>Before publishing real DOIs, you might want to test with a sandbox (a test environment).</p>
+<h3 id="zenodo-sandbox">Zenodo Sandbox<a class="headerlink" href="#zenodo-sandbox" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create a sandbox account: https://sandbox.zenodo.org</li>
+<li>This is separate from your main Zenodo account</li>
+<li>Create a token the same way as before</li>
+<li>Tell Cicada to use sandbox:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>test-file.fastq<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="w">  </span>--provider<span class="w"> </span>zenodo<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span>--zenodo-sandbox
+</span></code></pre></div></li>
+</ol>
+<p>Or in your config file:
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="nt">providers</span><span class="p">:</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nt">zenodo</span><span class="p">:</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-sandbox-token&quot;</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sandbox</span>
+</span></code></pre></div></p>
+<h3 id="datacite-sandbox">DataCite Sandbox<a class="headerlink" href="#datacite-sandbox" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Get sandbox credentials from your institution (or create test account)</li>
+<li>Use the <code>--datacite-sandbox</code> flag:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>test-file.fastq<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span>--provider<span class="w"> </span>datacite<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span>--datacite-sandbox
+</span></code></pre></div></li>
+</ol>
+<p><strong>Sandbox DOIs are NOT REAL</strong> - they're for testing only and will be deleted eventually.</p>
+<hr />
+<h2 id="security-tips-please-read">Security Tips (Please Read!)<a class="headerlink" href="#security-tips-please-read" title="Permanent link">&para;</a></h2>
+<p>Your credentials are like passwords - keep them safe:</p>
+<h3 id="do">✅ DO:<a class="headerlink" href="#do" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Keep credentials in the config file (<code>~/.config/cicada/config.yaml</code>)</li>
+<li>Make sure the config file has secure permissions (<code>chmod 600</code>)</li>
+<li>Create different tokens for different purposes (sandbox vs production)</li>
+<li>Delete old tokens when you're not using them anymore</li>
+</ul>
+<h3 id="dont">❌ DON'T:<a class="headerlink" href="#dont" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Share your tokens with anyone</li>
+<li>Commit tokens to git/GitHub</li>
+<li>Email tokens</li>
+<li>Put tokens in filenames or comments</li>
+<li>Use production tokens for testing</li>
+</ul>
+<h3 id="if-your-token-is-exposed">If Your Token is Exposed<a class="headerlink" href="#if-your-token-is-exposed" title="Permanent link">&para;</a></h3>
+<p>If you accidentally shared your token:</p>
+<ol>
+<li>Go to Zenodo → Applications</li>
+<li>Find your token</li>
+<li>Click "Revoke" to delete it</li>
+<li>Create a new token</li>
+<li>Update your Cicada config with the new token</li>
+</ol>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<h3 id="setup-commands">Setup Commands<a class="headerlink" href="#setup-commands" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Initialize config (guided setup)</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>cicada<span class="w"> </span>config<span class="w"> </span>init
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Test credentials</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>cicada<span class="w"> </span>config<span class="w"> </span><span class="nb">test</span><span class="w"> </span>zenodo
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>cicada<span class="w"> </span>config<span class="w"> </span><span class="nb">test</span><span class="w"> </span>datacite
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>
+</span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="c1"># View current config (tokens hidden)</span>
+</span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>cicada<span class="w"> </span>config<span class="w"> </span>show
+</span><span id="__span-30-10"><a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>
+</span><span id="__span-30-11"><a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a><span class="c1"># Validate security</span>
+</span><span id="__span-30-12"><a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>cicada<span class="w"> </span>config<span class="w"> </span>validate
+</span></code></pre></div>
+<h3 id="publishing-commands">Publishing Commands<a class="headerlink" href="#publishing-commands" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Basic publish</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>file.fastq<span class="w"> </span>--provider<span class="w"> </span>zenodo
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># With metadata</span>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>file.fastq<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="w">  </span>--enrich<span class="w"> </span>metadata.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="w">  </span>--provider<span class="w"> </span>zenodo
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="c1"># Using DataCite instead</span>
+</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>file.fastq<span class="w"> </span>--provider<span class="w"> </span>datacite
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>
+</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a><span class="c1"># Test with sandbox</span>
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>file.fastq<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a><span class="w">  </span>--provider<span class="w"> </span>zenodo<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a><span class="w">  </span>--zenodo-sandbox
+</span></code></pre></div>
+<h3 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># General help</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>cicada<span class="w"> </span>--help
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Help for specific command</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>--help
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>cicada<span class="w"> </span>config<span class="w"> </span>--help
+</span></code></pre></div>
+<hr />
+<h2 id="example-complete-workflow">Example: Complete Workflow<a class="headerlink" href="#example-complete-workflow" title="Permanent link">&para;</a></h2>
+<p>Here's a complete example from start to finish:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># 1. Set up credentials (one time)</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>cicada<span class="w"> </span>config<span class="w"> </span>init
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="c1"># Enter your Zenodo token when prompted</span>
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
+</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="c1"># 2. Test that it works</span>
+</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>cicada<span class="w"> </span>config<span class="w"> </span><span class="nb">test</span><span class="w"> </span>zenodo
+</span><span id="__span-33-7"><a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="c1"># ✓ Zenodo authentication successful</span>
+</span><span id="__span-33-8"><a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>
+</span><span id="__span-33-9"><a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="c1"># 3. Create metadata file</span>
+</span><span id="__span-33-10"><a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>metadata.yaml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+</span><span id="__span-33-11"><a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a><span class="s">title: &quot;My RNA-seq Data&quot;</span>
+</span><span id="__span-33-12"><a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a><span class="s">description: &quot;Sequencing data from experiment 123&quot;</span>
+</span><span id="__span-33-13"><a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a><span class="s">creators:</span>
+</span><span id="__span-33-14"><a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a><span class="s">  - name: &quot;Jane Smith&quot;</span>
+</span><span id="__span-33-15"><a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a><span class="s">    affiliation: &quot;University Lab&quot;</span>
+</span><span id="__span-33-16"><a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a><span class="s">    orcid: &quot;0000-0002-1234-5678&quot;</span>
+</span><span id="__span-33-17"><a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a><span class="s">keywords:</span>
+</span><span id="__span-33-18"><a id="__codelineno-33-18" name="__codelineno-33-18" href="#__codelineno-33-18"></a><span class="s">  - RNA-seq</span>
+</span><span id="__span-33-19"><a id="__codelineno-33-19" name="__codelineno-33-19" href="#__codelineno-33-19"></a><span class="s">  - gene expression</span>
+</span><span id="__span-33-20"><a id="__codelineno-33-20" name="__codelineno-33-20" href="#__codelineno-33-20"></a><span class="s">rights: &quot;Creative Commons Attribution 4.0 (CC-BY-4.0)&quot;</span>
+</span><span id="__span-33-21"><a id="__codelineno-33-21" name="__codelineno-33-21" href="#__codelineno-33-21"></a><span class="s">EOF</span>
+</span><span id="__span-33-22"><a id="__codelineno-33-22" name="__codelineno-33-22" href="#__codelineno-33-22"></a>
+</span><span id="__span-33-23"><a id="__codelineno-33-23" name="__codelineno-33-23" href="#__codelineno-33-23"></a><span class="c1"># 4. Publish your data</span>
+</span><span id="__span-33-24"><a id="__codelineno-33-24" name="__codelineno-33-24" href="#__codelineno-33-24"></a>cicada<span class="w"> </span>doi<span class="w"> </span>publish<span class="w"> </span>my-data.fastq<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-33-25"><a id="__codelineno-33-25" name="__codelineno-33-25" href="#__codelineno-33-25"></a><span class="w">  </span>--enrich<span class="w"> </span>metadata.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-33-26"><a id="__codelineno-33-26" name="__codelineno-33-26" href="#__codelineno-33-26"></a><span class="w">  </span>--provider<span class="w"> </span>zenodo
+</span><span id="__span-33-27"><a id="__codelineno-33-27" name="__codelineno-33-27" href="#__codelineno-33-27"></a>
+</span><span id="__span-33-28"><a id="__codelineno-33-28" name="__codelineno-33-28" href="#__codelineno-33-28"></a><span class="c1"># Output:</span>
+</span><span id="__span-33-29"><a id="__codelineno-33-29" name="__codelineno-33-29" href="#__codelineno-33-29"></a><span class="c1"># ✓ Metadata extracted from my-data.fastq</span>
+</span><span id="__span-33-30"><a id="__codelineno-33-30" name="__codelineno-33-30" href="#__codelineno-33-30"></a><span class="c1"># ✓ Uploading to Zenodo...</span>
+</span><span id="__span-33-31"><a id="__codelineno-33-31" name="__codelineno-33-31" href="#__codelineno-33-31"></a><span class="c1"># ✓ DOI created: 10.5281/zenodo.123456</span>
+</span><span id="__span-33-32"><a id="__codelineno-33-32" name="__codelineno-33-32" href="#__codelineno-33-32"></a><span class="c1"># ✓ URL: https://zenodo.org/record/123456</span>
+</span><span id="__span-33-33"><a id="__codelineno-33-33" name="__codelineno-33-33" href="#__codelineno-33-33"></a>
+</span><span id="__span-33-34"><a id="__codelineno-33-34" name="__codelineno-33-34" href="#__codelineno-33-34"></a><span class="c1"># 5. Your data is now published with a DOI!</span>
+</span></code></pre></div>
+<hr />
+<h2 id="getting-more-help">Getting More Help<a class="headerlink" href="#getting-more-help" title="Permanent link">&para;</a></h2>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Main README: https://github.com/scttfrdmn/cicada</li>
+<li>Detailed guides: https://github.com/scttfrdmn/cicada/docs</li>
+</ul>
+<h3 id="support">Support<a class="headerlink" href="#support" title="Permanent link">&para;</a></h3>
+<ul>
+<li>GitHub Issues: https://github.com/scttfrdmn/cicada/issues</li>
+<li>Ask a question or report a problem</li>
+</ul>
+<h3 id="zenodo-help">Zenodo Help<a class="headerlink" href="#zenodo-help" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Zenodo FAQ: https://help.zenodo.org</li>
+<li>Zenodo Support: info@zenodo.org</li>
+</ul>
+<h3 id="datacite-help">DataCite Help<a class="headerlink" href="#datacite-help" title="Permanent link">&para;</a></h3>
+<ul>
+<li>DataCite Support Guide: https://support.datacite.org</li>
+<li>Contact: support@datacite.org</li>
+</ul>
+<hr />
+<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
+<p><strong>DOI (Digital Object Identifier)</strong>: A permanent identifier for your data (like <code>10.5281/zenodo.123456</code>)</p>
+<p><strong>Token</strong>: A secret code that lets Cicada access your Zenodo account</p>
+<p><strong>Credentials</strong>: Your login information (tokens, passwords, etc.)</p>
+<p><strong>Sandbox</strong>: A test environment where you can practice without creating real DOIs</p>
+<p><strong>Config file</strong>: A file where Cicada stores your settings and credentials</p>
+<p><strong>Repository ID</strong>: Your institution's DataCite identifier</p>
+<p><strong>Metadata</strong>: Information about your data (title, authors, description, etc.)</p>
+<p><strong>Provider</strong>: The service that creates your DOI (Zenodo or DataCite)</p>
+<hr />
+<p><strong>Questions?</strong> Create an issue on GitHub: https://github.com/scttfrdmn/cicada/issues</p>
+<p><strong>Ready to start?</strong> Go back to <a href="#part-1-getting-your-zenodo-credentials-5-minutes">Part 1</a> and follow the steps!</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 15V3h4v12zM15 3a2 2 0 0 1 2 2v10c0 .55-.22 1.05-.59 1.41L9.83 23l-1.06-1.06c-.27-.27-.44-.64-.44-1.06l.03-.31.95-4.57H3a2 2 0 0 1-2-2v-2c0-.26.05-.5.14-.73l3.02-7.05C4.46 3.5 5.17 3 6 3zm0 2H5.97L3 12v2h8.78l-1.13 5.32L15 14.97z"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 Scott Friedman
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/scttfrdmn/cicada" target="_blank" rel="noopener" title="Cicada on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
