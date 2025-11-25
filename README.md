@@ -481,11 +481,12 @@ Ensure your AWS user/role has required S3 permissions (see [AWS Setup](#aws-setu
 **v0.2.0**: Metadata extraction, quality validation, multi-format support ✅
 **v0.3.0 (Current)**: Comprehensive documentation, GitHub Pages site, official branding ✅
 
-**v0.4.0+** (Future):
+**v0.4.0** (Q1 2026) - [Detailed Roadmap](planning/ROADMAP_v0.4.0.md):
 - Live DOI provider integration (DataCite, Zenodo)
-- Additional storage backends (Azure, GCS)
-- Advanced metadata features (custom extractors, enhanced search)
-- Workflow execution support
+- Advanced AWS S3 features (Intelligent-Tiering, Batch Operations, S3 Select, Object Lock)
+- Custom metadata extractors (Go plugins, Python support)
+- Metadata search and enhanced export formats
+- Production hardening (structured logging, Prometheus metrics, health checks)
 
 See [planning/](planning/) for detailed roadmaps and [CHANGELOG.md](CHANGELOG.md) for release history.
 
