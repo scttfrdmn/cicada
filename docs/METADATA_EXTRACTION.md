@@ -27,10 +27,21 @@ Cicada automatically extracts rich metadata from scientific instrument files, in
 - **Instrument details**: Type, pairing information
 - **Format-specific fields**: Depends on file type
 
+### Why Extract Metadata?
+
+Metadata extraction is essential for effective data commons management:
+
+- **Data Discovery**: Find files by instrument, date, sample, or other criteria
+- **Data Quality**: Validate data meets quality standards
+- **Data Integrity**: Verify files haven't been corrupted
+- **Data Organization**: Automatically catalog and classify datasets
+- **Compliance**: Track required information for regulatory compliance
+- **Publication**: Have metadata ready when publishing datasets (optional)
+
 ### Benefits
 
 ✅ **Automated**: No manual metadata tracking
-✅ **Comprehensive**: Extracts all available metadata
+✅ **Multi-Format**: 14 file format extractors (microscopy, sequencing, mass spec, and more)
 ✅ **Fast**: Processes large files efficiently with sampling
 ✅ **Accurate**: Validates metadata during extraction
 ✅ **Flexible**: Multiple output formats (JSON, YAML, table)
@@ -76,21 +87,53 @@ cicada metadata extract sample.fastq.gz --output metadata.json
 
 ## Supported Formats
 
-### Current (v0.2.0)
+Cicada v0.2.0 includes **14 file format extractors** across multiple scientific domains:
 
-| Format | Extensions | Description | Metadata Extracted |
-|--------|-----------|-------------|-------------------|
-| **FASTQ** | `.fastq`, `.fq`, `.fastq.gz`, `.fq.gz` | Nucleotide sequencing data | Read counts, quality scores, GC content, pairing info |
+### Microscopy
 
-### Planned (v0.3.0+)
+| Format | Extensions | Description |
+|--------|-----------|-------------|
+| **TIFF** | `.tif`, `.tiff` | Generic microscopy images |
+| **OME-TIFF** | `.ome.tif`, `.ome.tiff` | Open Microscopy Environment TIFF |
+| **Zeiss CZI** | `.czi` | Zeiss microscopy format (20+ fields) |
+| **Nikon ND2** | `.nd2` | Nikon microscopy format |
+| **Leica LIF** | `.lif` | Leica microscopy format |
 
-| Format | Extensions | Description | Status |
-|--------|-----------|-------------|--------|
-| **CZI** | `.czi` | Zeiss microscopy images | Planned v0.3.0 |
-| **OME-TIFF** | `.ome.tif`, `.ome.tiff` | Open Microscopy Environment | Planned v0.3.0 |
-| **TIFF** | `.tif`, `.tiff` | Generic microscopy images | Planned v0.3.0 |
-| **ND2** | `.nd2` | Nikon microscopy images | Planned v0.4.0 |
-| **LIF** | `.lif` | Leica microscopy images | Planned v0.4.0 |
+### Sequencing & Genomics
+
+| Format | Extensions | Description |
+|--------|-----------|-------------|
+| **FASTQ** | `.fastq`, `.fq`, `.fastq.gz` | Nucleotide sequencing data |
+| **BAM** | `.bam` | Binary alignment/map format |
+
+### Mass Spectrometry
+
+| Format | Extensions | Description |
+|--------|-----------|-------------|
+| **mzML** | `.mzml` | Mass spectrometry XML format |
+| **MGF** | `.mgf` | Mascot generic format |
+
+### Data Arrays
+
+| Format | Extensions | Description |
+|--------|-----------|-------------|
+| **HDF5** | `.h5`, `.hdf5` | Hierarchical Data Format 5 |
+| **Zarr** | `.zarr` | Chunked, compressed array storage |
+
+### Medical Imaging & Flow Cytometry
+
+| Format | Extensions | Description |
+|--------|-----------|-------------|
+| **DICOM** | `.dcm`, `.dicom` | Medical imaging standard |
+| **FCS** | `.fcs` | Flow Cytometry Standard |
+
+### Fallback
+
+| Format | Description |
+|--------|-------------|
+| **Generic** | Basic file metadata for unsupported formats |
+
+Each extractor automatically detects applicable files and extracts format-specific metadata.
 
 ---
 

@@ -1,5 +1,9 @@
 # DOI Workflow Guide
 
+> **Note:** DOI preparation is an **optional advanced feature** of Cicada's data commons platform. Most labs use Cicada for daily data management, storage, and metadata extraction. DOI support is provided for labs that need to publish datasets to repositories like Zenodo or institutional data repositories.
+>
+> **For core data management features**, see the [User Guide](USER_GUIDE.md) (coming in v0.3.0) and [Metadata Extraction Guide](METADATA_EXTRACTION.md).
+
 This guide covers preparing datasets for DOI (Digital Object Identifier) registration using Cicada's automated metadata mapping and validation tools. Learn how to assess DOI readiness, enrich metadata, and prepare DataCite-compliant metadata for repository submission.
 
 ## Table of Contents
@@ -19,22 +23,37 @@ This guide covers preparing datasets for DOI (Digital Object Identifier) registr
 
 ## Overview
 
-DOIs provide permanent, citable identifiers for research datasets. Cicada helps prepare datasets for DOI registration by:
+DOIs (Digital Object Identifiers) provide permanent, citable identifiers for research datasets that you wish to publish. This is typically the **final step** in your data lifecycle:
 
-- **Extracting** base metadata from instrument files
+```
+1. Generate data → 2. Store & sync → 3. Extract metadata → 4. Organize & manage → 5. Publish (DOI)
+   (Instrument)      (Cicada core)     (Cicada core)      (Cicada core)           (This guide)
+```
+
+Most research data stays within your lab's data commons for analysis and collaboration. You only need DOI registration when:
+- Publishing datasets alongside papers
+- Making data publicly available
+- Meeting funder requirements for data sharing
+- Archiving data in institutional repositories
+
+### DOI Preparation Workflow
+
+Cicada helps prepare datasets for DOI registration by:
+
+- **Extracting** base metadata from instrument files (core platform feature)
 - **Mapping** metadata to DataCite Schema v4.5
 - **Validating** metadata completeness and quality
-- **Enriching** metadata with user-provided information
+- **Enriching** metadata with author information and descriptions
 - **Scoring** metadata quality (0-100 scale)
-- **Exporting** DataCite-compliant metadata for submission
+- **Exporting** DataCite-compliant metadata for repository submission
 
 ### Benefits
 
-✅ **Guided workflow**: Know exactly what metadata is required
+✅ **Leverages existing metadata**: Builds on metadata already extracted for data management
+✅ **Guided workflow**: Know exactly what metadata is required for publication
 ✅ **Quality scoring**: Track metadata completeness (0-100)
 ✅ **Standards compliance**: DataCite Schema v4.5 compatible
-✅ **Flexible enrichment**: Add metadata via YAML/JSON files
-✅ **Repository ready**: Export metadata for Zenodo, Dryad, etc.
+✅ **Repository ready**: Export metadata for Zenodo, Dryad, institutional repositories
 
 ---
 

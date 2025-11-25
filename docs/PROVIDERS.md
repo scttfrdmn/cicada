@@ -1,11 +1,15 @@
 # DOI Provider Setup Guide
 
-**Status:** v0.2.0 Documentation
+> **Note:** Provider integration is an **optional advanced feature** for labs that need to publish datasets. Most Cicada usage involves core data management features (storage, sync, metadata extraction). This guide is only relevant if you need to mint DOIs for dataset publication.
+>
+> **Current Status (v0.2.0):** Framework for provider integration is implemented. Live API integration planned for v0.4.0+.
+
+**Status:** v0.2.0 Documentation (Framework Ready, Live APIs in v0.4.0+)
 **Audience:** Lab managers, data managers, researchers publishing datasets
 
 ## Overview
 
-Cicada supports multiple DOI registration providers for publishing research datasets. Each provider offers different features, pricing, and repository integration.
+For labs that need to publish datasets, Cicada will support multiple DOI registration providers. Each provider offers different features, pricing, and repository integration.
 
 **Supported Providers (v0.2.0):**
 

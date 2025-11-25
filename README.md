@@ -6,44 +6,51 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/scttfrdmn/cicada)](go.mod)
 
-> **Current Version**: v0.2.0 - Adds comprehensive metadata extraction and DOI preparation capabilities. See **[CHANGELOG.md](CHANGELOG.md)** for release details and **[planning/PROJECT-SUMMARY.md](planning/PROJECT-SUMMARY.md)** for the complete data commons vision.
+> **Current Version**: v0.2.0 - Adds comprehensive metadata extraction, file format support, and enhanced data management capabilities. See **[CHANGELOG.md](CHANGELOG.md)** for release details and **[planning/PROJECT-SUMMARY.md](planning/PROJECT-SUMMARY.md)** for the complete data commons vision.
 
 ## Documentation
 
 - 📖 **[User Scenarios v0.2.0](docs/USER_SCENARIOS_v0.2.0.md)** - Detailed persona-based walkthroughs:
-  - Postdoc extracting metadata from sequencing data
-  - Graduate student preparing datasets for publication with DOI
-  - Lab manager validating compliance with instrument presets
-  - Data curator enriching metadata for repositories
   - Small lab complete adoption journey (target users)
+  - Lab manager organizing and managing research data
+  - Postdoc extracting and validating metadata from files
+  - Data curator ensuring data quality and compliance
+  - Advanced: Preparing datasets for publication
 - 📚 **User Guides**:
-  - [Metadata Extraction Guide](docs/METADATA_EXTRACTION.md) - Extract metadata from scientific files
-  - [DOI Workflow Guide](docs/DOI_WORKFLOW.md) - Prepare datasets for DOI registration
+  - [Metadata Extraction Guide](docs/METADATA_EXTRACTION.md) - Extract and manage metadata from scientific files
   - [Instrument Presets Guide](docs/PRESETS.md) - Validate metadata with instrument-specific presets
-  - [Provider Setup Guide](docs/PROVIDERS.md) - Configure DataCite/Zenodo integration
+  - [DOI Workflow Guide](docs/DOI_WORKFLOW.md) - Optional: Prepare datasets for DOI registration
+  - [Provider Setup Guide](docs/PROVIDERS.md) - Optional: Configure DataCite/Zenodo for publication
 - 🚀 **Quick Start** (below) - Get started in 5 minutes
 - 📋 **[Full Documentation](#usage)** - Complete command reference
 
 ## Features
 
-### Storage & Sync (v0.1.0)
-- ✅ **Fast S3 Sync**: Concurrent transfers with MD5/ETag comparison
+### Core Data Commons Platform
+
+**Storage & Sync (v0.1.0)**
+- ✅ **Multi-Backend Storage**: Local filesystem and S3 (Azure, GCS planned)
+- ✅ **Bi-directional Sync**: Efficient local ↔ S3 synchronization
+- ✅ **Smart Transfers**: MD5/ETag comparison, only sync changed files
 - ✅ **File Watching**: Auto-sync directories on file changes
-- ✅ **Two-way Sync**: Local ↔ S3 in both directions
-- ✅ **Smart Transfers**: Only sync changed files
-- ✅ **Dry Run Mode**: Preview changes before syncing
+- ✅ **Concurrent Operations**: 4-8x speedup with parallel transfers
 
-### Metadata & DOI (v0.2.0)
-- ✅ **Metadata Extraction**: Automatic extraction from FASTQ files (sequencing data)
-- ✅ **Instrument Presets**: 8 built-in presets (Illumina, Zeiss, generic)
-- ✅ **DOI Preparation**: DataCite Schema v4.5 compliance validation
-- ✅ **Quality Scoring**: 0-100 scale for metadata completeness
-- ✅ **Provider Integration**: DataCite and Zenodo support (API structure ready)
+**Metadata & Data Quality (v0.2.0)**
+- ✅ **Multi-Format Support**: 14 file format extractors (TIFF, CZI, FASTQ, BAM, mzML, HDF5, Zarr, DICOM, FCS, and more)
+- ✅ **Instrument-Specific Metadata**: 6 metadata types (Microscopy, Sequencing, Mass Spec, Flow Cytometry, Cryo-EM, X-Ray)
+- ✅ **Quality Validation**: 8 built-in instrument presets with 0-100 quality scoring
+- ✅ **S3 Metadata Tagging**: Automatic metadata storage as S3 object tags
+- ✅ **Extensible Architecture**: Pluggable extractors and presets
 
-### Cross-Cutting
+**Advanced Features (Optional)**
+- ✅ **DOI Preparation**: DataCite Schema v4.5 compliance for dataset publication
+- ✅ **Provider Integration**: DataCite and Zenodo support framework
+
+### Platform Characteristics
 - ✅ **Configurable**: YAML configuration with extensible design
 - ✅ **Cross-platform**: Linux, macOS, Windows
-- ✅ **Performant**: < 1 ms metadata extraction, 4-8x concurrent speedup
+- ✅ **Performant**: Sub-millisecond metadata extraction, concurrent processing
+- ✅ **Production-Ready**: 100+ tests, comprehensive error handling
 
 ## Quick Start
 
@@ -83,13 +90,15 @@ cicada sync --dry-run /local/data s3://my-bucket/data
 cicada sync --delete /local/data s3://my-bucket/data
 ```
 
-#### Metadata Extraction (v0.2.0)
+#### Metadata & Data Management (v0.2.0)
 
 ```bash
-# Extract metadata from FASTQ file
+# Extract metadata from files
 cicada metadata extract sample_R1.fastq.gz
+cicada metadata extract microscopy_image.czi
+cicada metadata extract mass_spec_data.mzML
 
-# Extract with preset validation
+# Validate with instrument presets
 cicada metadata extract sample_R1.fastq.gz --preset illumina-novaseq
 
 # Save metadata to file
@@ -100,22 +109,18 @@ cicada metadata preset list
 
 # Show preset details
 cicada metadata preset show illumina-novaseq
+
+# Validate data quality
+cicada metadata validate sample_R1.fastq.gz --preset illumina-novaseq
 ```
 
-#### DOI Preparation (v0.2.0)
+**Advanced: DOI Preparation** (Optional - see [DOI Workflow Guide](docs/DOI_WORKFLOW.md))
 
 ```bash
-# Validate metadata for DOI readiness
-cicada doi validate sample.fastq
-
-# Prepare dataset for DOI registration with enrichment
+# Prepare dataset for publication
 cicada doi prepare sample_R1.fastq sample_R2.fastq \
   --enrich metadata.yaml \
-  --publisher "My Lab" \
   --output doi-ready.json
-
-# Check quality score
-jq '.validation.score' doi-ready.json
 ```
 
 ## Installation
@@ -464,21 +469,21 @@ Ensure your AWS user/role has required S3 permissions (see [AWS Setup](#aws-setu
 
 ## Roadmap
 
-**v0.1.0 (Current)**: Core sync and watch functionality
+**v0.1.0**: Core sync and watch functionality ✅
+**v0.2.0 (Current)**: Metadata extraction, quality validation, multi-format support ✅
 
-**v0.2.0**:
-- Background daemon service
-- Improved path handling
-- Multipart uploads for large files
-- Bandwidth throttling
+**v0.3.0** (Q2 2025):
+- Comprehensive documentation and user guides
+- GitHub Pages documentation site
+- Enhanced onboarding experience
 
-**v0.3.0+**:
-- Metadata extraction and management
-- DOI minting integration
-- Public data portal
+**v0.4.0+** (Future):
+- Live DOI provider integration (DataCite, Zenodo)
+- Additional storage backends (Azure, GCS)
+- Advanced metadata features (custom extractors, enhanced search)
 - Workflow execution support
 
-See [VISION.md](VISION.md) for the complete roadmap and [CHANGELOG.md](CHANGELOG.md) for release history.
+See [planning/](planning/) for detailed roadmaps and [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## Contributing
 
@@ -498,7 +503,7 @@ If you use Cicada in your research, please cite:
   author = {Scott Friedman},
   year = {2025},
   url = {https://github.com/scttfrdmn/cicada},
-  version = {0.1.0}
+  version = {0.2.0}
 }
 ```
 
