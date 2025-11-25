@@ -1,38 +1,47 @@
-# Cicada v0.2.0 User Scenarios - Metadata & DOI Features
+# Cicada v0.2.0 User Scenarios - Data Commons Management
 
-This document provides persona-based walkthroughs for **v0.2.0**, which adds automated metadata extraction, instrument preset validation, and DOI preparation capabilities to Cicada. These scenarios demonstrate how researchers can extract rich metadata from scientific instrument files, validate against instrument specifications, and prepare datasets for DOI minting.
+This document provides persona-based walkthroughs for **v0.2.0**, which adds comprehensive data management capabilities to Cicada's data commons platform: automated metadata extraction, multi-format support, instrument preset validation, and quality assurance features. These scenarios demonstrate how labs use Cicada for daily data management, organization, and quality control.
+
+**What's New in v0.2.0:**
+- 14 file format extractors (microscopy, sequencing, mass spec, and more)
+- 6 instrument-specific metadata types
+- 8 instrument presets for quality validation
+- S3 metadata tagging for enhanced data organization
+- Optional: DOI preparation support for dataset publication
 
 ## Table of Contents
 
-1. [Postdoc: Metadata Extraction from Sequencing Data](#scenario-1-postdoc-metadata-extraction)
-2. [Graduate Student: DOI Preparation for Publication](#scenario-2-graduate-student-doi-preparation)
-3. [Lab Manager: Preset Validation](#scenario-3-lab-manager-preset-validation)
-4. [Data Curator: Metadata Enrichment](#scenario-4-data-curator-metadata-enrichment)
+1. [Postdoc: Managing Sequencing Data](#scenario-1-postdoc-metadata-extraction)
+2. [Lab Manager: Data Quality Validation](#scenario-3-lab-manager-preset-validation)
+3. [Data Curator: Organizing Research Data](#scenario-4-data-curator-metadata-enrichment)
+4. [Advanced: Preparing Data for Publication](#scenario-2-graduate-student-doi-preparation)
 
 ---
 
-## Scenario 1: Postdoc - Metadata Extraction from Sequencing Data
+## Scenario 1: Postdoc - Managing Sequencing Data
 
 ### Persona: Dr. Sarah Chen
 
 **Background**:
 - Postdoctoral researcher in genomics
 - Generates ~200 FASTQ files per month from Illumina NovaSeq
-- Needs to track read counts, quality scores, and sample information
-- Must document metadata for data repository submission
+- Needs to organize, validate, and track sequencing data
+- Maintains lab data commons with shared S3 storage
 - Technical level: Comfortable with command line, basic bioinformatics
 
 **Pain Points**:
 - Manually tracking file metadata is tedious and error-prone
-- Need to extract quality metrics from FASTQ files
-- Repository submission requires comprehensive metadata
-- Lost track of which samples were already processed
+- Hard to find specific datasets months later
+- No systematic quality control process
+- Uncertainty about which files have been analyzed
+- Need better data organization for the lab
 
 **Goals**:
-- Automatically extract metadata from FASTQ files
-- Generate metadata reports for lab records
-- Prepare data for repository submission
-- Track metadata alongside uploaded files in S3
+- Automatically extract and track metadata from sequencing files
+- Validate data quality against instrument specifications
+- Organize data in S3 with searchable metadata
+- Maintain lab data commons for current and future use
+- Have data well-documented for any future needs (analysis, sharing, publication)
 
 ---
 

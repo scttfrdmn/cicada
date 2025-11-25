@@ -5,15 +5,25 @@
 
 ## Overview
 
-Instrument presets provide pre-configured validation rules and metadata templates for specific scientific instruments. They ensure your metadata meets field-specific standards and improves reproducibility for common instruments.
+Instrument presets provide pre-configured validation rules and metadata templates for specific scientific instruments. They ensure your data commons maintains high-quality, standardized metadata for effective data management.
+
+**Why Use Presets?**
+
+Presets are essential for maintaining data quality in your lab's data commons:
+- Ensure data is properly documented for future use
+- Catch missing or incorrect metadata early
+- Enable consistent data organization across the lab
+- Facilitate data sharing within and between labs
+- Meet requirements when publishing data (optional)
 
 **Key Benefits:**
 
-- **Standardization**: Consistent metadata across instruments and labs
-- **Validation**: Automatic checking of required and optional fields
-- **Quality Scoring**: Objective assessment of metadata completeness (0-100 scale)
-- **Time Savings**: No need to manually specify field requirements
-- **Compliance**: Ensures metadata meets publisher and repository requirements
+- **Data Quality Assurance**: Catch incomplete or incorrect metadata before it becomes a problem
+- **Lab Standardization**: Consistent metadata practices across your lab
+- **Automatic Validation**: Instant feedback on metadata completeness
+- **Quality Scoring**: Objective assessment (0-100 scale) to track improvement
+- **Time Savings**: Pre-configured rules for common instruments
+- **Future-Proof**: Well-documented data is usable years later
 
 **Available Presets (v0.2.0):**
 
