@@ -14,7 +14,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/scttfrdmn/cicada)](go.mod)
 
-> **Current Version**: v0.2.0 - Adds comprehensive metadata extraction, file format support, and enhanced data management capabilities. See **[CHANGELOG.md](CHANGELOG.md)** for release details and **[planning/PROJECT-SUMMARY.md](planning/PROJECT-SUMMARY.md)** for the complete data commons vision.
+> **Current Version**: v0.3.0 - Documentation release with 12 comprehensive guides (14,074+ lines), GitHub Pages site, and official branding. See **[CHANGELOG.md](CHANGELOG.md)** for release details and **[Documentation Site](https://scttfrdmn.github.io/cicada)** for complete guides.
 
 ## Documentation
 
@@ -478,12 +478,8 @@ Ensure your AWS user/role has required S3 permissions (see [AWS Setup](#aws-setu
 ## Roadmap
 
 **v0.1.0**: Core sync and watch functionality ✅
-**v0.2.0 (Current)**: Metadata extraction, quality validation, multi-format support ✅
-
-**v0.3.0** (Q2 2025):
-- Comprehensive documentation and user guides
-- GitHub Pages documentation site
-- Enhanced onboarding experience
+**v0.2.0**: Metadata extraction, quality validation, multi-format support ✅
+**v0.3.0 (Current)**: Comprehensive documentation, GitHub Pages site, official branding ✅
 
 **v0.4.0+** (Future):
 - Live DOI provider integration (DataCite, Zenodo)
@@ -511,7 +507,7 @@ If you use Cicada in your research, please cite:
   author = {Scott Friedman},
   year = {2025},
   url = {https://github.com/scttfrdmn/cicada},
-  version = {0.2.0}
+  version = {0.3.0}
 }
 ```
 

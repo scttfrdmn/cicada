@@ -209,15 +209,15 @@ Ready to transform your lab's data management?
 
 ## Current Version
 
-**v0.2.0** - Released January 23, 2025
+**v0.3.0** - Released November 25, 2025
 
-- 14 file format extractors
-- 6 instrument-specific metadata types
-- 8 instrument presets
-- S3 metadata tagging
-- Optional DOI preparation
+- 12 comprehensive documentation files (14,074+ lines)
+- GitHub Pages documentation site
+- Official mascot and branding guidelines
+- Complete user guides and tutorials
+- Developer documentation and API reference
 
-[View changelog →](about/changelog.md) | [Release notes →](https://github.com/scttfrdmn/cicada/releases/tag/v0.2.0)
+[View changelog →](about/changelog.md) | [Release notes →](https://github.com/scttfrdmn/cicada/releases/tag/v0.3.0)
 
 ---
 
@@ -239,6 +239,6 @@ If you use Cicada in your research, please cite:
   author = {Scott Friedman},
   year = {2025},
   url = {https://github.com/scttfrdmn/cicada},
-  version = {0.2.0}
+  version = {0.3.0}
 }
 ```
