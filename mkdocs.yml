@@ -38,8 +38,8 @@ theme:
     - content.code.annotate
   icon:
     repo: fontawesome/brands/github
-  logo: assets/logo.png
-  favicon: assets/favicon.ico
+  logo: assets/images/cicada-mascot.png
+  favicon: assets/images/cicada-mascot.png
 
 plugins:
   - search:

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/images/cicada-mascot.png" alt="Cicada Mascot" width="300">
+</p>
+
 # Cicada: Small Lab Data Commons Platform
 
 **Dormant data commons for academic research** - Lightweight, cost-effective platform providing federated storage, automated metadata extraction, and comprehensive data management. Like a cicada, it lies dormant (consuming minimal resources) until needed, then emerges powerfully for data-intensive work.

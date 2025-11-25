@@ -1,6 +1,14 @@
-# Cicada
+<p align="center">
+  <img src="assets/images/cicada-mascot.png" alt="Cicada Mascot" width="300">
+</p>
 
-**Dormant data commons for academic research** - Lightweight, cost-effective platform providing federated storage, access control, and compute-to-data capabilities. Like a cicada, it lies dormant (consuming minimal resources) until needed, then emerges powerfully for data-intensive work.
+<h1 align="center">Cicada</h1>
+
+<p align="center">
+  <strong>Dormant data commons for academic research</strong><br>
+  Lightweight, cost-effective platform providing federated storage, access control, and compute-to-data capabilities.<br>
+  Like a cicada, it lies dormant (consuming minimal resources) until needed, then emerges powerfully for data-intensive work.
+</p>
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/scttfrdmn/cicada)](https://goreportcard.com/report/github.com/scttfrdmn/cicada)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
