@@ -9,19 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0] - 2025-01-23
 
-Major release adding comprehensive metadata extraction and DOI preparation capabilities for research data management.
+Major release transforming Cicada into a comprehensive data commons platform with automated metadata extraction, multi-format support, data quality validation, and optional DOI preparation capabilities.
 
 ### Added
 
 - **Metadata Extraction System**:
-  - FASTQ metadata extractor with quality score analysis
-  - Gzip compression support (.fastq.gz)
+  - 14 file format extractors across multiple domains
+  - Microscopy: TIFF, OME-TIFF, Zeiss CZI, Nikon ND2, Leica LIF
+  - Sequencing: FASTQ, BAM
+  - Mass Spectrometry: mzML, MGF
+  - Data Arrays: HDF5, Zarr
+  - Medical/Flow: DICOM, FCS
+  - Generic fallback extractor
+  - 6 instrument-specific metadata types (Microscopy, Sequencing, Mass Spec, Flow Cytometry, Cryo-EM, X-Ray)
+  - S3 object tagging integration for metadata storage
   - Automatic file format detection
-  - Paired-end read detection (R1/R2, _1/_2 patterns)
-  - Large file sampling (10,000 read limit for performance)
   - Thread-safe concurrent extraction
   - Extractor registry with plugin architecture
-  - CLI commands: `cicada metadata extract`, `cicada metadata validate`
+  - CLI commands: `cicada metadata extract`, `cicada metadata validate`, `cicada metadata show`, `cicada metadata list`
 
 - **Instrument Preset System**:
   - 8 default presets: Illumina (NovaSeq, MiSeq, NextSeq), Zeiss (LSM 880/900/980), Generic (sequencing, microscopy)
@@ -87,10 +92,9 @@ Major release adding comprehensive metadata extraction and DOI preparation capab
 
 ### Known Limitations
 
-- File format support: FASTQ only (CZI, OME-TIFF placeholders for v0.3.0)
-- Provider integration: API structure complete, actual API calls stubbed (v0.3.0)
-- Custom presets: 8 built-in presets, no user-defined presets yet (v0.3.0)
-- Metadata enrichment: Manual YAML/JSON editing (no interactive UI, v0.3.0)
+- Provider integration: API structure complete, live API calls for DataCite/Zenodo planned for v0.4.0+
+- Custom presets: 8 built-in presets, user-defined presets planned for v0.4.0+
+- Metadata enrichment: Manual YAML/JSON editing (interactive UI planned for v0.4.0+)
 
 ### Breaking Changes
 
